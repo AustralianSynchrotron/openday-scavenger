@@ -10,7 +10,7 @@ class Puzzle(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(index=True, unique=True)
     answer: Mapped[str] = mapped_column(String(100))
-    active: Mapped[bool]
+    active: Mapped[bool] = mapped_column(default=False)
     location: Mapped[str] = mapped_column(String(200))
     notes: Mapped[str]
 
