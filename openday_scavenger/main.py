@@ -3,10 +3,9 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 
 from openday_scavenger.api.db import create_tables
-from openday_scavenger.views.admin.views import router as admin_router
 from openday_scavenger.puzzles.demo.views import router as puzzle_demo_router
 from openday_scavenger.views.game import router as game_router
-
+from openday_scavenger.views.admin import router as admin_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

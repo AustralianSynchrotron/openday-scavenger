@@ -1,0 +1,32 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>UID</th>
+            <th>Checked In</th>
+            <th>Checked Out</th>
+            <th>Still Playing</th>
+            <th>Checkout</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for visitor in visitors %}
+        <tr>
+            <td>{{ visitor.uid }}</td>
+            <td>{{ visitor.checked_in.strftime("%H:%M") }}</td>
+            <td>{{ visitor.checked_out.strftime("%H:%M") if visitor.checked_out}}</td>
+            <td>{% if visitor.checked_out %}
+                <span class="badge text-bg-secondary">Finished</span>
+                {% else %}
+                <span class="badge text-bg-primary">Playing</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if visitor.checked_out is false %}
+                <button type="button" class="btn btn-danger" hx-put="/admin/puzzles/{{ puzzle.id }}" hx-vals='{"id": {{ puzzle.id }}, "active": false}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Checkout</button>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

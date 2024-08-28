@@ -15,15 +15,6 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 
 
 @router.get("/")
-async def render_index_page(request: Request):
-    """ Render admin index page """
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html"
-    )
-
-
-@router.get("/puzzles")
 async def render_puzzle_page(request: Request):
     """ Render the puzzle admin page """
     return templates.TemplateResponse(
@@ -32,28 +23,27 @@ async def render_puzzle_page(request: Request):
     )
 
 
-@router.post("/puzzles")
+@router.post("/")
 async def create_puzzle(puzzle: PuzzleCreate, request: Request, db: Annotated["Session", Depends(get_db)]):
     """ Create a new puzzle and re-render the table """
     puzzle = create(db, puzzle)
-    return await _render_table(request, db)
+    return await _render_puzzles_table(request, db)
 
 
-@router.get("/puzzles/table")
+@router.get("/table")
 async def render_puzzle_table(request: Request, db: Annotated["Session", Depends(get_db)]):
     """ Render the table of puzzles on the admin page """
-    return await _render_table(request, db)
+    return await _render_puzzles_table(request, db)
 
 
-@router.put("/puzzles/{puzzle_id}")
+@router.put("/{puzzle_id}")
 async def update_puzzle(puzzle: PuzzleUpdate, request: Request, db: Annotated["Session", Depends(get_db)]):
     """ Update a single puzzle and re-render the table """
     puzzle = update(db, puzzle)
-    return await _render_table(request, db)
+    return await _render_puzzles_table(request, db)
 
 
-
-async def _render_table(request: Request, db: Annotated["Session", Depends(get_db)]):
+async def _render_puzzles_table(request: Request, db: Annotated["Session", Depends(get_db)]):
     puzzles = get_all(db)
 
     return templates.TemplateResponse(

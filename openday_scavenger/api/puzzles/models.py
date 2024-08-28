@@ -16,7 +16,7 @@ class Puzzle(Base):
     notes: Mapped[str]= mapped_column(nullable=True)
 
     def __repr__(self) -> str:
-        return f"Puzzle(id={self.id!r}, uuid={self.name!r}, answer={self.answer!r})"
+        return f"Puzzle(id={self.id!r}, name={self.name!r}, answer={self.answer!r})"
 
 
 class Response(Base):
