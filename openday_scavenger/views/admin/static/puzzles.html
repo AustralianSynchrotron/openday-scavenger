@@ -4,4 +4,15 @@
 <a href="/admin">Return to admin home</a>
 
 <div id="puzzle-table" hx-get="/admin/puzzles/table" hx-trigger="load" hx-swap="innerHTML"></div>
+
+<div>
+    <form id='puzzle-add-form' hx-encoding='multipart/form-data' hx-post='/admin/puzzles' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <br>
+        <label for="name">Answer:</label>
+        <input type="text" id="answer" name="answer">
+        <button> Add </button>
+    </form>
+</div>
 {% endblock %}

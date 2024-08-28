@@ -5,8 +5,8 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
-from openday_scavenger.api.puzzles.service import get_all, update
-from openday_scavenger.api.puzzles.schemas import PuzzleUpdate
+from openday_scavenger.api.puzzles.service import get_all, create, update
+from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 
 
 router = APIRouter()
@@ -30,6 +30,13 @@ async def render_puzzle_page(request: Request):
         request=request,
         name="puzzles.html"
     )
+
+
+@router.post("/puzzles")
+async def create_puzzle(puzzle: PuzzleCreate, request: Request, db: Annotated["Session", Depends(get_db)]):
+    """ Create a new puzzle and re-render the table """
+    puzzle = create(db, puzzle)
+    return await _render_table(request, db)
 
 
 @router.get("/puzzles/table")
