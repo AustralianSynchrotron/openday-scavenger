@@ -34,8 +34,13 @@ def update(db_session: Session, puzzle_in: PuzzleUpdate):
 
     puzzle = db_session.query(Puzzle).filter(Puzzle.id == update_data["id"]).first()    
 
+    # map the pydantic model to database model explicitly to maintain abstraction
+    puzzle.name = update_data.get("name", puzzle.name)
     puzzle.active = update_data.get("active", puzzle.active)
-
+    puzzle.answer = update_data.get("answer", puzzle.answer)
+    puzzle.location = update_data.get("location", puzzle.location)
+    puzzle.notes = update_data.get("notes", puzzle.notes)
+    
     try:
         db_session.commit()
     except:
