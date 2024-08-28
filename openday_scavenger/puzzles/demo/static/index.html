@@ -2,7 +2,6 @@
     <head>
         <script src="/static/js/htmx.min.js"></script>
         <script src="/static/js/json-enc.js"></script>
-        <script src="/static/css/tailwind.css"></script>
     </head>
     <body>
         <h1>Demo Puzzle</h1>
@@ -10,7 +9,7 @@
         What energy in GeV does the accelerator of the Australian Synchrotron run at?
         
         <form id='form' hx-encoding='multipart/form-data' hx-post='/game/submission' hx-ext='json-enc'>
-            <input hidden type="text" id="id" name="id" value="{{ puzzle_id }}">
+            <input hidden type="text" id="name" name="name" value="{{ puzzle_id }}">
             <label for="energy">Energy:</label><br>
             <input type="text" id="answer" name="answer">
             <button>

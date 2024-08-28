@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 
 from openday_scavenger.api.db import create_tables
-from openday_scavenger.puzzles.demo.views import router as puzzle_demo_router
+from openday_scavenger.puzzles import router as puzzle_router
 from openday_scavenger.views.game import router as game_router
 from openday_scavenger.views.admin import router as admin_router
 
@@ -47,9 +47,7 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-# Include core routes
+# Include routes
 app.include_router(admin_router, prefix='/admin')
 app.include_router(game_router, prefix='/game')
-
-# Include puzzle routes
-app.include_router(puzzle_demo_router, prefix='/puzzles/demo')
+app.include_router(puzzle_router, prefix='/puzzles')

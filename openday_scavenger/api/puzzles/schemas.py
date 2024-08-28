@@ -18,10 +18,6 @@ class PuzzleUpdate(BaseModel):
     notes: str | None = None
 
 
-class PuzzleRead(BaseModel):
-    id: int
+class PuzzleCompare(BaseModel):
     name: str
     answer: str
-    active: bool
-    location: str | None
-    notes: str | None

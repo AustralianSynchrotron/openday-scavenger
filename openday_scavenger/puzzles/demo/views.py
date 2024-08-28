@@ -13,4 +13,3 @@ async def index(request: Request):
     return templates.TemplateResponse(
         request=request, name='index.html', context={"puzzle_id": "demo"}
     )
-

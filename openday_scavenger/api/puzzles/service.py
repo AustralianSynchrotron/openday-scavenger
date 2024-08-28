@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from openday_scavenger.api.puzzles.models import Puzzle, Response
 
-from .schemas import PuzzleCreate, PuzzleUpdate
+from .schemas import PuzzleCreate, PuzzleUpdate, PuzzleCompare
 
 
 def get_all(db_session: Session) -> list[Puzzle]:
@@ -48,3 +48,13 @@ def update(db_session: Session, puzzle_in: PuzzleUpdate):
         raise
 
     return puzzle
+
+
+def compare_answer(db_session: Session, puzzle_in: PuzzleCompare):
+
+    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()    
+
+    if puzzle_in.answer == puzzle.answer:
+        return True
+    else:
+        return False
