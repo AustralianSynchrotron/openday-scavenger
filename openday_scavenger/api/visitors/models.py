@@ -8,7 +8,7 @@ from openday_scavenger.api.db import Base
 class Visitor(Base):
     __tablename__ = "visitor"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uid: Mapped[str] = mapped_column(String(6), index=True)
+    uid: Mapped[str] = mapped_column(String(6), index=True, unique=True)
     checked_in: Mapped[datetime] = mapped_column()
     checked_out: Mapped[datetime | None] = mapped_column(nullable=True, default=None)
 

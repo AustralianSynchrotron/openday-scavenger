@@ -1,13 +1,14 @@
 from typing import Annotated
 from pathlib import Path
+from datetime import datetime
 from fastapi import APIRouter, Request, Depends
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
 
-from openday_scavenger.api.visitors.service import get_all, create
-from openday_scavenger.api.visitors.schemas import VisitorCreate
+from openday_scavenger.api.visitors.service import get_all, create, update
+from openday_scavenger.api.visitors.schemas import VisitorCreate, VisitorUpdate
 
 router = APIRouter()
 
@@ -24,11 +25,17 @@ async def render_visitor_page(request: Request):
 
 
 @router.post("/")
-async def create_visitor(visitor: VisitorCreate, db: Annotated["Session", Depends(get_db)]):
+async def create_visitor(visitor: VisitorCreate, request: Request, db: Annotated["Session", Depends(get_db)]):
     """Create a new visitor"""
     visitor = create(db, visitor)
-    return "Created"
+    return await _render_visitor_table(request, db)
 
+
+@router.put("/{visitor_id}")
+async def update_visitor(visitor: VisitorUpdate, request: Request, db: Annotated["Session", Depends(get_db)]):
+    """ Update a single puzzle and re-render the table """
+    visitor = update(db, visitor)
+    return await _render_visitor_table(request, db)
 
 @router.get("/table")
 async def render_visitor_table(request: Request, db: Annotated["Session", Depends(get_db)]):
@@ -42,5 +49,5 @@ async def _render_visitor_table(request: Request, db: Annotated["Session", Depen
     return templates.TemplateResponse(
         request=request,
         name="visitors_table.html",
-        context={"visitors": visitors}
+        context={"visitors": visitors, "now": datetime.now()}
     )

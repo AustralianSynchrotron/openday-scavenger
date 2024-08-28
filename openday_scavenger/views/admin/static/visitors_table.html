@@ -5,6 +5,7 @@
             <th>Checked In</th>
             <th>Checked Out</th>
             <th>Still Playing</th>
+            <th>Play Time (m)</th>
             <th>Checkout</th>
             <th></th>
         </tr>
@@ -21,11 +22,17 @@
                 <span class="badge text-bg-primary">Playing</span>
                 {% endif %}
             </td>
-            <td>
-                {% if visitor.checked_out is false %}
-                <button type="button" class="btn btn-danger" hx-put="/admin/puzzles/{{ puzzle.id }}" hx-vals='{"id": {{ puzzle.id }}, "active": false}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Checkout</button>
+            <td>{% if visitor.checked_out %}
+                {{ ((visitor.checked_out - visitor.checked_in).total_seconds()/60)|round|int}}
+                {% else %}
+                {{ ((now - visitor.checked_in).total_seconds()/60)|round|int}}
                 {% endif %}
             </td>
+            <td>{% if visitor.checked_out is none %}
+                <button type="button" class="btn btn-danger" hx-put="/admin/visitors/{{ visitor.id }}" hx-vals='{"id": {{ visitor.id }}, "check_out": true}' hx-ext="json-enc" hx-swap="innerHTML" hx-target="#visitor-table">Checkout</button>
+                {% endif %}
+            </td>
+
         </tr>
         {% endfor %}
     </tbody>
