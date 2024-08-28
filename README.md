@@ -16,6 +16,12 @@ Install Python 3.12:
 uv python install 3.12
 ```
 
+
+```
+uv run fastapi dev main.py --reload
+```
+
+
 ### Option 2: use devcontainers
 TBD
 

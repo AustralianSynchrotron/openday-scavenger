@@ -1,0 +1,5 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div id="puzzle-table" hx-get="/admin/puzzles/table" hx-trigger="load" hx-swap="innerHTML"></div>
+{% endblock %}

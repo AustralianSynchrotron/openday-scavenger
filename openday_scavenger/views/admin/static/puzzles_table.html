@@ -1,0 +1,31 @@
+<table class="table-auto">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Answer</th>
+            <th>Status</th>
+            <th>Location</th>
+            <th>Notes</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for puzzle in puzzles %}
+        <tr>
+            <td>{{ puzzle.name }}</td>
+            <td>{{ puzzle.answer }}</td>
+            <td>{% if puzzle.active is true %} Enabled {% else %} Disabled {% endif %}
+            </td>
+            <td>{{ puzzle.location if puzzle.location }}</td>
+            <td>{{ puzzle.notes if puzzle.notes }}</td>
+            <td>
+                {% if puzzle.active is true %}
+                <button hx-put="/admin/puzzles/{{ puzzle.id }}" hx-vals='{"id": {{ puzzle.id }}, "active": false}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Disable</button>
+                {% else %}
+                <button hx-put="/admin/puzzles/{{ puzzle.id }}" hx-vals='{"id": {{ puzzle.id }}, "active": true}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Enable</button>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
