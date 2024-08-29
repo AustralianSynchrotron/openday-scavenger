@@ -1,15 +1,28 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<a href="/admin">Return to admin home</a>
-
-<div id="visitor-table" hx-get="/admin/visitors/table" hx-trigger="load" hx-swap="innerHTML"></div>
-
-<div>
-    <form id='visitor-add-form' hx-encoding='multipart/form-data' hx-post='/admin/visitors' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table">
-        <label for="uid">UID:</label>
-        <input type="text" id="uid" name="uid">
-        <button class="btn btn-warning"> Add </button>
-    </form>
+<div class="card m-4">
+    <div class="card-header">
+        <h5 class="card-title">Visitors</h5>
+    </div>
+    <div class="card-body">
+        <div id="visitor-table" hx-get="/admin/visitors/table" hx-trigger="load" hx-swap="innerHTML"></div>
+    </div>
 </div>
+
+<div class="card m-4">
+    <div class="card-header">
+        <h5 class="card-title">Add a new Visitor</h5>
+    </div>
+    <div class="card-body">
+        <div>
+            <form id='visitor-add-form' hx-encoding='multipart/form-data' hx-post='/admin/visitors' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table">
+                <label for="uid">UID:</label>
+                <input type="text" id="uid" name="uid">
+                <button class="btn btn-warning"> Add </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

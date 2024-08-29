@@ -7,7 +7,29 @@
         <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
-        <h1>Admin</h1>
-        {% block content %}{% endblock %}
+        <div class="container-fluid">
+            <div class="row flex-nowrap">
+                <aside class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                        <a href="/admin" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                            <span class="fs-5 d-none d-sm-inline">Admin</span>
+                        </a>
+                        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                            <li class="nav-item">
+                                <a href="/admin/visitors" class="nav-link align-middle px-0">
+                                    <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Visitors</span>
+                                </a>
+                                <a href="/admin/puzzles" class="nav-link align-middle px-0">
+                                    <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Puzzles</span>
+                                </a>
+                            </li>
+                        </ul>                      
+                    </div>
+                </aside>
+                <div class="col py-3">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
     </body>
 </html>

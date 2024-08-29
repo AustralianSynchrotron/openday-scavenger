@@ -1,18 +1,30 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<a href="/admin">Return to admin home</a>
+<div class="card m-4">
+    <div class="card-header">
+        <h5 class="card-title">Available Puzzles</h5>
+    </div>
+    <div class="card-body">
+        <div id="puzzle-table" hx-get="/admin/puzzles/table" hx-trigger="load" hx-swap="innerHTML"></div>
+    </div>
+</div>
 
-<div id="puzzle-table" hx-get="/admin/puzzles/table" hx-trigger="load" hx-swap="innerHTML"></div>
-
-<div>
-    <form id='puzzle-add-form' hx-encoding='multipart/form-data' hx-post='/admin/puzzles' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name">
-        <br>
-        <label for="name">Answer:</label>
-        <input type="text" id="answer" name="answer">
-        <button> Add </button>
-    </form>
+<div class="card m-4">
+    <div class="card-header">
+        <h5 class="card-title">Add a new Puzzles</h5>
+    </div>
+    <div class="card-body">
+        <div>
+            <form id='puzzle-add-form' hx-encoding='multipart/form-data' hx-post='/admin/puzzles' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+                <br>
+                <label for="name">Answer:</label>
+                <input type="text" id="answer" name="answer">
+                <button> Add </button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
