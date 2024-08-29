@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<script>
+    function onScanSuccess(decodedText, decodedResult) {
+    // handle the scanned code as you like, for example:
+    console.log(`Code matched = ${decodedText}`, decodedResult);
+    window.location.assign(decodedText);
+    window.open(newUrl, "_top");
+    }
+
+    function onScanFailure(error) {
+    // handle scan failure, usually better to ignore and keep scanning.
+    // for example:
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: {width: 200, height: 200} },
+            false
+        );
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }, false);
+    
+</script>   
+<div>
+    <div class="mx-auto" id="reader" style="width: 400px;"></div>
+</div>
+{% endblock %}
