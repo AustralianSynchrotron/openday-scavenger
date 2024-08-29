@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
-from openday_scavenger.api.puzzles.service import get_all, create, update
+from openday_scavenger.api.puzzles.service import get_all, create, update, get_qr_code
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 
 
@@ -42,6 +42,15 @@ async def update_puzzle(puzzle: PuzzleUpdate, request: Request, db: Annotated["S
     puzzle = update(db, puzzle)
     return await _render_puzzles_table(request, db)
 
+@router.get("/qr/{name}")
+async def render_qr_code(name: str, request: Request):
+    qr = get_qr_code(name)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="qr.html",
+        context={"qr": qr}
+    )
 
 async def _render_puzzles_table(request: Request, db: Annotated["Session", Depends(get_db)]):
     puzzles = get_all(db)

@@ -8,6 +8,8 @@ dependencies = [
     "fastapi[standard]>=0.112.2",
     "jinja2>=3.1.4",
     "sqlalchemy>=2.0.32",
+    "segno>=1.6.1",
+    "python-slugify>=8.0.4",
 ]
 
 [build-system]
