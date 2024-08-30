@@ -1,9 +1,14 @@
 from typing import Annotated
 from pathlib import Path
 from sqlalchemy.orm import Session
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi import FastAPI, Depends, Request, HTTPException, status
 from fastapi.staticfiles import StaticFiles
+from fastapi.logger import logger
+from fastapi.exception_handlers import http_exception_handler
 from contextlib import asynccontextmanager
+
+from fastapi.templating import Jinja2Templates
 
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.models import Puzzle
@@ -12,6 +17,8 @@ from openday_scavenger.api.db import create_tables
 from openday_scavenger.puzzles import router as puzzle_router
 from openday_scavenger.views.game.game import router as game_router
 from openday_scavenger.views.admin import router as admin_router
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -29,19 +36,34 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# @app.exception_handler(StarletteHTTPException)
-# async def custom_http_exception_handler(request, exc):
-#     ''' Catch any HTTPException and log the error '''
-#     logger.error(f'{str(exc)}\n{exc.detail}', exc_info=exc)
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request, exc):
+    ''' Catch any HTTPException and log the error '''
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / 'static' / 'html')
 
-#     detail = exc.detail if isinstance(exc.detail, str) else exc.detail.dict()
-#     headers = exc.headers if hasattr(exc, 'headers') else None
+    logger.error(f'{str(exc)}\n{exc.detail}', exc_info=exc)
 
-#     return await http_exception_handler(request,
-#                                         HTTPException(
-#                                             status_code=exc.status_code,
-#                                             detail=detail,
-#                                             headers=headers))
+    match exc.status_code:
+        case status.HTTP_403_FORBIDDEN:
+            return templates.TemplateResponse(
+                request=request,
+                name="403.html"
+            )
+        case status.HTTP_404_NOT_FOUND:
+            return templates.TemplateResponse(
+                request=request,
+                name="404.html"
+            )
+        
+
+    detail = exc.detail if isinstance(exc.detail, str) else exc.detail.dict()
+    headers = exc.headers if hasattr(exc, 'headers') else None
+
+    return await http_exception_handler(request,
+                                        HTTPException(
+                                            status_code=exc.status_code,
+                                            detail=detail,
+                                            headers=headers))
 
 
 #@app.get("/favicon.ico", include_in_schema=False)
