@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from openday_scavenger.api.db import get_db
 
 from openday_scavenger.api.visitors.service import get_all, create, check_out
-from openday_scavenger.api.visitors.schemas import VisitorCreate, VisitorUpdate
+from openday_scavenger.api.visitors.schemas import VisitorCreate
 
 router = APIRouter()
 
