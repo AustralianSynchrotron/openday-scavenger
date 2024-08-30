@@ -24,18 +24,10 @@ def create(db_session: Session, visitor_in: VisitorCreate):
 
     return visitor
 
-def update(db_session: Session, visitor_in: VisitorUpdate):
-    update_data = visitor_in.model_dump(exclude_unset=True)
+def check_out(db_session: Session, visitor_uid: str):
+    visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
+    visitor.checked_out = datetime.now()
 
-    visitor = db_session.query(Visitor).filter(Visitor.id == update_data["id"]).first()    
-
-    # map the pydantic model to database model explicitly to maintain abstraction
-    visitor.uid = update_data.get("uid", visitor.uid)
-    visitor.checked_in = update_data.get("checked_in", visitor.checked_in)
-    if update_data.get("check_out"):
-        visitor.checked_out = datetime.now()
-    visitor.checked_out = update_data.get("checked_out", visitor.checked_out)
-    
     try:
         db_session.commit()
     except:

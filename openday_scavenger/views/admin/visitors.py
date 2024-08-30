@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
 
-from openday_scavenger.api.visitors.service import get_all, create, update
+from openday_scavenger.api.visitors.service import get_all, create, check_out
 from openday_scavenger.api.visitors.schemas import VisitorCreate, VisitorUpdate
 
 router = APIRouter()
@@ -31,10 +31,10 @@ async def create_visitor(visitor: VisitorCreate, request: Request, db: Annotated
     return await _render_visitor_table(request, db)
 
 
-@router.put("/{visitor_id}")
-async def update_visitor(visitor: VisitorUpdate, request: Request, db: Annotated["Session", Depends(get_db)]):
+@router.post("/{visitor_uid}/checkout")
+async def update_visitor(visitor_uid: str, request: Request, db: Annotated["Session", Depends(get_db)]):
     """ Update a single puzzle and re-render the table """
-    visitor = update(db, visitor)
+    _ = check_out(db, visitor_uid)
     return await _render_visitor_table(request, db)
 
 @router.get("/table")

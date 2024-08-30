@@ -42,18 +42,18 @@ async def render_puzzle_table(
     return await _render_puzzles_table(request, db)
 
 
-@router.put("/{puzzle_id}")
-async def update_puzzle(
-    puzzle: PuzzleUpdate, request: Request, db: Annotated["Session", Depends(get_db)]
+@router.put("/{puzzle_name}")
+async def update_puzzle(puzzle_name: str,
+    puzzle_in: PuzzleUpdate, request: Request, db: Annotated["Session", Depends(get_db)]
 ):
     """Update a single puzzle and re-render the table"""
-    puzzle = update(db, puzzle)
+    puzzle_in = update(db, puzzle_name, puzzle_in)
     return await _render_puzzles_table(request, db)
 
 
-@router.get("/qr/{name}")
-async def render_qr_code(name: str, request: Request):
-    qr = generate_qr_code(name)
+@router.get("/{puzzle_name}/qr")
+async def render_qr_code(puzzle_name: str, request: Request):
+    qr = generate_qr_code(puzzle_name)
 
     return templates.TemplateResponse(
         request=request, name="qr.html", context={"qr": qr}
@@ -68,6 +68,4 @@ async def _render_puzzles_table(
     return templates.TemplateResponse(
         request=request, name="puzzles_table.html", context={"puzzles": puzzles}
     )
-    return templates.TemplateResponse(
-        request=request, name="puzzles_table.html", context={"puzzles": puzzles}
-    )
+

@@ -10,7 +10,6 @@ class PuzzleCreate(BaseModel):
 
 
 class PuzzleUpdate(BaseModel):
-    id: int
     name: str | None = None
     answer: str | None = None
     active: bool | None = None

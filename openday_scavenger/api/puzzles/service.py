@@ -30,10 +30,10 @@ def create(db_session: Session, puzzle_in: PuzzleCreate):
     return puzzle
 
 
-def update(db_session: Session, puzzle_in: PuzzleUpdate):
-    update_data = puzzle_in.model_dump(exclude_unset=True)
+def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate):
+    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
 
-    puzzle = db_session.query(Puzzle).filter(Puzzle.id == update_data["id"]).first()
+    update_data = puzzle_in.model_dump(exclude_unset=True)
 
     # map the pydantic model to database model explicitly to maintain abstraction
     puzzle.name = update_data.get("name", puzzle.name)
