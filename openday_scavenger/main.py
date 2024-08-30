@@ -1,14 +1,11 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
-from pathlib import Path
-from fastapi import Request
-from fastapi.templating import Jinja2Templates
 
 
 from openday_scavenger.api.db import create_tables
 from openday_scavenger.puzzles import router as puzzle_router
-from openday_scavenger.views.game import router as game_router
+from openday_scavenger.views.game.game import router as game_router
 from openday_scavenger.views.admin import router as admin_router
 
 @asynccontextmanager
@@ -51,16 +48,6 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Include routes
+app.include_router(game_router, prefix='')
 app.include_router(admin_router, prefix='/admin')
-app.include_router(game_router, prefix='/game')
 app.include_router(puzzle_router, prefix='/puzzles')
-
-templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static/html")
-
-@app.get("/")
-async def render_root_page(request: Request):
-    """ Render root index page """
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html"
-    )
