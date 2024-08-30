@@ -27,10 +27,10 @@ async def render_puzzle_page(request: Request):
 
 @router.post("/")
 async def create_puzzle(
-    puzzle: PuzzleCreate, request: Request, db: Annotated["Session", Depends(get_db)]
+    puzzle_in: PuzzleCreate, request: Request, db: Annotated["Session", Depends(get_db)]
 ):
     """Create a new puzzle and re-render the table"""
-    puzzle = create(db, puzzle)
+    _ = create(db, puzzle_in)
     return await _render_puzzles_table(request, db)
 
 
@@ -47,7 +47,7 @@ async def update_puzzle(puzzle_name: str,
     puzzle_in: PuzzleUpdate, request: Request, db: Annotated["Session", Depends(get_db)]
 ):
     """Update a single puzzle and re-render the table"""
-    puzzle_in = update(db, puzzle_name, puzzle_in)
+    _ = update(db, puzzle_name, puzzle_in)
     return await _render_puzzles_table(request, db)
 
 

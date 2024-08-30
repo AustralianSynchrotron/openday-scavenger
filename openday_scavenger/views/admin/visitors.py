@@ -25,9 +25,9 @@ async def render_visitor_page(request: Request):
 
 
 @router.post("/")
-async def create_visitor(visitor: VisitorCreate, request: Request, db: Annotated["Session", Depends(get_db)]):
+async def create_visitor(visitor_in: VisitorCreate, request: Request, db: Annotated["Session", Depends(get_db)]):
     """Create a new visitor"""
-    visitor = create(db, visitor)
+    _ = create(db, visitor_in)
     return await _render_visitor_table(request, db)
 
 
