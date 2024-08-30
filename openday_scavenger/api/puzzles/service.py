@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from segno import make
-from slugify import slugify
 
 from openday_scavenger.api.puzzles.models import Puzzle, Response
 
@@ -65,5 +64,5 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare):
 
 
 def get_qr_code(name: str):
-    return make(f"puzzles/{slugify(name)}", error='H').svg_data_uri()
+    return make(f"puzzles/{name}", error='H').svg_data_uri()
     
