@@ -4,14 +4,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from typing_extensions import Any
 
-#from ..config import get_settings
+from openday_scavenger.config import get_settings
 
 __all__ = ("create_tables", "get_db")
 
-#config = get_settings()
-#engine = create_engine(str(config.DATABASE_URI))  # turn off thread checking for now
+config = get_settings()
 
-engine = create_engine("sqlite:///../scavenger_hunt.db", echo=True, connect_args={"check_same_thread": False})
+engine = create_engine(str(config.DATABASE_URI), echo=True, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

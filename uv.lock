@@ -268,6 +268,8 @@ dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "jinja2" },
     { name = "reportlab" },
+    { name = "pydantic-settings" },
+    { name = "python-dotenv" },
     { name = "segno" },
     { name = "sqlalchemy" },
 ]
@@ -277,6 +279,8 @@ requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.112.2" },
     { name = "jinja2", specifier = ">=3.1.4" },
     { name = "reportlab", specifier = ">=4.2.2" },
+    { name = "pydantic-settings", specifier = ">=2.4.0" },
+    { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "segno", specifier = ">=1.6.1" },
     { name = "sqlalchemy", specifier = ">=2.0.32" },
 ]
@@ -358,6 +362,19 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/5d/1f/f378631574ead46d636b9a04a80ff878b9365d4b361b1905ef1667d4182a/pydantic_core-2.20.1-cp313-cp313-musllinux_1_1_x86_64.whl", hash = "sha256:c81131869240e3e568916ef4c307f8b99583efaa60a8112ef27a366eefba8ef0", size = 2118920 },
     { url = "https://files.pythonhosted.org/packages/7a/ea/e4943f17df7a3031d709481fe4363d4624ae875a6409aec34c28c9e6cf59/pydantic_core-2.20.1-cp313-none-win32.whl", hash = "sha256:b91ced227c41aa29c672814f50dbb05ec93536abf8f43cd14ec9521ea09afe4e", size = 1717397 },
     { url = "https://files.pythonhosted.org/packages/13/63/b95781763e8d84207025071c0cec16d921c0163c7a9033ae4b9a0e020dc7/pydantic_core-2.20.1-cp313-none-win_amd64.whl", hash = "sha256:65db0f2eefcaad1a3950f498aabb4875c8890438bc80b19362cf633b87a8ab20", size = 1898013 },
+]
+
+[[package]]
+name = "pydantic-settings"
+version = "2.4.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/58/14/7bfb313ccee79f97dc235721b035174af94ef4472cfe455c259cd2971f2f/pydantic_settings-2.4.0.tar.gz", hash = "sha256:ed81c3a0f46392b4d7c0a565c05884e6e54b3456e6f0fe4d8814981172dc9a88", size = 63033 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/93/46/7f90f36c1bdcf24962d2b7b0e11aba3bbd65ea7904cb2553072882a4e6b7/pydantic_settings-2.4.0-py3-none-any.whl", hash = "sha256:bb6849dc067f1687574c12a639e231f3a6feeed0a12d710c1382045c5db1c315", size = 23996 },
 ]
 
 [[package]]
