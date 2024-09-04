@@ -16,7 +16,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
-            { fps: 10, qrbox: {width: 200, height: 200} },
+            { fps: 10, qrbox: {width: 100, height: 100} },
             false
         );
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);

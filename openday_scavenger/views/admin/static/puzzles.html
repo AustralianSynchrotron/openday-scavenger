@@ -4,6 +4,10 @@
 <div class="my-3 p-3 bg-body rounded shadow-sm">
     <h5 class="border-bottom pb-2 mb-0">Available Puzzles</h5>
      <div id="puzzle-table" hx-get="/admin/puzzles/table" hx-trigger="load" hx-swap="innerHTML"></div>
+     <a class="btn btn-primary" href="/admin/puzzles/download-pdf">
+        <i class="fa-regular fa-qrcode"></i> 
+        Download All QR Codes
+    </a>
 </div>
 
 <div class="my-3 p-3 bg-body rounded shadow-sm">

@@ -1,10 +1,6 @@
 from pydantic import BaseModel
 
 
-class VisitorCreate(BaseModel):
-    uid: str
-
-
 class VisitorUpdate(BaseModel):
     id: int
     uid: str | None = None
