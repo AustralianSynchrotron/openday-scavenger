@@ -8,7 +8,6 @@ from sqlalchemy.orm import Session
 from openday_scavenger.api.db import get_db
 
 from openday_scavenger.api.visitors.service import get_all, create, check_out
-from openday_scavenger.api.visitors.schemas import VisitorCreate
 
 router = APIRouter()
 
@@ -25,9 +24,9 @@ async def render_visitor_page(request: Request):
 
 
 @router.post("/")
-async def create_visitor(visitor_in: VisitorCreate, request: Request, db: Annotated["Session", Depends(get_db)]):
+async def create_visitor(visitor_uid: str, request: Request, db: Annotated["Session", Depends(get_db)]):
     """Create a new visitor"""
-    _ = create(db, visitor_in)
+    _ = create(db, visitor_uid)
     return await _render_visitor_table(request, db)
 
 

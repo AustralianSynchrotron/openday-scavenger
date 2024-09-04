@@ -1,17 +1,16 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
 from openday_scavenger.api.visitors.models import Visitor
-from openday_scavenger.api.visitors.schemas import VisitorCreate, VisitorUpdate
 
 
 def get_all(db_session: Session) -> list[Visitor]:
     return db_session.query(Visitor).all()
 
 
-def create(db_session: Session, visitor_in: VisitorCreate):
+def create(db_session: Session, visitor_uid: str):
 
     visitor = Visitor(
-        uid = visitor_in.uid,
+        uid = visitor_uid,
         checked_in = datetime.now()
     )
     db_session.add(visitor)
