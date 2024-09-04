@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
+from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -10,6 +11,7 @@ from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
     create,
     generate_qr_code,
+    generate_qr_codes_pdf,
     get_all,
     update,
 )
@@ -43,8 +45,11 @@ async def render_puzzle_table(
 
 
 @router.put("/{puzzle_name}")
-async def update_puzzle(puzzle_name: str,
-    puzzle_in: PuzzleUpdate, request: Request, db: Annotated["Session", Depends(get_db)]
+async def update_puzzle(
+    puzzle_name: str,
+    puzzle_in: PuzzleUpdate,
+    request: Request,
+    db: Annotated["Session", Depends(get_db)],
 ):
     """Update a single puzzle and re-render the table"""
     _ = update(db, puzzle_name, puzzle_in)
@@ -60,6 +65,17 @@ async def render_qr_code(puzzle_name: str, request: Request):
     )
 
 
+@router.get("/download-pdf")
+async def download_qr_codes(db: Annotated["Session", Depends(get_db)]):
+    pdf_io = generate_qr_codes_pdf(db)
+
+    return StreamingResponse(
+        pdf_io,
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=puzzle_qr_codes.pdf"},
+    )
+
+
 async def _render_puzzles_table(
     request: Request, db: Annotated["Session", Depends(get_db)]
 ):
@@ -68,4 +84,3 @@ async def _render_puzzles_table(
     return templates.TemplateResponse(
         request=request, name="puzzles_table.html", context={"puzzles": puzzles}
     )
-
