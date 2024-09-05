@@ -38,13 +38,13 @@ async def update_visitor(visitor_uid: str, request: Request, db: Annotated["Sess
     return await _render_visitor_table(request, db)
 
 @router.get("/table")
-async def render_visitor_table(request: Request, db: Annotated["Session", Depends(get_db)]):
+async def render_visitor_table(request: Request, db: Annotated["Session", Depends(get_db)], uid_filter: str | None = None):
     """ Render the table of visitors on the admin page """
-    return await _render_visitor_table(request, db)
+    return await _render_visitor_table(request, db, uid_filter)
 
 
-async def _render_visitor_table(request: Request, db: Annotated["Session", Depends(get_db)]):
-    visitors = get_all(db)
+async def _render_visitor_table(request: Request, db: Annotated["Session", Depends(get_db)], uid_filter: str | None = None):
+    visitors = get_all(db, uid_filter=uid_filter)
 
     return templates.TemplateResponse(
         request=request,

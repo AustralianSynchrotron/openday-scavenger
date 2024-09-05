@@ -3,8 +3,11 @@ from sqlalchemy.orm import Session
 from openday_scavenger.api.visitors.models import Visitor
 
 
-def get_all(db_session: Session) -> list[Visitor]:
-    return db_session.query(Visitor).all()
+def get_all(db_session: Session, uid_filter: str | None = None) -> list[Visitor]:
+    q = db_session.query(Visitor)
+    if uid_filter is not None:
+        q = q.filter(Visitor.uid.like(f"{uid_filter}%"))
+    return q.all()
 
 
 def create(db_session: Session, visitor_uid: str):
