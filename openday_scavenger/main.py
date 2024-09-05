@@ -1,8 +1,6 @@
-from typing import Annotated
 from pathlib import Path
-from sqlalchemy.orm import Session
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from fastapi import FastAPI, Depends, Request, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.logger import logger
 from fastapi.exception_handlers import http_exception_handler
@@ -11,10 +9,11 @@ from contextlib import asynccontextmanager
 
 from fastapi.templating import Jinja2Templates
 
-from openday_scavenger.api.db import get_db, create_tables
-from openday_scavenger.api.puzzles.models import Puzzle
+from openday_scavenger.api.db import create_tables
 from openday_scavenger.api.visitors.dependencies import auth_required
 from openday_scavenger.api.visitors.exceptions import VisitorNotAuthenticatedError
+from openday_scavenger.api.puzzles.dependencies import block_disabled_puzzles
+from openday_scavenger.api.puzzles.exceptions import UnknownPuzzleError, DisabledPuzzleError
 from openday_scavenger.puzzles import router as puzzle_router
 from openday_scavenger.views.game.game import router as game_router
 from openday_scavenger.views.admin import router as admin_router
@@ -44,26 +43,41 @@ async def visitor_auth_exception_handler(request, exc):
     return RedirectResponse("/")
 
 
+@app.exception_handler(UnknownPuzzleError)
+async def unknown_puzzle_exception_handler(request, exc):
+    """ Catch an unknown puzzle exception and render the relevant page """
+    logger.error(f'{request.url} {str(exc)}\n{exc.detail}', exc_info=exc)
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
+    return templates.TemplateResponse(
+        request=request,
+        name="404_unknown_puzzle.html"
+    )
+
+
+@app.exception_handler(DisabledPuzzleError)
+async def disabled_puzzle_exception_handler(request, exc):
+    """ Catch a disabled puzzle exception and render the relevant page """
+    logger.error(f'{request.url} {str(exc)}\n{exc.detail}', exc_info=exc)
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
+    return templates.TemplateResponse(
+        request=request,
+        name="403_disabled_puzzle.html"
+    )
+
 
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, exc):
-    ''' Catch any HTTPException and log the error '''
-    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / 'static' / 'html')
-
+    """ Catch HTTP exceptions, log the error and if it is a 404 render the 404 template """
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
     logger.error(f'{request.url} {str(exc)}\n{exc.detail}', exc_info=exc)
 
     match exc.status_code:
-        case status.HTTP_403_FORBIDDEN:
-            return templates.TemplateResponse(
-                request=request,
-                name="403.html"
-            )
         case status.HTTP_404_NOT_FOUND:
             return templates.TemplateResponse(
                 request=request,
-                name="404.html"
+                name="404_general.html"
             )
-        
+
 
     detail = exc.detail if isinstance(exc.detail, str) else exc.detail.dict()
     headers = exc.headers if hasattr(exc, 'headers') else None
@@ -75,13 +89,7 @@ async def custom_http_exception_handler(request, exc):
                                             headers=headers))
 
 
-async def block_disabled_puzzles(request: Request, db: Annotated["Session", Depends(get_db)]):
-    puzzle_name = Path(request.url.path).name
-    puzzle = db.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
-    if puzzle is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Unknown Puzzle")
-    if not puzzle.active:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Disabled Puzzle")
+
 
 
 # Mount the static folder to serve common assets
