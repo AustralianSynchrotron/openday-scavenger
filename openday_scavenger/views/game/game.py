@@ -25,7 +25,7 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 
 @router.get("/")
 async def render_root_page(request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]):
-    """ Render root index page """
+    """ Render the starting page for visitors """
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -39,7 +39,8 @@ async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(ge
 
     # Registration of a visitor means we store a new visitor entry with the supplied
     # uid in the database and "authenticate" the user by setting a cookie.
-    # If the visitor already exists, we set the Cookie regardless. This is not something
+    # If the visitor already exists, we set the Cookie regardless. This allows visitors to
+    # get their session back easily if something happened to their phone. This is not something
     # that you would do in a proper application ever! Since our visitors are anonymous
     # and are not told what their uid is, the worst case is that a visitor finds the
     # uid of another visitor and hijacks their session. If they figure that out, props
@@ -63,6 +64,7 @@ async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(ge
 
 @router.post("/submission")
 async def submit_answer(puzzle_in: PuzzleCompare, db: Annotated["Session", Depends(get_db)]):
+    """ AJAX style endpoint to submit the answer to a puzzle """
 
     if compare_answer(db, puzzle_in):
         return {"success": True}

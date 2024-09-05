@@ -58,6 +58,7 @@ def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate):
 
 def compare_answer(db_session: Session, puzzle_in: PuzzleCompare):
     puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()
+    print(f"Puzzle submitted by {puzzle_in.visitor_uid}")
 
     if puzzle_in.answer == puzzle.answer:
         return True

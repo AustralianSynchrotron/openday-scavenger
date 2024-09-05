@@ -6,6 +6,8 @@ from openday_scavenger.config import get_settings
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.visitors.models import Visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
+from .exceptions import VisitorNotAuthenticatedError
+
 
 __all__ = ["get_auth_visitor"]
 
@@ -33,3 +35,9 @@ async def get_auth_visitor(db_session: Annotated["Session", Depends(get_db)], re
     # of abstraction.
     result = VisitorAuth(uid=visitor.uid)
     return result
+
+
+async def auth_required(visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]):
+    """ Raises an exception if the visitor is not authenticated """
+    if visitor is None:
+        raise VisitorNotAuthenticatedError("Visitor is not authenticated")

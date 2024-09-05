@@ -18,5 +18,6 @@ class PuzzleUpdate(BaseModel):
 
 
 class PuzzleCompare(BaseModel):
+    visitor_uid: str
     name: str
     answer: str

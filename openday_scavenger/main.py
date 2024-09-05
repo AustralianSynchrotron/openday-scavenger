@@ -6,14 +6,15 @@ from fastapi import FastAPI, Depends, Request, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.logger import logger
 from fastapi.exception_handlers import http_exception_handler
+from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
 
 from fastapi.templating import Jinja2Templates
 
-from openday_scavenger.api.db import get_db
+from openday_scavenger.api.db import get_db, create_tables
 from openday_scavenger.api.puzzles.models import Puzzle
-
-from openday_scavenger.api.db import create_tables
+from openday_scavenger.api.visitors.dependencies import auth_required
+from openday_scavenger.api.visitors.exceptions import VisitorNotAuthenticatedError
 from openday_scavenger.puzzles import router as puzzle_router
 from openday_scavenger.views.game.game import router as game_router
 from openday_scavenger.views.admin import router as admin_router
@@ -34,6 +35,15 @@ app = FastAPI(
     openapi_url='',
     lifespan=lifespan
 )
+
+
+@app.exception_handler(VisitorNotAuthenticatedError)
+async def visitor_auth_exception_handler(request, exc):
+    """ Catch an authenticated user exception and send them to the start page """
+    logger.error(f'{request.url} {str(exc)}', exc_info=exc)
+    return RedirectResponse("/")
+
+
 
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, exc):
@@ -80,4 +90,6 @@ app.mount("/static", StaticFiles(directory=Path(__file__).resolve().parent / "st
 # Include routes
 app.include_router(game_router, prefix='')
 app.include_router(admin_router, prefix='/admin')
-app.include_router(puzzle_router, prefix='/puzzles', dependencies=[Depends(block_disabled_puzzles)])
+app.include_router(puzzle_router, prefix='/puzzles',
+                   dependencies=[Depends(block_disabled_puzzles),
+                                 Depends(auth_required)])
