@@ -17,7 +17,6 @@ from openday_scavenger.api.db import create_tables
 from openday_scavenger.puzzles import router as puzzle_router
 from openday_scavenger.views.game.game import router as game_router
 from openday_scavenger.views.admin import router as admin_router
-from .config import get_settings
 
 
 @asynccontextmanager
@@ -65,10 +64,6 @@ async def custom_http_exception_handler(request, exc):
                                             detail=detail,
                                             headers=headers))
 
-
-#@app.get("/favicon.ico", include_in_schema=False)
-#async def favicon():
-#    return FileResponse(config.API_FAVICON)
 
 async def block_disabled_puzzles(request: Request, db: Annotated["Session", Depends(get_db)]):
     puzzle_name = Path(request.url.path).name

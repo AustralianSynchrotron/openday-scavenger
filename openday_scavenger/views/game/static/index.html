@@ -24,6 +24,14 @@
     
 </script>   
 <div>
+    <div>
+        {% if visitor.uid %}
+        <p>Find some puzzles!</p>
+        {% else %}
+        <p>Please go to the registration desk</p>
+        {% endif %}
+    </div>
+    
     <div class="mx-auto" id="reader" style="width: 400px;"></div>
 </div>
 {% endblock %}
