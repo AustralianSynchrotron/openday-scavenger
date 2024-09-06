@@ -74,5 +74,18 @@ TBD
 TBD
 
 
-## Technologies
-TBD
+## Technologies and Libraries
+The scavenger hunt web application makes use of a mix of our standard libraries we use in Scientific Computing and a few new ones that we wanted to try out for a little while.
+
+| Library  | Reason |
+| -------- | ------- |
+| [uv](https://github.com/astral-sh/uv) | An extremely fast alternative to [Poetry](https://python-poetry.org). Poetry is our standard for dependency management and virtual environments, but this project provided a great opportunity to try out `uv`.
+| [FastAPI](https://github.com/fastapi/fastapi)  | Our standard web framework for all RESTful and websocket APIs. |
+| [SQLAlchemy](https://www.sqlalchemy.org)| Our standard ORM for SQL databases. |
+| [jinja2](https://jinja.palletsprojects.com) | Our standard for templating, including the rendering of web pages. |
+| [reportlab](https://docs.reportlab.com) | Our preferred library for generating PDF files. |
+| [segno](https://github.com/heuer/segno)| A QR code generator that we like. |
+| [ruff](https://github.com/astral-sh/ruff)| Our standard linter and code formatter for Python. |
+| [mypy](https://mypy-lang.org)| Our standard type checker for Python. |
+| [htmx](https://htmx.org) | We usually use [ReactJS](https://react.dev)/[NextJS](https://nextjs.org) for our web frontends. But those frameworks seemed too heavy for this project, thus we decided to give `htmx` a go for the common game and admin pages.  |
+| [Bootstrap](https://getbootstrap.com) | We use a variety of styling libraries for our web services but for this project Bootstrap was the easiest and quickest way to introduce some decently styled components. |
