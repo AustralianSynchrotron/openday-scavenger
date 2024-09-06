@@ -7,6 +7,7 @@
             <th>Location</th>
             <th>Notes</th>
             <th>QR Code</th>
+            <th>Link to Puzzle</th>
             <th></th>
         </tr>
     </thead>
@@ -26,6 +27,11 @@
             <td>
                 <a href="{{ puzzle.name }}/qr">
                     <i class="fa-regular fa-qrcode"></i> 
+                </a>
+            </td>
+            <td>
+                <a href="{{ base_url }}puzzles/{{ puzzle.name }}">
+                    <i class="fa-solid fa-link"></i>
                 </a>
             </td>
             <td>

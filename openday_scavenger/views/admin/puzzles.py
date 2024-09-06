@@ -6,6 +6,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
+from openday_scavenger.config import get_settings
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
@@ -17,7 +18,7 @@ from openday_scavenger.api.puzzles.service import (
 )
 
 router = APIRouter()
-
+config = get_settings()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static")
 
 
@@ -82,5 +83,5 @@ async def _render_puzzles_table(
     puzzles = get_all(db)
 
     return templates.TemplateResponse(
-        request=request, name="puzzles_table.html", context={"puzzles": puzzles}
+        request=request, name="puzzles_table.html", context={"puzzles": puzzles, "base_url": config.BASE_URL}
     )
