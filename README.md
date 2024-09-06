@@ -62,14 +62,92 @@ Restart the server and it will pick up the settings automatically.
 TBD
 
 
+## The Visitor Flow
+TBD
+
 ## Contribution
 TBD
 
 
 ## Add a Puzzle
-TBD
+The heart and soul of the scavenger hunt web application are its puzzles. This sections describes the process of adding a puzzle and integrating it into the user experience and administration flow.
+
+You will find a `demo` puzzle in the repository that you can use as an example or a basis for your own puzzle.
 
 
+### Step 1: The Name
+Pick a name for your puzzle. It should be one word (no whitespaces), can be a bit cryptic and needs to be unique among all puzzles. You will use the name in a few places, so coming up with a good initial name will make your life a lot easier.
+
+We will use the very creative puzzle name of `demo` to illustrate the process in the following.
+
+### Step 2: The Folder
+Create a folder under `openday_scavenger/puzzles` with your puzzle name.
+
+In our example you will find the `demo` puzzle under `openday_scavenger/puzzles/demo`
+
+### Step 3: The Core Files
+In your puzzle folder create a `__init__.py` file and a file that will host the routes for your puzzle, for instance `views.py`. You can create as many files in your folder as you like, but these two are the minimum you will need.
+
+Within your routes file define the root route for your puzzle. You can define as many additional routes as you like, but we need at least one root route.
+
+The following example doesn't implement a rendered puzzle page yet, but demonstrates the basics of a root route :
+```Python
+from fastapi import APIRouter
+
+router = APIRouter()
+
+@router.get('/')
+async def index():
+    return {"test": "test"}
+```
+
+### Step 4: Register your Puzzle Route
+In order to make your puzzle visible to the world, register its API router. Attach it to the overarching puzzle router in the file `openday_scavenger/puzzles/__init__.py`.
+
+Add an `import` and a `include_router` statement like the following to the list of puzzle routes:
+
+```Python
+from .[your puzzle name].views import router as puzzle_[your puzzle name]_router
+
+router.include_router(puzzle_[your puzzle name]_router, prefix='/[your puzzle name]')
+```
+
+### Step 5: Enable your Puzzle
+With your puzzle root route created and registered your puzzle will be available under `http://localhost:8000/puzzles/[your puzzle name]`
+
+However, when you try to browse to your puzzle, you will be greeted with a "Unknown Puzzle" error. This is because we will need to add your puzzle to the database. While this seems like an unnecessary step first, having the puzzle added to the database allows us to not only store the correct answer to the puzzle in a central place but also enables us to take puzzles with the click of a button offline in case something is not working.
+
+Browse to the puzzle administration area `http://localhost:8000/admin/puzzles` and add a your puzzle to the database by entering the name of your puzzle and click "Add new Puzzle".
+
+Then click on the "Enable" button next to your puzzle. Now when you browse to `http://localhost:8000/puzzles/[your puzzle name]` you will see your puzzle.
+
+### Step 6: Growing your Puzzle
+The steps above are only the beginning of your puzzle implementation journey. You will most likely want to serve rendered web pages, possibly dynamic content via JavaScript and more.
+
+The `demo` example in the repository uses a folder called `static` to host static assets such as the puzzle html page and jinja2 to render the page.
+
+### Step 7: Submitting a Puzzle Answer
+At some point your puzzle will need to submit the visitor's answer and display whether it is correct or not. This is accomplished by sending a `POST` request to the endpoint `/submission` with the following content encoded as `multipart/form-data`:
+
+| Key  | Value |
+|----  | ------|
+| name | The name of your puzzle |
+| visitor_uid | The uid of the visitor |
+| answer | The answer that the visitor entered |
+
+You will receive a response with the `JSON` body:
+```JSON
+{
+    "success": True
+}
+```
+if the answer was correct, or
+```JSON
+{
+    "success": False
+}
+```
+if the answer was wrong.
 
 ## Architecture
 TBD
