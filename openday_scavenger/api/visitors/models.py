@@ -19,3 +19,9 @@ class Visitor(Base):
 
     def __repr__(self) -> str:
         return f"Visitor(id={self.id!r}, uid={self.uid!r})"
+
+
+class VisitorPool(Base):
+    __tablename__ = "visitor_pool"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uid: Mapped[str] = mapped_column(String(6), index=True, unique=True)

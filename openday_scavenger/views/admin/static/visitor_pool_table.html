@@ -1,0 +1,21 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>UID</th>
+            <th>Register</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for uid in visitor_pool_uids %}
+        <tr>
+            <td>{{ uid }}</td>
+            <td>
+                <a href="{{ base_url }}register/{{ uid }}">
+                    <i class="fa-solid fa-user-plus"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    
