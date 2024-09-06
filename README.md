@@ -70,12 +70,13 @@ TBD
 TBD
 
 
+
 ## Architecture
 TBD
 
 
 ## Technologies and Libraries
-The scavenger hunt web application makes use of a mix of our standard libraries we use in Scientific Computing and a few new ones that we wanted to try out for a little while.
+The scavenger hunt web application makes use of a mix of our standard libraries that we use in Scientific Computing and a few new ones that we wanted to try out.
 
 | Library  | Reason |
 | -------- | ------- |
@@ -88,4 +89,5 @@ The scavenger hunt web application makes use of a mix of our standard libraries 
 | [ruff](https://github.com/astral-sh/ruff)| Our standard linter and code formatter for Python. |
 | [mypy](https://mypy-lang.org)| Our standard type checker for Python. |
 | [htmx](https://htmx.org) | We usually use [ReactJS](https://react.dev)/[NextJS](https://nextjs.org) for our web frontends. But those frameworks seemed too heavy for this project, thus we decided to give `htmx` a go for the common game and admin pages.  |
+| [html5-qrcode](https://github.com/mebjas/html5-qrcode)| The QR scanner JavaScript library. This one seemed to work nicely and was least out of date of all the available QR scanner libraries. |
 | [Bootstrap](https://getbootstrap.com) | We use a variety of styling libraries for our web services but for this project Bootstrap was the easiest and quickest way to introduce some decently styled components. |
