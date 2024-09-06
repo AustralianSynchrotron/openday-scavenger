@@ -1,21 +1,55 @@
 from io import BytesIO
-
+from datetime import datetime
 from segno import make_qr
 from sqlalchemy.orm import Session
 
-from openday_scavenger.api.puzzles.models import Puzzle
+from openday_scavenger.api.puzzles.models import Puzzle, Response
+from openday_scavenger.api.visitors.models import Visitor
 
 from .schemas import PuzzleCompare, PuzzleCreate, PuzzleUpdate
+from .exceptions import (PuzzleCreationError,
+                         PuzzleUpdatedError,
+                         PuzzleNotFoundError)
 
 
 def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
+    """ Return all puzzles in the database, optionally only the active ones """
+    
+    # Construct the database query dynamically, taking into account
+    # whether only active puzzles should be returned.
     q = db_session.query(Puzzle)
+
     if only_active:
         q = q.filter(Puzzle.active)
+
     return q.all()
 
 
-def create(db_session: Session, puzzle_in: PuzzleCreate):
+def get_all_responses(db_session: Session, *,
+                      filter_by_puzzle_name: str | None = None,
+                      filter_by_visitor_uid: str | None = None) -> list[Response]:
+    """ Return all puzzle responses in the database with optional filtering """
+    
+    # Construct the database query dynamically. If the result needs to be filtered
+    # by the first letters of the puzzle name or visitor uid, join the tables first
+    # before applying the filter. We use ilike here, so the filter is case-insensitive.
+    q = db_session.query(Response)
+    
+    if (filter_by_puzzle_name is not None) and (filter_by_puzzle_name != ""):
+        q = q.join(Response.puzzle).filter(Puzzle.name.ilike(f"{filter_by_puzzle_name}%"))
+    
+    if (filter_by_visitor_uid is not None) and (filter_by_visitor_uid != ""):
+        q = q.join(Response.visitor).filter(Visitor.uid.ilike(f"{filter_by_visitor_uid}%"))
+
+    return q.all()
+
+
+def create(db_session: Session, puzzle_in: PuzzleCreate) -> Puzzle:
+    """ Create a new puzzle entry in the database and return the entry """
+    
+    # Create the database model object and pass in the pydantic schema values
+    # explicitly. This maintains a nice abstraction between the service layer
+    # and the database layer.
     puzzle = Puzzle(
         name=puzzle_in.name,
         answer=puzzle_in.answer,
@@ -24,46 +58,78 @@ def create(db_session: Session, puzzle_in: PuzzleCreate):
         notes=puzzle_in.notes,
     )
 
-    db_session.add(puzzle)
-
+    # Attempt adding the entry to the database. If it fails, roll back.
     try:
+        db_session.add(puzzle)
         db_session.commit()
     except:
         db_session.rollback()
-        raise
+        raise PuzzleCreationError(f"Failed to create the puzzle {puzzle_in.name}")
 
     return puzzle
 
 
-def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate):
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
+def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate) -> Puzzle:
+    """ Update a puzzle entry in the database and return the updated entry """
 
+    # Find the puzzle that should be updated in the database
+    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
+    if puzzle is None:
+        raise PuzzleNotFoundError(f"A puzzle with the name {puzzle_name} could not be found in the database")
+
+    # We transform the input data which contains the fields with the new values
+    # to a dictionary and in the process filter out any fields that have not been explicitly set.
+    # This means any field in the pydantic model that has either not been touched or
+    # has been assigned the default value is ignored.
     update_data = puzzle_in.model_dump(exclude_unset=True)
 
-    # map the pydantic model to database model explicitly to maintain abstraction
+    # We map the pydantic model to the database model explicitly in order to maintain abstraction.
     puzzle.name = update_data.get("name", puzzle.name)
     puzzle.active = update_data.get("active", puzzle.active)
     puzzle.answer = update_data.get("answer", puzzle.answer)
     puzzle.location = update_data.get("location", puzzle.location)
     puzzle.notes = update_data.get("notes", puzzle.notes)
 
+    # Attempt modifying the entry in the database. If it fails, roll back.
     try:
+        db_session.commit()
+    except:
+        db_session.rollback()
+        raise PuzzleUpdatedError(f"Failed to update the puzzle {puzzle_name}")
+
+    return puzzle
+
+
+def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
+    """ Compare the provided answer with the stored answer and return whether it is correct """
+
+    # Get the database models for the puzzle so we can perform the answer comparison.
+    # Also get the database model for the visitor so we can record who submitted the answer in the reponse table.
+    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()
+    visitor = db_session.query(Visitor).filter(Visitor.uid == puzzle_in.visitor_uid).first()
+
+    # We compare the provided answer with the stored answer. Currently this is a very simple
+    # case sensitive string comparison. We can add more complicated comparison modes here later.
+    is_correct = (puzzle_in.answer == puzzle.answer)
+
+    # Create a new response entry and store it in the database
+    response = Response(
+        visitor=visitor,
+        puzzle=puzzle,
+        answer=puzzle_in.answer,
+        is_correct=is_correct,
+        created_at=datetime.now()
+    )
+
+    # Attempt adding the entry to the database. If it fails, roll back.
+    try:
+        db_session.add(response)
         db_session.commit()
     except:
         db_session.rollback()
         raise
 
-    return puzzle
-
-
-def compare_answer(db_session: Session, puzzle_in: PuzzleCompare):
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()
-    print(f"Puzzle submitted by {puzzle_in.visitor_uid}")
-
-    if puzzle_in.answer == puzzle.answer:
-        return True
-    else:
-        return False
+    return is_correct
 
 
 def generate_qr_code(name: str, as_file_buff: bool = False) -> str | BytesIO:
