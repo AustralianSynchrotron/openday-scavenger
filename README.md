@@ -8,7 +8,7 @@ During the Open Day a visitor is guided through the following steps:
 1. The visitor registers at the registration desk by scanning a personalised QR code with their phone's camera or a QR scanner app. The code directs them to the scavenger hunt web application, generates an anonymous session and registers them in the application's database.
 2. The visitor explores the facility and keeps an eye out for QR codes. If they find a QR code, they scan it with the scavenger hunt web application. The puzzle is displayed in the application.
 3. The visitor solves the puzzle and enters their answer into the web application. The answer is compared with the correct answer stored in the database and they receive immediate feedback in the web application.
-4. Once the visitor has solved all puzzles, they return to the registration desk and pick up their price.
+4. Once the visitor has solved all puzzles, they return to the registration desk and pick up their prize.
 
 
 ## Installation
@@ -115,7 +115,7 @@ router.include_router(puzzle_[your puzzle name]_router, prefix='/[your puzzle na
 ### Step 5: Enable your Puzzle
 With your puzzle root route created and registered your puzzle will be available under `http://localhost:8000/puzzles/[your puzzle name]`
 
-However, when you try to browse to your puzzle, you will be greeted with a "Unknown Puzzle" error. This is because we will need to add your puzzle to the database. While this seems like an unnecessary step first, having the puzzle added to the database allows us to not only store the correct answer to the puzzle in a central place but also enables us to take puzzles with the click of a button offline in case something is not working.
+However, when you try to browse to your puzzle, you will be greeted with a "Unknown Puzzle" error. This is because we will need to add your puzzle to the database. While this seems like an unnecessary step first, having the puzzle added to the database allows us to not only store the correct answer to the puzzle in a central place but also enables us to take puzzles offline with the click of a button in case something is not working.
 
 Browse to the puzzle administration area `http://localhost:8000/admin/puzzles` and add a your puzzle to the database by entering the name of your puzzle and click "Add new Puzzle".
 
