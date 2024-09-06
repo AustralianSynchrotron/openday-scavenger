@@ -30,6 +30,8 @@ async def get_auth_visitor(db_session: Annotated["Session", Depends(get_db)], re
     # here, but use the visitor identity table directly. This is not something you
     # would do in a proper system, but for our purpose this is acceptable.
     visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
+    if visitor is None:
+        return None
 
     # Cast the database model to a pydantic schema, so we maintain a little bit
     # of abstraction.

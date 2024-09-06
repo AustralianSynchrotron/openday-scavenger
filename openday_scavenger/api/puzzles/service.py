@@ -1,9 +1,10 @@
 from io import BytesIO
-
+from datetime import datetime
 from segno import make_qr
 from sqlalchemy.orm import Session
 
-from openday_scavenger.api.puzzles.models import Puzzle
+from openday_scavenger.api.puzzles.models import Puzzle, Response
+from openday_scavenger.api.visitors.models import Visitor
 
 from .schemas import PuzzleCompare, PuzzleCreate, PuzzleUpdate
 
@@ -56,14 +57,35 @@ def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate):
     return puzzle
 
 
-def compare_answer(db_session: Session, puzzle_in: PuzzleCompare):
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()
-    print(f"Puzzle submitted by {puzzle_in.visitor_uid}")
+def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
+    """ Compare the provided answer with the stored answer and return whether it is correct """
 
-    if puzzle_in.answer == puzzle.answer:
-        return True
-    else:
-        return False
+    # Get the database models for the puzzle so we can perform the answer comparison.
+    # Also get the database model for the visitor so we can record who submitted the answer in the reponse table.
+    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()
+    visitor = db_session.query(Visitor).filter(Visitor.uid == puzzle_in.visitor_uid).first()
+
+    # We compare the provided answer with the stored answer. Currently this is a very simple
+    # case sensitive string comparison. We can add more complicated comparison modes here later.
+    is_correct = (puzzle_in.answer == puzzle.answer)
+
+    # Create a new response entry and store it in the database
+    response = Response(
+        visitor=visitor,
+        puzzle=puzzle,
+        answer=puzzle_in.answer,
+        is_correct=is_correct,
+        created_at=datetime.now()
+    )
+
+    try:
+        db_session.add(response)
+        db_session.commit()
+    except:
+        db_session.rollback()
+        raise
+
+    return is_correct
 
 
 def generate_qr_code(name: str, as_file_buff: bool = False) -> str | BytesIO:
