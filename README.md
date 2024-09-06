@@ -124,7 +124,7 @@ Then click on the "Enable" button next to your puzzle. Now when you browse to `h
 ### Step 6: Growing your Puzzle
 The steps above are only the beginning of your puzzle implementation journey. You will most likely want to serve rendered web pages, possibly dynamic content via JavaScript and more.
 
-The `demo` example in the repository uses a folder called `static` to host static assets such as the puzzle html page and jinja2 to render the page.
+The `demo` example in the repository uses a folder called `static` to host static assets such as the puzzle html page and jinja2 to render the page. Feel free to use this code as a starting point for your own puzzle.
 
 ### Step 7: Submitting a Puzzle Answer
 At some point your puzzle will need to submit the visitor's answer and display whether it is correct or not. This is accomplished by sending a `POST` request to the endpoint `/submission` with the following content encoded as `multipart/form-data`:
@@ -132,22 +132,32 @@ At some point your puzzle will need to submit the visitor's answer and display w
 | Key  | Value |
 |----  | ------|
 | name | The name of your puzzle |
-| visitor_uid | The uid of the visitor |
+| visitor_uid | The uid of the visitor submitting the answer |
 | answer | The answer that the visitor entered |
 
-You will receive a response with the `JSON` body:
+While the name of the puzzle and the answer is easy to collect, the visitor uid is a bit more complicated. You get the visitor uid from the authenticated visitor using the `get_auth_visitor` dependency:
+```Python
+from typing import Annotated
+from fastapi import APIRouter, Request, Depends
+
+from openday_scavenger.api.visitors.schemas import VisitorAuth
+from openday_scavenger.api.visitors.dependencies import get_auth_visitor
+
+
+router = APIRouter()
+
+@router.get('/')
+async def index(request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]):
+    pass
+```
+
+After you made the request you will receive a response with the `JSON` body containing a boolean value indicating whether the asnwer was correct or not:
 ```JSON
 {
     "success": True
 }
 ```
-if the answer was correct, or
-```JSON
-{
-    "success": False
-}
-```
-if the answer was wrong.
+
 
 ## Architecture
 TBD
