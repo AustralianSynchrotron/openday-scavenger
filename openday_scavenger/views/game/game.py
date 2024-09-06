@@ -13,7 +13,7 @@ from openday_scavenger.api.db import get_db
 from openday_scavenger.api.visitors.service import create as create_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
-from openday_scavenger.api.visitors.exceptions import VisitorExistsError
+from openday_scavenger.api.visitors.exceptions import VisitorExistsError, VisitorUIDInvalid
 from openday_scavenger.api.puzzles.service import compare_answer
 from openday_scavenger.api.puzzles.schemas import PuzzleCompare
 
@@ -37,7 +37,8 @@ async def render_root_page(request: Request, visitor: Annotated[VisitorAuth | No
 async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(get_db)]):
     """ Register a new visitor and set the authentication cookie """
 
-    # Registration of a visitor means we store a new visitor entry with the supplied
+    # Registration of a visitor means we check if the uid is available in the visitor pool, and if so
+    # we pop that uid out of the pool and store a new visitor entry with the supplied
     # uid in the database and "authenticate" the user by setting a cookie.
     # If the visitor already exists, we set the Cookie regardless. This allows visitors to
     # get their session back easily if something happened to their phone. This is not something
@@ -48,6 +49,8 @@ async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(ge
     try:
         _ = create_visitor(db, visitor_uid)
     except VisitorExistsError:
+        pass
+    except VisitorUIDInvalid:
         pass
 
     # Authenticate the visitor.
