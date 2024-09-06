@@ -9,3 +9,7 @@ class VisitorUpdate(BaseModel):
     checked_in: str | None = None
     checked_out: str | None = None
     check_out: bool | None = None
+
+
+class VisitorAuth(BaseModel):
+    uid: str

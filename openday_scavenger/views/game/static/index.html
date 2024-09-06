@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
+{% if visitor %}
 <script>
     function onScanSuccess(decodedText, decodedResult) {
     // handle the scanned code as you like, for example:
@@ -23,7 +25,16 @@
     }, false);
     
 </script>   
+{% endif %}
+
 <div>
-    <div class="mx-auto" id="reader" style="width: 400px;"></div>
+    <div>
+        {% if visitor %}
+        <p>Find some puzzles!</p>
+        <div class="mx-auto" id="reader" style="width: 400px;"></div>
+        {% else %}
+        <p>Please go to the registration desk</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
