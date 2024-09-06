@@ -16,4 +16,3 @@ class VisitorAuth(BaseModel):
 
 class VisitorPoolCreate(BaseModel):
     number_of_entries: int = 100
-    length_of_uid: int = 6

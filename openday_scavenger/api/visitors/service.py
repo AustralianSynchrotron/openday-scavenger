@@ -76,7 +76,4 @@ def get_visitor_pool(db_session: Session, number_of_entries: int = 10):
         id for (id,) in db_session.query(VisitorPool.uid).limit(number_of_entries)
     }
     return existing_uuids
-    existing_uuids = {
-        id for (id,) in db_session.query(VisitorPool.uid).limit(number_of_entries)
-    }
-    return existing_uuids
+
