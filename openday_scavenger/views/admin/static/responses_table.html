@@ -1,0 +1,28 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Puzzle</th>
+            <th>Visitor</th>
+            <th>Answer</th>
+            <th>Correct</th>
+            <th>Created at</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for response in responses %}
+        <tr>
+            <td>{{ response.puzzle.name }}</td>
+            <td>{{ response.visitor.uid }}</td>
+            <td>{{ response.answer }}</td>
+            <td>{% if response.is_correct %}
+                <span class="badge text-bg-success">Yes</span>
+                {% else %}
+                <span class="badge text-bg-danger">No</span>
+                {% endif %}
+            </td>
+            <td>{{ response.created_at.strftime("%H:%M") }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
