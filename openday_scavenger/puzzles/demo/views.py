@@ -23,7 +23,8 @@ async def get_static_files(
     # https://github.com/fastapi/fastapi/discussions/9070
     parent_path = Path(__file__).resolve().parent / "static"
     file_path = parent_path / path
-#        ## Make sure no files outside spa_app_path are requested
+
+    # Make sure the requested path is a file and relative to this path
     if file_path.is_relative_to(parent_path) and file_path.is_file():
         return FileResponse(file_path)
     else:

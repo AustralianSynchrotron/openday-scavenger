@@ -75,6 +75,13 @@ The heart and soul of the scavenger hunt web application are its puzzles. This s
 You will find a `demo` puzzle in the repository that you can use as an example or a basis for your own puzzle.
 
 
+### Step 0: Preparation
+The web application uses a simple Cookie-based session management to track visitors. This system is a little bit annoying when developing new puzzles. We recommend to turn it off during development by adding the following parameter to your `.env` file:
+```
+SESSIONS_ENABLED="false"
+```
+
+
 ### Step 1: The Name
 Pick a name for your puzzle. It should be one word (no whitespaces), can be a bit cryptic and needs to be unique among all puzzles. You will use the name in a few places, so coming up with a good initial name will make your life a lot easier.
 
