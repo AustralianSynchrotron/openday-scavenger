@@ -18,6 +18,6 @@ class PuzzleUpdate(BaseModel):
 
 
 class PuzzleCompare(BaseModel):
-    visitor_uid: str
+    visitor: str | None
     name: str
     answer: str

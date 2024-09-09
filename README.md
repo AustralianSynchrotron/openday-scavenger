@@ -131,8 +131,8 @@ At some point your puzzle will need to submit the visitor's answer and display w
 
 | Key  | Value |
 |----  | ------|
+| visitor | The uid of the visitor submitting the answer |
 | name | The name of your puzzle |
-| visitor_uid | The uid of the visitor submitting the answer |
 | answer | The answer that the visitor entered |
 
 While the name of the puzzle and the answer is easy to collect, the visitor uid is a bit more complicated. You get the visitor uid from the authenticated visitor using the `get_auth_visitor` dependency:

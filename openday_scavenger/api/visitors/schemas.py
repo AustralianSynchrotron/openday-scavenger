@@ -14,7 +14,7 @@ class VisitorUpdate(BaseModel):
 
 
 class VisitorAuth(BaseModel):
-    uid: str
+    uid: str | None
 
 
 class VisitorPoolCreate(BaseModel):
