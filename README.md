@@ -66,7 +66,11 @@ TBD
 TBD
 
 ## Contribution
-TBD
+We would be delighted to receive contributions, especially in the form of puzzles. Please note that we are preparing for the Open Day 2024 and thus will only be able to accept contributions from Australian Synchrotron facility staff at this point in time.
+
+All contributions are done via Pull Requests (PR). You can either fork the repository and send a PR through or create a branch in the upstream repository and send a merge request via PR. In both cases, please create a branch starting with your initials and a few words about the main work topics. For example `am-puzzle-admin-edit-fields`.
+
+For the Pull Request please request either Andreas or Stephen as a reviewer.
 
 
 ## Add a Puzzle
@@ -164,6 +168,12 @@ After you made the request you will receive a response with the `JSON` body cont
     "success": True
 }
 ```
+
+The reason for storing the correct answer in the database is twofold:
+- we don't want to reveal the correct answer in the source dode
+- we can quickly fix an incorrect answer by modifying the database entry
+
+> For the time being the application only supports a case-sensitive, direct string comparison. If you need a more complex comparison method, such as a fuzzy comparison mode or computational methods (e.g. Levenshtein distance), please let Andreas or Stephen know.
 
 
 ## Architecture
