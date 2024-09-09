@@ -12,8 +12,12 @@ from .models import Puzzle
 
 async def block_disabled_puzzles(request: Request, db: Annotated["Session", Depends(get_db)]):
     """Dependency that prevents access to unknown or disabled puzzle endpoints"""
-    # Use the pthlib library to deconstruct the url and get the final path component
-    puzzle_name = Path(request.url.path).name
+    # Use the pathlib library to deconstruct the url and find the name of the puzzle
+    try:
+        path_parts = Path(request.url.path).parts
+        puzzle_name = path_parts[path_parts.index("puzzles") + 1]
+    except ValueError:
+        raise UnknownPuzzleError(status_code=status.HTTP_404_NOT_FOUND, detail="Unknown Puzzle")
 
     # Look up the puzzle in the database. If the puzzle has not been registered in the database
     # raise an unknown puzzle exception. If it has been disabled raise the disabled puzzle exception.
