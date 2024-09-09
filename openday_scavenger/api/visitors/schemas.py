@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 
+
 class VisitorCreate(BaseModel):
     uid: str
+
 
 class VisitorUpdate(BaseModel):
     id: int
@@ -13,6 +15,7 @@ class VisitorUpdate(BaseModel):
 
 class VisitorAuth(BaseModel):
     uid: str
+
 
 class VisitorPoolCreate(BaseModel):
     number_of_entries: int = 100

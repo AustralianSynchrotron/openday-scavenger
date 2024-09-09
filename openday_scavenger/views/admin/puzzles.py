@@ -6,7 +6,6 @@ from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from openday_scavenger.config import get_settings
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
@@ -16,6 +15,7 @@ from openday_scavenger.api.puzzles.service import (
     get_all,
     update,
 )
+from openday_scavenger.config import get_settings
 
 router = APIRouter()
 config = get_settings()
@@ -38,9 +38,7 @@ async def create_puzzle(
 
 
 @router.get("/table")
-async def render_puzzle_table(
-    request: Request, db: Annotated["Session", Depends(get_db)]
-):
+async def render_puzzle_table(request: Request, db: Annotated["Session", Depends(get_db)]):
     """Render the table of puzzles on the admin page"""
     return await _render_puzzles_table(request, db)
 
@@ -61,9 +59,7 @@ async def update_puzzle(
 async def render_qr_code(puzzle_name: str, request: Request):
     qr = generate_qr_code(puzzle_name)
 
-    return templates.TemplateResponse(
-        request=request, name="qr.html", context={"qr": qr}
-    )
+    return templates.TemplateResponse(request=request, name="qr.html", context={"qr": qr})
 
 
 @router.get("/download-pdf")
@@ -77,11 +73,11 @@ async def download_qr_codes(db: Annotated["Session", Depends(get_db)]):
     )
 
 
-async def _render_puzzles_table(
-    request: Request, db: Annotated["Session", Depends(get_db)]
-):
+async def _render_puzzles_table(request: Request, db: Annotated["Session", Depends(get_db)]):
     puzzles = get_all(db)
 
     return templates.TemplateResponse(
-        request=request, name="puzzles_table.html", context={"puzzles": puzzles, "base_url": config.BASE_URL}
+        request=request,
+        name="puzzles_table.html",
+        context={"puzzles": puzzles, "base_url": config.BASE_URL},
     )

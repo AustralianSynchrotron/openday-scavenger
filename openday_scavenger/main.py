@@ -53,9 +53,7 @@ async def visitor_auth_exception_handler(request, exc):
 async def visitor_uid_invalid_exception_handler(request, exc):
     """Catch an invalid uid"""
     logger.error(f"{request.url} {str(exc)}", exc_info=exc)
-    templates = Jinja2Templates(
-        directory=Path(__file__).resolve().parent / "static" / "html"
-    )
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
     return templates.TemplateResponse(request=request, name="404_invalid_uid.html")
 
 
@@ -63,9 +61,7 @@ async def visitor_uid_invalid_exception_handler(request, exc):
 async def unknown_puzzle_exception_handler(request, exc):
     """Catch an unknown puzzle exception and render the relevant page"""
     logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
-    templates = Jinja2Templates(
-        directory=Path(__file__).resolve().parent / "static" / "html"
-    )
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
     return templates.TemplateResponse(request=request, name="404_unknown_puzzle.html")
 
 
@@ -73,18 +69,14 @@ async def unknown_puzzle_exception_handler(request, exc):
 async def disabled_puzzle_exception_handler(request, exc):
     """Catch a disabled puzzle exception and render the relevant page"""
     logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
-    templates = Jinja2Templates(
-        directory=Path(__file__).resolve().parent / "static" / "html"
-    )
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
     return templates.TemplateResponse(request=request, name="403_disabled_puzzle.html")
 
 
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, exc):
     """Catch HTTP exceptions, log the error and if it is a 404 render the 404 template"""
-    templates = Jinja2Templates(
-        directory=Path(__file__).resolve().parent / "static" / "html"
-    )
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
     logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
 
     match exc.status_code:

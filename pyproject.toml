@@ -21,3 +21,14 @@ build-backend = "hatchling.build"
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+
+[tool.uv]
+dev-dependencies = [
+    "mypy>=1.11.2",
+    "pyright>=1.1.379",
+    "ruff>=0.6.4",
+]
+
+[tool.ruff]
+line-length = 100
+lint.extend-select = ["I"]
