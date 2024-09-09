@@ -21,7 +21,7 @@ async def get_auth_visitor(
     """Dependency that returns an authenticated visitor"""
     # If the session management is enabled, either return a VisitorAuth object with
     # the authenticated visitor, or None if the visitor is not authenticated.
-    # If the session management is disabled, return a VisitorAuth object with 
+    # If the session management is disabled, return a VisitorAuth object with
     # the visitor uid set to None, in order to indicate that the system is turned off.
     if not config.SESSIONS_ENABLED:
         return VisitorAuth(uid=None)

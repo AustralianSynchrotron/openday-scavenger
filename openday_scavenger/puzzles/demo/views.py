@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
@@ -28,8 +28,10 @@ async def get_static_files(
     if file_path.is_relative_to(parent_path) and file_path.is_file():
         return FileResponse(file_path)
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Requested file does not exist")
-    
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Requested file does not exist"
+        )
+
 
 @router.get("/")
 async def index(
