@@ -16,7 +16,7 @@ class Visitor(Base):
     checked_in: Mapped[datetime] = mapped_column()
     checked_out: Mapped[datetime | None] = mapped_column(nullable=True, default=None)
 
-    responses: Mapped[List["Response"]] = relationship(back_populates="visitor")  # noqa F821
+    responses: Mapped[List["Response"]] = relationship(back_populates="visitor")  # noqa F821 # type: ignore
 
     def __repr__(self) -> str:
         return f"Visitor(id={self.id!r}, uid={self.uid!r})"

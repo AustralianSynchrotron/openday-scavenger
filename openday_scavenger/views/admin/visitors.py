@@ -48,10 +48,13 @@ async def update_visitor(
 
 @router.get("/table")
 async def render_visitor_table(
-    request: Request, db: Annotated["Session", Depends(get_db)], uid_filter: str | None = None
+    request: Request,
+    db: Annotated["Session", Depends(get_db)],
+    uid_filter: str | None = None,
+    still_playing: bool | None = None,
 ):
     """Render the table of visitors on the admin page"""
-    return await _render_visitor_table(request, db, uid_filter)
+    return await _render_visitor_table(request, db, uid_filter, still_playing)
 
 
 @router.post("/pool")
@@ -73,9 +76,12 @@ async def render_visitor_pool_table(
 
 
 async def _render_visitor_table(
-    request: Request, db: Annotated["Session", Depends(get_db)], uid_filter: str | None = None
+    request: Request,
+    db: Annotated["Session", Depends(get_db)],
+    uid_filter: str | None = None,
+    still_playing: bool | None = None,
 ):
-    visitors = get_all(db, uid_filter=uid_filter)
+    visitors = get_all(db, uid_filter=uid_filter, still_playing=still_playing)
 
     return templates.TemplateResponse(
         request=request,
