@@ -8,10 +8,14 @@ from .models import Visitor, VisitorPool
 from .schemas import VisitorPoolCreate
 
 
-def get_all(db_session: Session, uid_filter: str | None = None) -> list[Visitor]:
+def get_all(
+    db_session: Session, uid_filter: str | None = None, still_playing: bool | None = None
+) -> list[Visitor]:
     q = db_session.query(Visitor)
     if uid_filter is not None:
         q = q.filter(Visitor.uid.like(f"{uid_filter}%"))
+    if still_playing is not None:
+        q = q.filter(Visitor.checked_out == None)  # noqa E711
     return q.all()
 
 

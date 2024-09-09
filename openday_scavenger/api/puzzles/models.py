@@ -35,7 +35,7 @@ class Response(Base):
     is_correct: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[datetime] = mapped_column()
 
-    visitor: Mapped["Visitor"] = relationship(back_populates="responses")  # noqa F821
+    visitor: Mapped["Visitor"] = relationship(back_populates="responses")  # noqa F821 # type: ignore
     puzzle: Mapped["Puzzle"] = relationship(back_populates="responses")
 
     def __repr__(self) -> str:
