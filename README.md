@@ -49,13 +49,13 @@ uv sync
 ```
 
 ##### Setup a pre-commit hook
-These instructions use `uvx` for running pre-commit. This is not the only viable method (an alternative is e.g., `pipx`)
+These instructions describe using `uvx` to run [pre-commit](https://pre-commit.com/). `pre-commit` is a tool to setup pre-commit `git` hooks. This is not the only viable method (an alternative is e.g., `pipx`)
 
-Install pre-commit as a `uv` tool:
+Install `pre-commit` as a `uv` tool:
 ```
 uv tool install pre-commit
 ```
-This installs pre-commit in its own, persistent, environment so that it can be used for any project.
+This installs `pre-commit` in its own, persistent, virtual environment so that it can be used for any project.
 
 `cd` to the repo and run:
 ```
@@ -68,7 +68,7 @@ Finally, to test, run the hook against all the files:
 uvx pre-commit run --all-files
 ```
 
-Now whenever a commit is made the `ruff` will format any changed files, and run a linter and import sorter.
+Now whenever a commit is made `ruff` will format, lint, and sort imports, for any changed files.
 
 #### Run the Application
 Run the web application using its internal development server with:
