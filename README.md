@@ -49,7 +49,7 @@ uv sync
 ```
 
 ##### Setup a pre-commit hook
-These instructions describe using `uvx` to run [pre-commit](https://pre-commit.com/). `pre-commit` is a tool to setup pre-commit `git` hooks. This is not the only viable method (an alternative is e.g., `pipx`)
+These instructions describe using `uvx` to run [pre-commit](https://pre-commit.com/). `pre-commit` is a tool to configure pre-commit `git` hooks. `uvx` is not the only viable method to run `pre-commit` (an alternative is e.g., `pipx`)
 
 Install `pre-commit` as a `uv` tool:
 ```
