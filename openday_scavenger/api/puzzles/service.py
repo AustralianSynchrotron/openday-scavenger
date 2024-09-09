@@ -1,20 +1,19 @@
-from io import BytesIO
 from datetime import datetime
+from io import BytesIO
+
 from segno import make_qr
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.puzzles.models import Puzzle, Response
 from openday_scavenger.api.visitors.models import Visitor
 
+from .exceptions import PuzzleCreationError, PuzzleNotFoundError, PuzzleUpdatedError
 from .schemas import PuzzleCompare, PuzzleCreate, PuzzleUpdate
-from .exceptions import (PuzzleCreationError,
-                         PuzzleUpdatedError,
-                         PuzzleNotFoundError)
 
 
 def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
-    """ Return all puzzles in the database, optionally only the active ones """
-    
+    """Return all puzzles in the database, optionally only the active ones"""
+
     # Construct the database query dynamically, taking into account
     # whether only active puzzles should be returned.
     q = db_session.query(Puzzle)
@@ -25,19 +24,22 @@ def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
     return q.all()
 
 
-def get_all_responses(db_session: Session, *,
-                      filter_by_puzzle_name: str | None = None,
-                      filter_by_visitor_uid: str | None = None) -> list[Response]:
-    """ Return all puzzle responses in the database with optional filtering """
-    
+def get_all_responses(
+    db_session: Session,
+    *,
+    filter_by_puzzle_name: str | None = None,
+    filter_by_visitor_uid: str | None = None,
+) -> list[Response]:
+    """Return all puzzle responses in the database with optional filtering"""
+
     # Construct the database query dynamically. If the result needs to be filtered
     # by the first letters of the puzzle name or visitor uid, join the tables first
     # before applying the filter. We use ilike here, so the filter is case-insensitive.
     q = db_session.query(Response)
-    
+
     if (filter_by_puzzle_name is not None) and (filter_by_puzzle_name != ""):
         q = q.join(Response.puzzle).filter(Puzzle.name.ilike(f"{filter_by_puzzle_name}%"))
-    
+
     if (filter_by_visitor_uid is not None) and (filter_by_visitor_uid != ""):
         q = q.join(Response.visitor).filter(Visitor.uid.ilike(f"{filter_by_visitor_uid}%"))
 
@@ -45,8 +47,8 @@ def get_all_responses(db_session: Session, *,
 
 
 def create(db_session: Session, puzzle_in: PuzzleCreate) -> Puzzle:
-    """ Create a new puzzle entry in the database and return the entry """
-    
+    """Create a new puzzle entry in the database and return the entry"""
+
     # Create the database model object and pass in the pydantic schema values
     # explicitly. This maintains a nice abstraction between the service layer
     # and the database layer.
@@ -62,7 +64,7 @@ def create(db_session: Session, puzzle_in: PuzzleCreate) -> Puzzle:
     try:
         db_session.add(puzzle)
         db_session.commit()
-    except:
+    except Exception:
         db_session.rollback()
         raise PuzzleCreationError(f"Failed to create the puzzle {puzzle_in.name}")
 
@@ -70,12 +72,14 @@ def create(db_session: Session, puzzle_in: PuzzleCreate) -> Puzzle:
 
 
 def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate) -> Puzzle:
-    """ Update a puzzle entry in the database and return the updated entry """
+    """Update a puzzle entry in the database and return the updated entry"""
 
     # Find the puzzle that should be updated in the database
     puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
     if puzzle is None:
-        raise PuzzleNotFoundError(f"A puzzle with the name {puzzle_name} could not be found in the database")
+        raise PuzzleNotFoundError(
+            f"A puzzle with the name {puzzle_name} could not be found in the database"
+        )
 
     # We transform the input data which contains the fields with the new values
     # to a dictionary and in the process filter out any fields that have not been explicitly set.
@@ -93,7 +97,7 @@ def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate) -> Pu
     # Attempt modifying the entry in the database. If it fails, roll back.
     try:
         db_session.commit()
-    except:
+    except Exception:
         db_session.rollback()
         raise PuzzleUpdatedError(f"Failed to update the puzzle {puzzle_name}")
 
@@ -101,7 +105,7 @@ def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate) -> Pu
 
 
 def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
-    """ Compare the provided answer with the stored answer and return whether it is correct """
+    """Compare the provided answer with the stored answer and return whether it is correct"""
 
     # Get the database models for the puzzle so we can perform the answer comparison.
     # Also get the database model for the visitor so we can record who submitted the answer in the reponse table.
@@ -110,7 +114,7 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
 
     # We compare the provided answer with the stored answer. Currently this is a very simple
     # case sensitive string comparison. We can add more complicated comparison modes here later.
-    is_correct = (puzzle_in.answer == puzzle.answer)
+    is_correct = puzzle_in.answer == puzzle.answer
 
     # Create a new response entry and store it in the database
     response = Response(
@@ -118,7 +122,7 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
         puzzle=puzzle,
         answer=puzzle_in.answer,
         is_correct=is_correct,
-        created_at=datetime.now()
+        created_at=datetime.now(),
     )
 
     # Attempt adding the entry to the database. If it fails, roll back.

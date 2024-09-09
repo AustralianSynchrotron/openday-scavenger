@@ -1,8 +1,9 @@
 from fastapi import APIRouter
+
 from .admin import router as admin_router
 from .puzzles import router as puzzle_router
-from .visitors import router as visitor_router
 from .responses import router as response_router
+from .visitors import router as visitor_router
 
 router = APIRouter()
 

@@ -24,9 +24,7 @@ def create(db_session: Session, visitor_uid: str) -> Visitor:
         raise VisitorExistsError(f"Visitor {visitor.uid} already exists")
 
     # Check if the UID is available in the visitor pool
-    visitor_pool = (
-        db_session.query(VisitorPool).filter(VisitorPool.uid == visitor_uid).first()
-    )
+    visitor_pool = db_session.query(VisitorPool).filter(VisitorPool.uid == visitor_uid).first()
     if visitor_pool is None:
         raise VisitorUIDInvalidError(f"UID {visitor_uid} not in visitor pool")
 
@@ -72,8 +70,5 @@ def create_visitor_pool(db_session: Session, pool_in: VisitorPoolCreate):
 
 
 def get_visitor_pool(db_session: Session, number_of_entries: int = 10):
-    existing_uuids = {
-        id for (id,) in db_session.query(VisitorPool.uid).limit(number_of_entries)
-    }
+    existing_uuids = {id for (id,) in db_session.query(VisitorPool.uid).limit(number_of_entries)}
     return existing_uuids
-
