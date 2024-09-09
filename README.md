@@ -18,6 +18,17 @@ The web application is written in Python, the language of choice for the Scienti
 This is the quickest and easiest method to run the scavenger hunt web application. It uses a local database and demonstrates the power of virtual environments for local Python development.
 
 #### Setup
+##### Get the source
+Currently there is no released version of the project, therefore the first step is to clone the repo:
+
+```
+git clone git@github.com:AustralianSynchrotron/openday-scavenger.git  # Using ssh key (preferred)
+or
+git clone https://github.com/AustralianSynchrotron/openday-scavenger.git # Using https with username/password credentials
+```
+If testing the application, use the `main` branch.
+
+##### Install dependencies
 The web application makes use of [`uv`](https://github.com/astral-sh/uv) for installing dependencies and creating the virtual environment.
 
 If you don't have `uv` installed yet, get it on Linux with:
