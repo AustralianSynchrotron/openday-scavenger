@@ -19,6 +19,12 @@ async def get_auth_visitor(
     db_session: Annotated["Session", Depends(get_db)], request: Request
 ) -> VisitorAuth | None:
     """Dependency that returns an authenticated visitor"""
+    # If the session management is enabled, either return a VisitorAuth object with
+    # the authenticated visitor, or None if the visitor is not authenticated.
+    # If the session management is disabled, return a VisitorAuth object with
+    # the visitor uid set to None, in order to indicate that the system is turned off.
+    if not config.SESSIONS_ENABLED:
+        return VisitorAuth(uid=None)
 
     # Get the visitor uid from the cookie directly. As we make the Cookie name
     # configurable, we can't use the Cookie dependency injection but get it from
@@ -44,5 +50,5 @@ async def get_auth_visitor(
 
 async def auth_required(visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]):
     """Raises an exception if the visitor is not authenticated"""
-    if visitor is None:
+    if (config.SESSIONS_ENABLED) and (visitor is None):
         raise VisitorNotAuthenticatedError("Visitor is not authenticated")

@@ -37,8 +37,10 @@ class Settings(BaseSettings):
     DATABASE_USER: str | None = None
     DATABASE_PASSWORD: str | None = None
 
-    COOKIE_KEY: str = "SYNCOD_SESSION"
+    COOKIE_KEY: str = "SYNOD_SESSION"
     COOKIE_MAX_AGE: int = 86400  # in seconds: 24 hours = 86400 seconds
+
+    SESSIONS_ENABLED: bool = True
 
     model_config = SettingsConfigDict(env_file=".env")
 

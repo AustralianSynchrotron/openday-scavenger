@@ -107,11 +107,3 @@ app.include_router(
     prefix="/puzzles",
     dependencies=[Depends(block_disabled_puzzles), Depends(auth_required)],
 )
-# Include routes
-app.include_router(game_router, prefix="")
-app.include_router(admin_router, prefix="/admin")
-app.include_router(
-    puzzle_router,
-    prefix="/puzzles",
-    dependencies=[Depends(block_disabled_puzzles), Depends(auth_required)],
-)

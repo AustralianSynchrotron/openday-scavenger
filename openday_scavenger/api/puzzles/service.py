@@ -6,9 +6,12 @@ from sqlalchemy.orm import Session
 
 from openday_scavenger.api.puzzles.models import Puzzle, Response
 from openday_scavenger.api.visitors.models import Visitor
+from openday_scavenger.config import get_settings
 
 from .exceptions import PuzzleCreationError, PuzzleNotFoundError, PuzzleUpdatedError
 from .schemas import PuzzleCompare, PuzzleCreate, PuzzleUpdate
+
+config = get_settings()
 
 
 def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
@@ -108,30 +111,34 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
     """Compare the provided answer with the stored answer and return whether it is correct"""
 
     # Get the database models for the puzzle so we can perform the answer comparison.
-    # Also get the database model for the visitor so we can record who submitted the answer in the reponse table.
     puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()
-    visitor = db_session.query(Visitor).filter(Visitor.uid == puzzle_in.visitor_uid).first()
 
     # We compare the provided answer with the stored answer. Currently this is a very simple
     # case sensitive string comparison. We can add more complicated comparison modes here later.
     is_correct = puzzle_in.answer == puzzle.answer
 
-    # Create a new response entry and store it in the database
-    response = Response(
-        visitor=visitor,
-        puzzle=puzzle,
-        answer=puzzle_in.answer,
-        is_correct=is_correct,
-        created_at=datetime.now(),
-    )
+    # If the session management is turned off, skip the creation and storage
+    # of a response as it is connected to a visitor uid.
+    if config.SESSIONS_ENABLED:
+        # Get the database model for the visitor so we can record who submitted the answer in the response table.
+        visitor = db_session.query(Visitor).filter(Visitor.uid == puzzle_in.visitor).first()
 
-    # Attempt adding the entry to the database. If it fails, roll back.
-    try:
-        db_session.add(response)
-        db_session.commit()
-    except:
-        db_session.rollback()
-        raise
+        # Create a new response entry and store it in the database
+        response = Response(
+            visitor=visitor,
+            puzzle=puzzle,
+            answer=puzzle_in.answer,
+            is_correct=is_correct,
+            created_at=datetime.now(),
+        )
+
+        # Attempt adding the entry to the database. If it fails, roll back.
+        try:
+            db_session.add(response)
+            db_session.commit()
+        except:
+            db_session.rollback()
+            raise
 
     return is_correct
 
