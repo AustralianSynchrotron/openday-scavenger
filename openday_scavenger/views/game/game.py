@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -66,7 +66,7 @@ async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(ge
 
 
 @router.post("/submission")
-async def submit_answer(puzzle_in: PuzzleCompare, db: Annotated["Session", Depends(get_db)]):
+async def submit_answer(puzzle_in: Annotated[PuzzleCompare, Form()], db: Annotated["Session", Depends(get_db)]):
     """AJAX style endpoint to submit the answer to a puzzle"""
 
     if compare_answer(db, puzzle_in):
