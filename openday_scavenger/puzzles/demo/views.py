@@ -40,5 +40,5 @@ async def index(
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"puzzle_id": "demo", "visitor_uid": visitor.uid},
+        context={"puzzle": "demo", "visitor": visitor.uid},
     )
