@@ -14,6 +14,7 @@ from openday_scavenger.api.puzzles.dependencies import block_disabled_puzzles
 from openday_scavenger.api.puzzles.exceptions import (
     DisabledPuzzleError,
     UnknownPuzzleError,
+    PuzzleCompletedError
 )
 from openday_scavenger.api.visitors.dependencies import auth_required
 from openday_scavenger.api.visitors.exceptions import (
@@ -71,6 +72,14 @@ async def disabled_puzzle_exception_handler(request, exc):
     logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
     templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
     return templates.TemplateResponse(request=request, name="403_disabled_puzzle.html")
+
+
+@app.exception_handler(PuzzleCompletedError)
+async def completed_puzzle_exception_handler(request, exc):
+    """Catch a completed puzzle exception and render the relevant page"""
+    logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
+    return templates.TemplateResponse(request=request, name="410_completed_puzzle.html")
 
 
 @app.exception_handler(StarletteHTTPException)
