@@ -4,6 +4,7 @@
             <th>UID</th>
             <th>Checked In</th>
             <th>Checked Out</th>
+            <th>Correct</th>
             <th>Still Playing</th>
             <th>Play Time (m)</th>
             <th>Checkout</th>
@@ -11,11 +12,12 @@
         </tr>
     </thead>
     <tbody>
-        {% for visitor in visitors %}
+        {% for visitor, correct in visitors %}
         <tr>
             <td>{{ visitor.uid }}</td>
             <td>{{ visitor.checked_in.strftime("%H:%M") }}</td>
             <td>{{ visitor.checked_out.strftime("%H:%M") if visitor.checked_out}}</td>
+            <td>{{ correct }}</td>
             <td>{% if visitor.checked_out %}
                 <span class="badge text-bg-secondary">Finished</span>
                 {% else %}
