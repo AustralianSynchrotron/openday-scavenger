@@ -32,14 +32,32 @@
 <body>
     <div class="puzzle">
         <h1>Synchrotron Question Puzzle</h1>
-        <p><strong>Question:</strong> Which part of the synchrotron is responsible for accelerating particles to near light speed?</p>
-        <ul class="options">
-            <li>Booster</li>
-            <li>Beamline</li>
-            <li>Detector</li>
-            <li>Storage Ring</li>
-        </ul>
-        <p class="hint"><strong>Hint:</strong> It's where particles gain most of their energy.</p>
+        <form action="/puzzles/synchrotron_question/submit" method="post">
+            <p><strong>Question:</strong> Which part of the synchrotron is responsible for accelerating particles to near light speed?</p>
+            <ul class="options">
+                <li><input type="radio" name="answer" value="Booster" id="booster"><label for="booster">Booster</label></li>
+                <li><input type="radio" name="answer" value="Beamline" id="beamline"><label for="beamline">Beamline</label></li>
+                <li><input type="radio" name="answer" value="Detector" id="detector"><label for="detector">Detector</label></li>
+                <li><input type="radio" name="answer" value="Storage Ring" id="storage_ring"><label for="storage_ring">Storage Ring</label></li>
+            </ul>
+            <p class="hint"><strong>Hint:</strong> It's where particles gain most of their energy.</p>
+            <button type="submit">Submit Answer</button>
+        </form>
+        <p id="feedback"></p>
     </div>
+    <script>
+        // Handle form submission
+        document.querySelector('form').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+            const formData = new FormData(event.target);
+            const response = await fetch('/puzzles/synchrotron_question/submit', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            // Display feedback message
+            document.getElementById('feedback').textContent = result.message;
+        });
+    </script>
 </body>
 </html>
