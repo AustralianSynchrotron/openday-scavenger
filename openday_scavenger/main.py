@@ -10,11 +10,14 @@ from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from openday_scavenger.api.db import create_tables
-from openday_scavenger.api.puzzles.dependencies import block_disabled_puzzles
+from openday_scavenger.api.puzzles.dependencies import (
+    block_correctly_answered_puzzle,
+    block_disabled_puzzles,
+)
 from openday_scavenger.api.puzzles.exceptions import (
     DisabledPuzzleError,
+    PuzzleCompletedError,
     UnknownPuzzleError,
-    PuzzleCompletedError
 )
 from openday_scavenger.api.visitors.dependencies import auth_required
 from openday_scavenger.api.visitors.exceptions import (
@@ -114,5 +117,9 @@ app.include_router(admin_router, prefix="/admin")
 app.include_router(
     puzzle_router,
     prefix="/puzzles",
-    dependencies=[Depends(block_disabled_puzzles), Depends(auth_required)],
+    dependencies=[
+        Depends(block_disabled_puzzles),
+        Depends(block_correctly_answered_puzzle),
+        Depends(auth_required),
+    ],
 )

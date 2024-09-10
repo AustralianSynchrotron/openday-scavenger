@@ -75,7 +75,7 @@ async def submit_answer(
     responses = get_all_responses(
         db, filter_by_puzzle_name=puzzle_in.name, filter_by_visitor_uid=puzzle_in.visitor
     )
-    
+
     if any([response.is_correct for response in responses]):
         return {"success": True}  # TODO: Need to handle this better. A specific return code.
 
