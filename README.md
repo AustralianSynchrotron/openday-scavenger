@@ -48,6 +48,28 @@ Install all the dependencies inside a virtual environment with:
 uv sync
 ```
 
+##### Setup a pre-commit hook
+These instructions describe using `uvx` to run [pre-commit](https://pre-commit.com/). `pre-commit` is a tool to configure pre-commit `git` hooks. `uvx` is not the only viable method to run `pre-commit` (an alternative is e.g., `pipx`)
+
+Install `pre-commit` as a `uv` tool:
+```
+uv tool install pre-commit
+```
+This installs `pre-commit` in its own, persistent, virtual environment so that it can be used for any project.
+
+`cd` to the repo and run:
+```
+uvx pre-commit install
+```
+This installs the pre-commit hook in `.git/hooks`.
+
+Finally, to test, run the hook against all the files:
+```
+uvx pre-commit run --all-files
+```
+
+Now whenever a commit is made `ruff` will format, lint, and sort imports, for any changed files.
+
 #### Run the Application
 Run the web application using its internal development server with:
 ```
