@@ -1,7 +1,10 @@
 from datetime import datetime
 from uuid import uuid4
 
-from sqlalchemy.orm import Session
+from sqlalchemy import Integer, and_, cast, func
+from sqlalchemy.orm import Query, Session
+
+from openday_scavenger.api.puzzles.models import Response
 
 from .exceptions import VisitorExistsError, VisitorUIDInvalidError
 from .models import Visitor, VisitorPool
@@ -12,10 +15,63 @@ def get_all(
     db_session: Session, uid_filter: str | None = None, still_playing: bool | None = None
 ) -> list[Visitor]:
     q = db_session.query(Visitor)
+
+    return _filter(q).all()
+
+
+def _filter(
+    query: Query, uid_filter: str | None = None, still_playing: bool | None = None
+) -> Query:
+    """
+    Applies filters to the provided SQLAlchemy query.
+
+    Args:
+        query (Query): The base query to apply filters to.
+        uid_filter (str, optional): A string to filter visitors by their UID (prefix match).
+        still_playing (bool, optional): Whether to filter for visitors who are still playing (checked_out is None).
+
+    Returns:
+        Query: The filtered query object.
+    """
+
+    filters = []
     if uid_filter is not None:
-        q = q.filter(Visitor.uid.like(f"{uid_filter}%"))
-    if still_playing is not None:
-        q = q.filter(Visitor.checked_out == None)  # noqa E711
+        filters.append(Visitor.uid.like(f"{uid_filter}%"))
+    if still_playing:
+        filters.append(
+            Visitor.checked_out.is_(None)
+        )  # Use .is_(None) for NULL comparison  # Filter for visitors who are still playing
+
+    if filters:
+        query = query.filter(and_(*filters))
+
+    return query
+
+
+def get_all_with_stats(
+    db_session: Session, uid_filter: str | None = None, still_playing: bool | None = None
+) -> list[tuple[Visitor, int]]:
+    """
+    Retrieves all visitors with their correct answer count from the database, applying filters if provided.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        uid_filter (str, optional): A string to filter visitors by their UID (prefix match).
+        still_playing (bool, optional): Whether to filter for visitors who are still playing (checked_out is None).
+
+    Returns:
+        list[VisitorWithAnswers]: A list of VisitorWithAnswers objects, containing visitor data and correct answer count.
+    """
+
+    q = _filter(db_session.query(Visitor), uid_filter, still_playing)
+    q = (
+        q.outerjoin(Response, Visitor.id == Response.visitor_id)
+        .group_by(Visitor.uid)
+        .with_entities(
+            Visitor, func.sum(cast(Response.is_correct, Integer)).label("correct_answers")
+        )
+    )
+
     return q.all()
 
 
