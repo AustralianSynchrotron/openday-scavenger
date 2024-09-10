@@ -170,7 +170,7 @@ After you made the request you will receive a response with the `JSON` body cont
 ```
 
 The reason for storing the correct answer in the database is twofold:
-- we don't want to reveal the correct answer in the source dode
+- we don't want to reveal the correct answer in the source code
 - we can quickly fix an incorrect answer by modifying the database entry
 
 > For the time being the application only supports a case-sensitive, direct string comparison. If you need a more complex comparison method, such as a fuzzy comparison mode or computational methods (e.g. Levenshtein distance), please let Andreas or Stephen know.
