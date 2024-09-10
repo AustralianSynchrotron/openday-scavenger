@@ -163,3 +163,5 @@ cython_debug/
 
 #  Don't commit any sqlite db files
 *.db
+
+.devcontainer/

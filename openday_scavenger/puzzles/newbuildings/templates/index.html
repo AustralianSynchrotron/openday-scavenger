@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Count the New Buildings - Australian Synchrotron Open Day 2024</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+      rel="stylesheet">
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+    <script>
+      window.onload = (event) => {
+        document.body.addEventListener('htmx:beforeSwap', function(evt) {
+        if (!evt)
+        {
+          return ;
+        }
+        if(evt.detail.xhr.status === 404){
+            // alert the user when a 404 occurs (maybe use a nicer mechanism than alert())
+            alert("Error: Could Not Find Resource");
+        } else if(evt.detail.xhr.status === 422){
+            // allow 422 responses to swap as we are using this as a signal that
+            // a form was submitted with bad data and want to rerender with the
+            // errors
+            //
+            // set isError to false to avoid error logging in console
+            evt.detail.shouldSwap = true;
+            evt.detail.isError = false;
+        } else if(evt.detail.xhr.status === 418){
+            // if the response code 418 (I'm a teapot) is returned, retarget the
+            // content of the response to the element with the id `teapot`
+            evt.detail.shouldSwap = true;
+            evt.detail.target = htmx.find("#teapot");
+        }else if(evt.detail.xhr.status === 200){
+            // if the response code 418 (I'm a teapot) is returned, retarget the
+            // content of the response to the element with the id `teapot`
+            evt.detail.shouldSwap = false;
+            evt.detail.target = htmx.find("#response");
+            const success = JSON.parse(evt.detail.serverResponse).success;
+            if(success)
+            {
+              document.getElementById("response").innerText="Congratulations! The answer is correct!";
+            }
+            else
+            {
+              document.getElementById("response").innerText="Oops! The answer is incorrect!";
+            }
+            
+            console.log("Find",evt)
+        }
+    });
+    };
+    
+    </script>
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link href="static/styles.css" rel="stylesheet">
+</head>
+<body>
+
+
+<div class="container">
+  <!-- <div class="title-container">count differences</div> -->
+   <h1 class="title">Count the New Buildings! 🔍</h1>
+
+   <div class="instructions">
+    <p>Below are 2 overlooking photos of the Synchrotron taken from 2019 and 2024.</p>
+    <p>How many <b>new buildings</b> can you find between them? 👀 Enter your answer at the bottom of this page! 👇</p>
+   </div>
+
+  <hr class="solid">
+  
+  <div class="grid">
+    <div class="grid-item"><img src="static/left.png" ></div>
+    <div class="grid-item"><img src="static/right.png" ></div>
+  </div>
+  
+  <hr class="solid">
+  
+  <form id='form' class="form" hx-encoding='multipart/form-data' hx-post='/submission' hx-target="#response"  >
+    <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+    <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+
+    <label class="form-label">
+      Answer:
+      <input class="form-input" type="text" required pattern="[1-9]\d{0,5}" title="Positive integer only"
+        placeholder="Enter your answer here..." name="answer" aria-describedby="input-help_text">
+    </label>
+
+    <p class="form-help_text" id="input-help_text">(Please only enter positive integers!)</p>
+    
+    <button class="form-button" type="submit">✈ Submit</button>
+  </form>
+
+  <div id="response" >
+  </div>
+
+</div>
+</body>
+</html>
+
+
