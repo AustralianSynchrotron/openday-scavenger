@@ -42,5 +42,5 @@ class Response(Base):
         return (
             f"Response("
             f"id={self.id!r}, visitor={self.visitor_id!r}, puzzle={self.puzzle_id!r},"
-            f"answer={self.answer!r}, correct={self.correct!r})"
+            f"answer={self.answer!r}, correct={self.is_correct!r})"
         )
