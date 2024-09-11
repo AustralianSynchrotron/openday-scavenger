@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
+from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
@@ -10,6 +10,7 @@ from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 router = APIRouter()
 
+# Set up the Jinja2 template directory
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static")
 
 
@@ -18,6 +19,7 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 async def get_static_files(
     path: Path,
 ):
+    """Serve files from a local static folder"""
     parent_path = Path(__file__).resolve().parent / "static"
     file_path = parent_path / path
 
@@ -41,23 +43,25 @@ async def index(
     )
 
 
-# Handle the submission of answers
-@router.post("/submit")
+@router.post("/submission")
 async def submit_answer(
-    request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)], answer: str
+    visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)],
+    request: Request,
+    answer: str = Form(...),
 ):
-    if not visitor:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Visitor not authenticated"
-        )
+    correct_answer = "Storage Ring"
 
-    # Define the correct answer
-    CORRECT_ANSWER = "Storage Ring"
-
-    # Check if the provided answer is correct
-    if answer == CORRECT_ANSWER:
+    if answer == correct_answer:
         message = "Correct! You've found the answer!"
     else:
-        message = "Incorrect, try again!"
+        message = "Incorrect, try again."
 
-    return JSONResponse(content={"message": message})
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "puzzle": "synchrotron_question",
+            "visitor": visitor.uid,
+            "message": message,
+        },
+    )

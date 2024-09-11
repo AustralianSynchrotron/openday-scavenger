@@ -1,63 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synchrotron Question Puzzle</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .puzzle {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .hint {
-            font-style: italic;
-            color: #666;
-        }
-        .options {
-            list-style-type: none;
-            padding: 0;
-        }
-        .options li {
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="puzzle">
+<html>
+    <head>
+        <script src="/static/js/htmx.min.js"></script>
+        <script src="/static/js/json-enc.js"></script>
+        
+        <link href="/static/synchrotron_question.css" rel="stylesheet">
+        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    </head>
+    <body>
         <h1>Synchrotron Question Puzzle</h1>
-        <form action="/puzzles/synchrotron_question/submit" method="post">
-            <p><strong>Question:</strong> Which part of the synchrotron is responsible for accelerating particles to near light speed?</p>
+        
+        <p><strong>Question:</strong> Which part of the synchrotron is responsible for accelerating particles to near light speed?</p>
+        
+        <form id='form' hx-encoding='multipart/form-data' hx-post='/submission'>
+            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+            <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+
+            <!-- Multiple choice options -->
             <ul class="options">
                 <li><input type="radio" name="answer" value="Booster" id="booster"><label for="booster">Booster</label></li>
                 <li><input type="radio" name="answer" value="Beamline" id="beamline"><label for="beamline">Beamline</label></li>
                 <li><input type="radio" name="answer" value="Detector" id="detector"><label for="detector">Detector</label></li>
                 <li><input type="radio" name="answer" value="Storage Ring" id="storage_ring"><label for="storage_ring">Storage Ring</label></li>
             </ul>
+
             <p class="hint"><strong>Hint:</strong> It's where particles gain most of their energy.</p>
+
             <button type="submit">Submit Answer</button>
         </form>
-        <p id="feedback"></p>
-    </div>
-    <script>
-        // Handle form submission
-        document.querySelector('form').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent the default form submission
-            const formData = new FormData(event.target);
-            const response = await fetch('/puzzles/synchrotron_question/submit', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
-            // Display feedback message
-            document.getElementById('feedback').textContent = result.message;
-        });
-    </script>
-</body>
+
+        <!-- Feedback message -->
+        <p id="feedback">{{ message }}</p>
+    </body>
 </html>
