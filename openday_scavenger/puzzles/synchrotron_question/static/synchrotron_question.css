@@ -1,3 +1,81 @@
+/* Set a light gray background color for the entire page */
 body {
-    background-color: LightSteelBlue;
+    background-color: #f8f9fa; /* Light gray background */
+    font-family: Arial, sans-serif; /* Use a clean sans-serif font */
+}
+
+/* Style the main card that holds the form, with a white background and rounded corners */
+.card {
+    background-color: #fff; /* White background for the card */
+    border-radius: 10px; /* Slightly rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+/* Center the heading and apply blue color to match the primary color */
+h1 {
+    color: #007bff; /* Bootstrap's primary color (blue) */
+    font-weight: 600; /* Make the heading bold */
+}
+
+/* Add margin to the bottom of the form check (radio button labels) */
+.form-check {
+    margin-bottom: 15px; /* Space between each radio button */
+}
+
+/* Style the labels of the radio buttons */
+.form-check-label {
+    font-size: 18px; /* Make the labels larger */
+    padding-left: 10px; /* Add some padding between the radio button and label */
+}
+
+/* Style the hint text with a lighter color and italics */
+.hint {
+    color: #6c757d; /* Bootstrap's muted text color */
+    font-style: italic; /* Italicize the hint text */
+    font-size: 16px; /* Slightly smaller font size */
+}
+
+/* Style the submit button */
+button[type="submit"] {
+    background-color: #007bff; /* Blue background for the button */
+    color: white; /* White text color */
+    padding: 10px 20px; /* Add padding to the button */
+    border-radius: 5px; /* Slightly rounded corners */
+    border: none; /* Remove the default button border */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+/* Add hover effect to the submit button */
+button[type="submit"]:hover {
+    background-color: #0056b3; /* Darker blue when hovered */
+}
+
+/* Style the feedback message */
+#feedback {
+    margin-top: 20px; /* Add some space above the feedback message */
+    font-size: 18px; /* Make the feedback text larger */
+    text-align: center; /* Center the feedback text */
+}
+
+/* Style for success feedback messages */
+.alert-success {
+    background-color: #d4edda; /* Light green background for success */
+    color: #155724; /* Dark green text for success */
+}
+
+/* Style for failure feedback messages */
+.alert-danger {
+    background-color: #f8d7da; /* Light red background for failure */
+    color: #721c24; /* Dark red text for failure */
+}
+
+/* Add a small margin to the top of the container */
+.container {
+    margin-top: 30px; /* Space between the top of the page and the container */
+}
+
+/* Style for the favicon, ensuring it appears in the tab */
+#favicon {
+    width: 16px;
+    height: 16px;
 }
