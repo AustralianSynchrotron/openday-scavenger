@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
@@ -40,28 +40,4 @@ async def index(
         request=request,
         name="index.html",
         context={"puzzle": "synchrotron_question", "visitor": visitor.uid},
-    )
-
-
-@router.post("/submission")
-async def submit_answer(
-    visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)],
-    request: Request,
-    answer: str = Form(...),
-):
-    correct_answer = "Storage Ring"
-
-    if answer == correct_answer:
-        message = "Correct! You've found the answer!"
-    else:
-        message = "Incorrect, try again."
-
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "puzzle": "synchrotron_question",
-            "visitor": visitor.uid,
-            "message": message,
-        },
     )
