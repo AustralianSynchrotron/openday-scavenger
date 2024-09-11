@@ -1,27 +1,20 @@
 <html>
     <head>
-        <!-- Bootstrap CSS for styling -->
+        <!-- Bootstrap CSS for responsive design -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/static/synchrotron_question.css" rel="stylesheet">
+        <link href="static/synchrotron_question.css" rel="stylesheet">
         <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
     </head>
     <body>
-        <!-- Container to center the content and add padding -->
-        <div class="container mt-5">
-            <!-- Card to add a shadow effect to the form -->
-            <div class="card shadow-lg p-4">
-                <h1 class="text-center">Synchrotron Question Puzzle</h1>
-                
-                <!-- Main question with lead text style -->
+        <div class="container">
+            <div class="card">
+                <h1>Synchrotron Question Puzzle</h1>
                 <p class="lead text-center"><strong>Question:</strong> Which part of the synchrotron is responsible for accelerating particles to near light speed?</p>
                 
-                <!-- Form for submitting answers -->
                 <form id="form" hx-encoding="multipart/form-data" hx-post="/submission" class="text-center">
-                    <!-- Hidden fields to store puzzle and visitor information -->
                     <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
                     <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
                     
-                    <!-- Multiple choice options with Bootstrap form-check for styling -->
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="answer" value="Booster" id="booster">
                         <label class="form-check-label" for="booster">Booster</label>
@@ -39,35 +32,28 @@
                         <label class="form-check-label" for="storage_ring">Storage Ring</label>
                     </div>
                     
-                    <!-- Hint section to give users a clue -->
-                    <p class="mt-3"><strong>Hint:</strong> It's where particles gain most of their energy.</p>
-
-                    <!-- Submit button styled with Bootstrap -->
-                    <button type="submit" class="btn btn-primary btn-lg mt-3">Submit Answer</button>
+                    <p class="hint mt-3"><strong>Hint:</strong> It's where particles gain most of their energy.</p>
+                    <button type="submit" class="btn btn-primary btn-lg">Submit Answer</button>
                 </form>
 
-                <!-- Feedback message placeholder; message from the backend will be displayed here -->
-                <p id="feedback" class="mt-4 text-center alert alert-info">{{ message }}</p>
+                <!-- <p id="feedback" class="mt-4 text-center alert alert-info">{{ message }}</p> -->
             </div>
         </div>
 
-        <!-- Bootstrap JS for interactive components -->
+        <!-- Bootstrap JS and other dependencies -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        
-        <!-- JS for form handling -->
         <script src="/static/js/htmx.min.js"></script>
         <script src="/static/js/json-enc.js"></script>
 
-        <!-- JavaScript to automatically hide the feedback message after 3 seconds -->
+        <!-- Auto-hide feedback message -->
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                // Hide feedback after 3 seconds
                 setTimeout(function() {
                     var feedback = document.getElementById("feedback");
                     if (feedback && feedback.textContent.trim() !== "") {
-                        feedback.style.display = "none";  // Hide feedback message
+                        feedback.style.display = "none";
                     }
-                }, 3000);  // 3000 ms = 3 seconds
+                }, 3000);
             });
         </script>
     </body>
