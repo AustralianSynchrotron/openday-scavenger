@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import uuid4
 
-from sqlalchemy import Integer, and_, cast, func
+from sqlalchemy import Integer, Row, and_, cast, func
 from sqlalchemy.orm import Query, Session
 
 from openday_scavenger.api.puzzles.models import Response
@@ -50,7 +50,7 @@ def _filter(
 
 def get_all_with_stats(
     db_session: Session, uid_filter: str | None = None, still_playing: bool | None = None
-) -> list[tuple[Visitor, int]]:
+) -> list[Row[tuple[Visitor, int]]]:
     """
     Retrieves all visitors with their correct answer count from the database, applying filters if provided.
 
