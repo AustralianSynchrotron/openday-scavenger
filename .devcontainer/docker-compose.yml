@@ -18,7 +18,6 @@ services:
       - DATABASE_NAME=postgres
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
-      - SESSIONS_ENABLED=false
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
