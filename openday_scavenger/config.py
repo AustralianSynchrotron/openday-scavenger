@@ -10,7 +10,7 @@ __all__ = ["get_settings"]
 
 
 # Type definitions for the database systems and URIs the application supports
-Allowed_DB_Types = Literal["sqlite", "postgresql"]
+Allowed_DB_Types = Literal["sqlite", "postgresql+psycopg2"]
 
 DatabaseDsn = Annotated[
     MultiHostUrl,
