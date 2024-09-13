@@ -11,14 +11,6 @@ from .models import Visitor, VisitorPool
 from .schemas import VisitorPoolCreate
 
 
-def get_all(
-    db_session: Session, uid_filter: str | None = None, still_playing: bool | None = None
-) -> list[Visitor]:
-    q = db_session.query(Visitor)
-
-    return _filter(q).all()
-
-
 def _filter(
     query: Query, uid_filter: str | None = None, still_playing: bool | None = None
 ) -> Query:
@@ -48,8 +40,11 @@ def _filter(
     return query
 
 
-def get_all_with_stats(
-    db_session: Session, uid_filter: str | None = None, still_playing: bool | None = None
+def get_all(
+    db_session: Session,
+    uid_filter: str | None = None,
+    still_playing: bool | None = None,
+    with_stats: bool | None = False,
 ) -> list[Row[tuple[Visitor, int]]]:
     """
     Retrieves all visitors with their correct answer count from the database, applying filters if provided.
@@ -64,13 +59,15 @@ def get_all_with_stats(
     """
 
     q = _filter(db_session.query(Visitor), uid_filter, still_playing)
-    q = (
-        q.outerjoin(Response, Visitor.id == Response.visitor_id)
-        .group_by(Visitor.uid)
-        .with_entities(
-            Visitor, func.sum(cast(Response.is_correct, Integer)).label("correct_answers")
+
+    if with_stats:
+        q = (
+            q.outerjoin(Response, Visitor.id == Response.visitor_id)
+            .group_by(Visitor.uid)
+            .with_entities(
+                Visitor, func.sum(cast(Response.is_correct, Integer)).label("correct_answers")
+            )
         )
-    )
 
     return q.all()
 
