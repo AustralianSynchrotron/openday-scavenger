@@ -45,7 +45,7 @@ def get_all(
     uid_filter: str | None = None,
     still_playing: bool | None = None,
     with_stats: bool | None = False,
-) -> list[Row[tuple[Visitor, int]]]:
+) -> list[Visitor | Row[tuple[Visitor, int]]]:
     """
     Retrieves all visitors with their correct answer count from the database, applying filters if provided.
 
@@ -53,9 +53,11 @@ def get_all(
         db_session (Session): The SQLAlchemy session object.
         uid_filter (str, optional): A string to filter visitors by their UID (prefix match).
         still_playing (bool, optional): Whether to filter for visitors who are still playing (checked_out is None).
-
+        with_stats (bool, optional): Whether to provide playing statistics in response.
     Returns:
-        list[VisitorWithAnswers]: A list of VisitorWithAnswers objects, containing visitor data and correct answer count.
+        List[Union[Visitor, tuple[Visitor, int]]]:
+            - If with_stats is False: a list of Visitor objects
+            - If with_stats is True: a list of tuples containing Visitor data and correct answer count.
     """
 
     q = _filter(db_session.query(Visitor), uid_filter, still_playing)
@@ -69,7 +71,7 @@ def get_all(
             )
         )
 
-    return q.all()
+    return q.all()  # type: ignore
 
 
 def create(db_session: Session, visitor_uid: str) -> Visitor:
