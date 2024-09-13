@@ -94,7 +94,7 @@ Restart the server and it will pick up the settings automatically.
 ### Option 2: Use devcontainers (with VSCode)
 If you would like a setup which is similar to a real production environment, use the provided [devcontainer](https://containers.dev). It uses a proper PostgreSQL database server instead of sqlite.
 
-> Before you can use devcontainers make sure you have Docker as well as the VSCode [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extensions installed. Please refer to the dev container setup documentation on the VSCode page.
+> Before you can use devcontainers make sure you have Docker as well as the VSCode [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) extensions installed. Please refer to the dev container setup documentation on the VSCode page.
 
 Open the cloned repository in [VSCode](https://code.visualstudio.com). Usually it will detect that a `.devcontainer` folder is present and ask you whether you'd like to "Reopen folder to develop in a container". Press "Reopen in Container" and wait.
 
