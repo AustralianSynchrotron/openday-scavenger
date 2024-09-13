@@ -14,7 +14,7 @@ config = get_settings()
 # Since sqlite only allows access from a single thread, set the special connect arg accordingly
 connect_args = {}
 if config.DATABASE_SCHEME == "sqlite":
-    connect_args["check_same_thread":False]
+    connect_args["check_same_thread"] = False
 
 engine = create_engine(
     str(config.DATABASE_URI),
