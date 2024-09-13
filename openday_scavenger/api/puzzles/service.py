@@ -41,7 +41,7 @@ def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
     if only_active:
         q = q.filter(Puzzle.active)
 
-    return q.all()
+    return q.order_by(Puzzle.name).all()
 
 
 def get_all_responses(
