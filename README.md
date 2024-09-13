@@ -98,7 +98,7 @@ If you would like a setup which is similar to a real production environment, use
 
 Open the cloned repository in [VSCode](https://code.visualstudio.com). Usually it will detect that a `.devcontainer` folder is present and ask you whether you'd like to "Reopen folder to develop in a container". Press "Reopen in Container" and wait.
 
-If VSCode does not prompt you, click on the green area on the bottom left of VSCode and select "Reopen in Container" from the drop down menu at the top.
+If VSCode does not prompt you, click on the button on the very bottom left of VSCode and select "Reopen in Container" from the drop down menu at the top.
 
 Once the containers have finished starting up, browse to `http://localhost:8000` in a web browser.
 
