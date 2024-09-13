@@ -289,7 +289,7 @@ def generate_test_data(
     # generate a number of responses for each puzzle.
     try:
         for visitor_from_pool in visitors_pool:
-            visitor = Visitor(uid=visitor_from_pool, checked_in=datetime.now())
+            visitor = Visitor(uid=visitor_from_pool.uid, checked_in=datetime.now())
             db_session.add(visitor)
             db_session.delete(visitor_from_pool)
 

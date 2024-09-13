@@ -22,4 +22,4 @@ class PuzzleNotFoundError(RuntimeError):
 
 
 class ForbiddenAccessTestEndpointError(RuntimeError):
-    """Raised of somebidy tries to access the test endpoint if it is turned off"""
+    """Raised if somebody tries to access the test endpoint if it is turned off"""
