@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     COOKIE_MAX_AGE: int = 86400  # in seconds: 24 hours = 86400 seconds
 
     SESSIONS_ENABLED: bool = True
+    TEST_ENDPOINT_ENABLED: bool = False
 
     model_config = SettingsConfigDict(env_file=".env")
 

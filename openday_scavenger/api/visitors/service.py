@@ -11,41 +11,11 @@ from .models import Visitor, VisitorPool
 from .schemas import VisitorPoolCreate
 
 
-def _filter(
-    query: Query, uid_filter: str | None = None, still_playing: bool | None = None
-) -> Query:
-    """
-    Applies filters to the provided SQLAlchemy query.
-
-    Args:
-        query (Query): The base query to apply filters to.
-        uid_filter (str, optional): A string to filter visitors by their UID (prefix match).
-        still_playing (bool, optional): Whether to filter for visitors who are still playing (checked_out is None).
-
-    Returns:
-        Query: The filtered query object.
-    """
-
-    filters = []
-    if uid_filter is not None:
-        filters.append(Visitor.uid.like(f"{uid_filter}%"))
-    if still_playing:
-        filters.append(
-            Visitor.checked_out.is_(None)
-        )  # Use .is_(None) for NULL comparison  # Filter for visitors who are still playing
-
-    if filters:
-        query = query.filter(and_(*filters))
-
-    return query
-
-
 def get_all(
     db_session: Session,
     uid_filter: str | None = None,
     still_playing: bool | None = None,
-    with_stats: bool | None = False,
-) -> list[Visitor | Row[tuple[Visitor, int, int]]]:
+) -> list[Row[tuple[Visitor, int, int]]]:
     """
     Retrieves all visitors with their correct answer count from the database, applying filters if provided.
 
@@ -53,32 +23,34 @@ def get_all(
         db_session (Session): The SQLAlchemy session object.
         uid_filter (str, optional): A string to filter visitors by their UID (prefix match).
         still_playing (bool, optional): Whether to filter for visitors who are still playing (checked_out is None).
-        with_stats (bool, optional): Whether to provide playing statistics in response.
     Returns:
-        List[Union[Visitor, tuple[Visitor, int]]]:
-            - If with_stats is False: a list of Visitor objects
-            - If with_stats is True: a list of tuples containing Visitor data and correct answer count.
+        List[tuple[Visitor, int]]
     """
+    q = _filter(db_session.query(Visitor), uid_filter=uid_filter, still_playing=still_playing)
 
-    q = _filter(db_session.query(Visitor), uid_filter, still_playing)
-
-    if with_stats:
-        q = (
-            q.outerjoin(Response, Visitor.id == Response.visitor_id)
-            .group_by(Visitor.uid)
-            .with_entities(
-                Visitor,
-                func.sum(cast(Response.is_correct, Integer)).label("correct_answers"),
-                func.count(func.distinct(Response.puzzle_id)).label("attempted_puzzles"),
-            )
+    q = (
+        q.outerjoin(Response, Visitor.id == Response.visitor_id)
+        .group_by(Visitor.id)
+        .with_entities(
+            Visitor,
+            func.sum(cast(Response.is_correct, Integer)).label("correct_answers"),
+            func.count(func.distinct(Response.puzzle_id)).label("attempted_puzzles"),
         )
-        q = q.group_by(Visitor.uid)
+    )
 
     return q.all()  # type: ignore
 
 
-def create(db_session: Session, visitor_uid: str) -> Visitor:
-    """Create a new visitor"""
+def create(db_session: Session, *, visitor_uid: str) -> Visitor:
+    """
+    Create a new visitor entry in the database.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        visitor_uid (str): The uid of the visitor that should be added to the database.
+
+
+    """
 
     # Check first whether the visitor already exists
     visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
@@ -104,11 +76,25 @@ def create(db_session: Session, visitor_uid: str) -> Visitor:
     return visitor
 
 
-def check_out(db_session: Session, visitor_uid: str):
+def check_out(db_session: Session, *, visitor_uid: str) -> Visitor:
+    """
+    Check out a visitor, which ends their session and they can't play any longer.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        visitor_uid (str): The uid of the visitor that should be checked out.
+
+    Returns:
+        Visitor: The visitor database model.
+
+    """
     visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
-    visitor.checked_out = datetime.now()
+
+    if visitor is None:
+        raise VisitorUIDInvalidError(f"The uid {visitor_uid} is not valid")
 
     try:
+        visitor.checked_out = datetime.now()
         db_session.commit()
     except:
         db_session.rollback()
@@ -117,9 +103,31 @@ def check_out(db_session: Session, visitor_uid: str):
     return visitor
 
 
-def create_visitor_pool(db_session: Session, pool_in: VisitorPoolCreate):
+def get_visitor_pool(db_session: Session, *, limit: int = 10) -> list[VisitorPool]:
+    """
+    Return the visitors in the visitor pool.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        limit (int): Limit the returned visitors from the pool to this number.
+
+    Returns:
+        list[VisitorPool]: List of visitors from the pool.
+    """
+    return db_session.query(VisitorPool).limit(limit).all()
+
+
+def create_visitor_pool(db_session: Session, pool_in: VisitorPoolCreate) -> None:
+    """
+    Add the specified number of new visitors with random uids to the visitor pool.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        pool_in (VisitorPoolCreate): The object containing the settings for the creation.
+    """
     existing_uuids = {id for (id,) in db_session.query(VisitorPool.uid)}
-    uuids = set([str(uuid4())[:6] for i in range(pool_in.number_of_entries)])
+    uuids = set([str(uuid4())[:6] for _ in range(pool_in.number_of_entries)])
+
     # Remove duplicates.
     uuids = uuids - existing_uuids
 
@@ -131,6 +139,31 @@ def create_visitor_pool(db_session: Session, pool_in: VisitorPoolCreate):
         raise
 
 
-def get_visitor_pool(db_session: Session, number_of_entries: int = 10):
-    existing_uuids = {id for (id,) in db_session.query(VisitorPool.uid).limit(number_of_entries)}
-    return existing_uuids
+def _filter(
+    query: Query, *, uid_filter: str | None = None, still_playing: bool | None = None
+) -> Query:
+    """
+    Applies filters to the provided SQLAlchemy query.
+
+    Args:
+        query (Query): The base query to apply filters to.
+        uid_filter (str, optional): A string to filter visitors by their UID (prefix match).
+        still_playing (bool, optional): Whether to filter for visitors who are still playing (checked_out is None).
+
+    Returns:
+        Query: The filtered query object.
+    """
+
+    filters = []
+    if uid_filter is not None:
+        filters.append(Visitor.uid.like(f"{uid_filter}%"))
+
+    if still_playing:
+        filters.append(
+            Visitor.checked_out.is_(None)
+        )  # Use .is_(None) for NULL comparison  # Filter for visitors who are still playing
+
+    if filters:
+        query = query.filter(and_(*filters))
+
+    return query

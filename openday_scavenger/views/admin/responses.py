@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
-from openday_scavenger.api.puzzles.service import get_all_responses
+from openday_scavenger.api.puzzles.service import generate_test_data, get_all_responses
 
 router = APIRouter()
 
@@ -37,3 +37,12 @@ async def render_response_table(
     return templates.TemplateResponse(
         request=request, name="responses_table.html", context={"responses": responses}
     )
+
+
+@router.post("/test")
+async def add_test_entries(
+    db: Annotated["Session", Depends(get_db)],
+):
+    generate_test_data(db, number_visitors=3000, number_wrong_answers=3)
+
+    return {"success": True}
