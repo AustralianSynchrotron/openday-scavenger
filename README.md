@@ -102,7 +102,7 @@ If VSCode does not prompt you, click on the green area on the bottom left of VSC
 
 Once the containers have finished starting up, browse to `http://localhost:8000` in a web browser.
 
-If you like to see the content of the database with a database client, use the following settings:
+If you would like to see the content of the database with a database client (a GUI client we like is [DBeaver](https://dbeaver.io)), use the following settings:
 
 | Setting  | Value |
 | -------  | ----- |
