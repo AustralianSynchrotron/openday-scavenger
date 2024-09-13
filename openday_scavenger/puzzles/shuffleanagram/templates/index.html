@@ -1,0 +1,87 @@
+<html>
+
+<head>
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+    <script>
+        // shamelessly stolen from Tingting and Michelle's example
+        window.onload = (event) => {
+          form.addEventListener('htmx:beforeSwap', function(evt) {
+          if (!evt)
+          {
+            return ;
+          }
+          if(evt.detail.xhr.status === 404){
+              // alert the user when a 404 occurs (maybe use a nicer mechanism than alert())
+              alert("Error: Could Not Find Resource");
+          } else if(evt.detail.xhr.status === 422){
+              // allow 422 responses to swap as we are using this as a signal that
+              // a form was submitted with bad data and want to rerender with the
+              // errors
+              //
+              // set isError to false to avoid error logging in console
+              evt.detail.shouldSwap = true;
+              evt.detail.isError = false;
+          } else if(evt.detail.xhr.status === 418){
+              // if the response code 418 (I'm a teapot) is returned, retarget the
+              // content of the response to the element with the id `teapot`
+              evt.detail.shouldSwap = true;
+              evt.detail.target = htmx.find("#teapot");
+          }else if(evt.detail.xhr.status === 200){
+              // if the response code 418 (I'm a teapot) is returned, retarget the
+              // content of the response to the element with the id `teapot`
+              evt.detail.shouldSwap = false;
+              const success = JSON.parse(evt.detail.serverResponse).success;
+              if(success)
+              {
+                evt.detail.target = htmx.find("#response-good");
+                document.getElementById("response-good").innerText="Congratulations! The answer is correct!";
+                document.getElementById("response-bad").innerText="";
+            }
+            else
+            {
+                evt.detail.target = htmx.find("#response-bad");
+                document.getElementById("response-good").innerText="";
+                document.getElementById("response-bad").innerText="Oops! The answer is incorrect!";
+              }
+
+              console.log("Find",evt)
+          }
+      });
+      };
+
+    </script>
+    <link href="static/styles.css" rel="stylesheet">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+
+<body id="body">
+    <h1>Anagram Puzzle!</h1>
+    <!--  -->
+    <p> What's a synchrotron-related anagram of the following word?</p>
+
+    <p id="scrambled_word"><b>{{ scrambled_word }}</b></p>
+
+    <!-- create a button, using htmx, that sends a get request to /shuffled -->
+    <button hx-get="shuffled" hx-trigger="click" hx-target="#scrambled_word" hx-swap="outerHTML">
+        Shuffle
+    </button>
+
+    <!-- use validation to lowercase the answer before submitting -->
+
+    <form id='form' hx-encoding='multipart/form-data' hx-post='/submission'>
+        <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+        <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+        <label for="user_solution">Your answer:</label><br>
+        <input type="text" id="answer" name="answer" pattern="[a-z]+" placeholder="(lowercase letters only)">
+        <button>
+            Submit your answer
+        </button>
+    </form>
+
+    <div id="response-good" ></div>
+    <div id="response-bad" ></div>
+
+</body>
+
+</html>
