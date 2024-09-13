@@ -7,14 +7,15 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
+from openday_scavenger.api.puzzles.service import get_all as get_all_puzzles
 from openday_scavenger.api.visitors.schemas import VisitorCreate, VisitorPoolCreate
 from openday_scavenger.api.visitors.service import (
     check_out,
     create,
     create_visitor_pool,
-    get_all,
     get_visitor_pool,
 )
+from openday_scavenger.api.visitors.service import get_all as get_all_visitors
 from openday_scavenger.config import get_settings
 
 router = APIRouter()
@@ -81,12 +82,19 @@ async def _render_visitor_table(
     uid_filter: str | None = None,
     still_playing: bool | None = None,
 ):
-    visitors = get_all(db, uid_filter=uid_filter, still_playing=still_playing, with_stats=True)
+    visitors = get_all_visitors(
+        db, uid_filter=uid_filter, still_playing=still_playing, with_stats=True
+    )
+    number_enabled_puzzles = len(get_all_puzzles(db, only_active=True))
 
     return templates.TemplateResponse(
         request=request,
         name="visitors_table.html",
-        context={"visitors": visitors, "now": datetime.now()},
+        context={
+            "visitors": visitors,
+            "number_enabled_puzzles": number_enabled_puzzles,
+            "now": datetime.now(),
+        },
     )
 
 

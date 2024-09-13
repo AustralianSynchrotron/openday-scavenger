@@ -45,7 +45,7 @@ def get_all(
     uid_filter: str | None = None,
     still_playing: bool | None = None,
     with_stats: bool | None = False,
-) -> list[Visitor | Row[tuple[Visitor, int]]]:
+) -> list[Visitor | Row[tuple[Visitor, int, int]]]:
     """
     Retrieves all visitors with their correct answer count from the database, applying filters if provided.
 
@@ -67,9 +67,12 @@ def get_all(
             q.outerjoin(Response, Visitor.id == Response.visitor_id)
             .group_by(Visitor.uid)
             .with_entities(
-                Visitor, func.sum(cast(Response.is_correct, Integer)).label("correct_answers")
+                Visitor,
+                func.sum(cast(Response.is_correct, Integer)).label("correct_answers"),
+                func.count(func.distinct(Response.puzzle_id)).label("attempted_puzzles"),
             )
         )
+        q = q.group_by(Visitor.uid)
 
     return q.all()  # type: ignore
 
