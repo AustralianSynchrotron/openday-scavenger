@@ -12,7 +12,7 @@ from openday_scavenger.api.visitors.service import (
     check_out,
     create,
     create_visitor_pool,
-    get_all_with_stats,
+    get_all,
     get_visitor_pool,
 )
 from openday_scavenger.config import get_settings
@@ -81,7 +81,7 @@ async def _render_visitor_table(
     uid_filter: str | None = None,
     still_playing: bool | None = None,
 ):
-    visitors = get_all_with_stats(db, uid_filter=uid_filter, still_playing=still_playing)
+    visitors = get_all(db, uid_filter=uid_filter, still_playing=still_playing, with_stats=True)
 
     return templates.TemplateResponse(
         request=request,
