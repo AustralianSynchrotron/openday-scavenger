@@ -22,7 +22,7 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 
 @router.get("/")
 async def render_root_page(
-    request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]
+    request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]
 ):
     """Render the starting page for visitors"""
     return templates.TemplateResponse(
