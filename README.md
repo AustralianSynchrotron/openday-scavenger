@@ -210,7 +210,7 @@ from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 router = APIRouter()
 
 @router.get('/')
-async def index(request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]):
+async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
     pass
 ```
 
