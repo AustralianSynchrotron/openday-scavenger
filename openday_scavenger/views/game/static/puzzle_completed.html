@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+        });
+    }, false);
+</script>   
+
+{% endblock %}

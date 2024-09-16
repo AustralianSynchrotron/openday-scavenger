@@ -4,7 +4,7 @@ from uuid import uuid4
 from sqlalchemy import Integer, Row, and_, cast, func
 from sqlalchemy.orm import Query, Session
 
-from openday_scavenger.api.puzzles.models import Response
+from openday_scavenger.api.puzzles.models import Puzzle, Response
 
 from .exceptions import VisitorExistsError, VisitorUIDInvalidError
 from .models import Visitor, VisitorPool
@@ -101,6 +101,20 @@ def check_out(db_session: Session, *, visitor_uid: str) -> Visitor:
         raise
 
     return visitor
+
+
+def has_completed_all_puzzles(db_session: Session, *, visitor_uid: str | None) -> bool:
+    if visitor_uid is None:
+        raise VisitorUIDInvalidError("The visitor uid can't be None")
+
+    visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
+
+    if visitor is None:
+        raise VisitorUIDInvalidError(f"The uid {visitor_uid} is not valid")
+
+    number_active_puzzles = db_session.query(Puzzle).filter(Puzzle.active).count()
+
+    return len(visitor.correct_responses) >= number_active_puzzles
 
 
 def get_visitor_pool(db_session: Session, *, limit: int = 10) -> list[VisitorPool]:

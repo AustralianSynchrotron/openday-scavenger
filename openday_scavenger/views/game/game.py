@@ -13,6 +13,9 @@ from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.exceptions import VisitorExistsError
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 from openday_scavenger.api.visitors.service import create as create_visitor
+from openday_scavenger.api.visitors.service import (
+    has_completed_all_puzzles as visitor_has_completed_all_puzzles,
+)
 from openday_scavenger.config import get_settings
 
 router = APIRouter()
@@ -67,11 +70,23 @@ async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(ge
 
 @router.post("/submission")
 async def submit_answer(
-    puzzle_in: Annotated[PuzzleCompare, Form()], db: Annotated["Session", Depends(get_db)]
+    request: Request,
+    puzzle_in: Annotated[PuzzleCompare, Form()],
+    db: Annotated["Session", Depends(get_db)],
 ):
     """AJAX style endpoint to submit the answer to a puzzle"""
-
     if compare_answer(db, puzzle_in):
-        return {"success": True}
+        if (config.SESSIONS_ENABLED) and (
+            visitor_has_completed_all_puzzles(db, visitor_uid=puzzle_in.visitor)
+        ):
+            return templates.TemplateResponse(
+                request=request, name="puzzle_completed.html", context={"visitor": None}
+            )
+        else:
+            return templates.TemplateResponse(
+                request=request, name="puzzle_correct.html", context={"visitor": None}
+            )
     else:
-        return {"success": False}
+        return templates.TemplateResponse(
+            request=request, name="puzzle_incorrect.html", context={"visitor": None}
+        )
