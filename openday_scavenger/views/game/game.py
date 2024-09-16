@@ -94,7 +94,21 @@ async def submit_answer(
     puzzle_in: Annotated[PuzzleCompare, Form()],
     db: Annotated["Session", Depends(get_db)],
 ):
-    """AJAX style endpoint to submit the answer to a puzzle"""
+    """
+    Endpoint for submitting the puzzle answer.
+
+    This endpoint will check whether the visitor's answer was
+    correct and return the appropriate HTML page:
+    - if the answer was correct and the visitor has completed
+      all the puzzles, we congratulate the visitor and send them
+      back to the registration desk so they can pick up their prize.
+    - if the answer was correct and the visitor has not completed
+      all the puzzles, we congratulate the visitor for solving the
+      puzzle and provide them with a button which sends them back
+      to the main starting page with the QR scanner.
+    - if the answer was not correct, we say sorry and provide a button
+      which will take them back to the puzzle page so they can try again.
+    """
     if compare_answer(db, puzzle_in):
         if (
             (config.SESSIONS_ENABLED)
