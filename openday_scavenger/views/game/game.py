@@ -9,10 +9,12 @@ from sqlalchemy.orm import Session
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCompare
 from openday_scavenger.api.puzzles.service import compare_answer
+from openday_scavenger.api.puzzles.service import count as count_puzzles
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.exceptions import VisitorExistsError
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 from openday_scavenger.api.visitors.service import create as create_visitor
+from openday_scavenger.api.visitors.service import get_correct_responses
 from openday_scavenger.api.visitors.service import (
     has_completed_all_puzzles as visitor_has_completed_all_puzzles,
 )
@@ -25,11 +27,29 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 
 @router.get("/")
 async def render_root_page(
-    request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]
+    request: Request,
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    db: Annotated["Session", Depends(get_db)],
 ):
     """Render the starting page for visitors"""
+
+    # If the visitor has completed all puzzles, don't show the QR code scanner
+    # and send them back to the registration desk. Also get the progress of the visitor.
+    has_completed_all_puzzles = False
+    number_correct_responses = 1
+    if (config.SESSIONS_ENABLED) and (visitor.uid is not None):
+        has_completed_all_puzzles = visitor_has_completed_all_puzzles(db, visitor_uid=visitor.uid)
+        number_correct_responses = len(get_correct_responses(db, visitor_uid=visitor.uid))
+
     return templates.TemplateResponse(
-        request=request, name="index.html", context={"visitor": visitor}
+        request=request,
+        name="index.html",
+        context={
+            "visitor": visitor,
+            "number_active_puzzles": count_puzzles(db, only_active=True),
+            "number_correct_responses": number_correct_responses,
+            "has_completed_all_puzzles": has_completed_all_puzzles,
+        },
     )
 
 
@@ -76,17 +96,19 @@ async def submit_answer(
 ):
     """AJAX style endpoint to submit the answer to a puzzle"""
     if compare_answer(db, puzzle_in):
-        if (config.SESSIONS_ENABLED) and (
-            visitor_has_completed_all_puzzles(db, visitor_uid=puzzle_in.visitor)
+        if (
+            (config.SESSIONS_ENABLED)
+            and (puzzle_in.visitor is not None)
+            and (visitor_has_completed_all_puzzles(db, visitor_uid=puzzle_in.visitor))
         ):
             return templates.TemplateResponse(
-                request=request, name="puzzle_completed.html", context={"visitor": None}
+                request=request, name="puzzle_completed.html", context={"puzzle": puzzle_in.name}
             )
         else:
             return templates.TemplateResponse(
-                request=request, name="puzzle_correct.html", context={"visitor": None}
+                request=request, name="puzzle_correct.html", context={"puzzle": puzzle_in.name}
             )
     else:
         return templates.TemplateResponse(
-            request=request, name="puzzle_incorrect.html", context={"visitor": None}
+            request=request, name="puzzle_incorrect.html", context={"puzzle": puzzle_in.name}
         )

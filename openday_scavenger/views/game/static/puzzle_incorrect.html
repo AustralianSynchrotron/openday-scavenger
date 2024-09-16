@@ -2,6 +2,12 @@
 
 {% block content %}
 
-Incorrect
+Sorry, your answer is incorrect!
+
+<div class="game-response-incorrect-icon">
+    <i class="fa-regular fa-face-sad-tear"></i>
+</div>
+
+<a href="/puzzles/{{ puzzle }}" class="btn btn-success"><i class="fa-regular fa-thumbs-up"></i>Try again</a>
 
 {% endblock %}

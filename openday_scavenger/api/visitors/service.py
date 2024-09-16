@@ -23,6 +23,7 @@ def get_all(
         db_session (Session): The SQLAlchemy session object.
         uid_filter (str, optional): A string to filter visitors by their UID (prefix match).
         still_playing (bool, optional): Whether to filter for visitors who are still playing (checked_out is None).
+
     Returns:
         List[tuple[Visitor, int]]
     """
@@ -49,7 +50,8 @@ def create(db_session: Session, *, visitor_uid: str) -> Visitor:
         db_session (Session): The SQLAlchemy session object.
         visitor_uid (str): The uid of the visitor that should be added to the database.
 
-
+    Returns:
+        Visitor: The created visitor database model.
     """
 
     # Check first whether the visitor already exists
@@ -103,18 +105,40 @@ def check_out(db_session: Session, *, visitor_uid: str) -> Visitor:
     return visitor
 
 
-def has_completed_all_puzzles(db_session: Session, *, visitor_uid: str | None) -> bool:
-    if visitor_uid is None:
-        raise VisitorUIDInvalidError("The visitor uid can't be None")
+def get_correct_responses(db_session: Session, *, visitor_uid: str) -> list[Response]:
+    """
+    Get the correct responses for the visitor.
 
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        visitor_uid (str): The uid of the visitor for whom the correct
+                           responses should be returned.
+
+    Returns:
+        list[Response]: The correct responses for the visitor.
+    """
     visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
 
     if visitor is None:
         raise VisitorUIDInvalidError(f"The uid {visitor_uid} is not valid")
 
-    number_active_puzzles = db_session.query(Puzzle).filter(Puzzle.active).count()
+    return visitor.correct_responses
 
-    return len(visitor.correct_responses) >= number_active_puzzles
+
+def has_completed_all_puzzles(db_session: Session, *, visitor_uid: str) -> bool:
+    """
+    Check whether a visitor has completed all their puzzles.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        visitor_uid (str): The uid of the visitor that should be checked.
+
+    Returns:
+        bool: True of the visitor has completed all their puzzles.
+    """
+    number_active_puzzles = db_session.query(Puzzle).filter(Puzzle.active).count()
+    correct_responses = get_correct_responses(db_session=db_session, visitor_uid=visitor_uid)
+    return len(correct_responses) >= number_active_puzzles
 
 
 def get_visitor_pool(db_session: Session, *, limit: int = 10) -> list[VisitorPool]:

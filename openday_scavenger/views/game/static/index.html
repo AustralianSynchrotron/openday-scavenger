@@ -29,11 +29,23 @@
 
 <div>
     <div>
-        {% if visitor %}
-        <p>Find some puzzles!</p>
-        <div class="mx-auto" id="reader" style="width: 400px;"></div>
+        {% if visitor.is_authenticated %}
+            {% if has_completed_all_puzzles %}
+                <p>Congratulations! You have completed all puzzles.</p>
+                <p>Please go to the registration desk and pick up your prize!</p>
+            {% else %}
+                <p>Find some puzzles!</p>
+                <div class="mx-auto" id="reader" style="width: 400px;"></div>
+                <div>
+                    {% if number_correct_responses > 0 %}
+                    <div class="progress" role="progressbar">
+                        <div class="progress-bar" style="width: {{ (number_correct_responses / number_active_puzzles) * 100.0 }}%">{{ number_correct_responses }} / {{ number_active_puzzles }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         {% else %}
-        <p>Please go to the registration desk</p>
+            <p>Please register for the scavenger hunt at the registration desk</p>
         {% endif %}
     </div>
 </div>
