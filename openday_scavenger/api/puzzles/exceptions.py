@@ -24,9 +24,6 @@ class PuzzleNotFoundError(RuntimeError):
 class PuzzleCompletedError(HTTPException):
     """Raised if a puzzle already correctly finished"""
 
-    pass
-
 
 class ForbiddenAccessTestEndpointError(RuntimeError):
     """Raised if somebody tries to access the test endpoint if it is turned off"""
-

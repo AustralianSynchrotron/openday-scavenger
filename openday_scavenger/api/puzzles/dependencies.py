@@ -13,19 +13,39 @@ from .exceptions import DisabledPuzzleError, PuzzleCompletedError, UnknownPuzzle
 from .models import Puzzle
 
 
-async def catch_unknown_puzzles(request: Request, db: Annotated["Session", Depends(get_db)]):
+async def get_puzzle_name_from_request(request: Request, db: Annotated["Session", Depends(get_db)]):
+    """
+    Extracts the puzzle name from the request URL path and returns it.
+
+    Args:
+        request (Request): The incoming HTTP request.
+        db (Annotated["Session", Depends(get_db)]): The database session dependency.
+
+    Returns:
+        str: The name of the puzzle extracted from the URL path.
+
+    Raises:
+        UnknownPuzzleError: If a valid puzzle name is not found in the URL path.
+
+    Example:
+        If the request URL is 'http://example.com/puzzles/demo',
+        the function will return 'demo'.
+    """
+
     try:
         path_parts = Path(request.url.path).parts
         puzzle_name = path_parts[path_parts.index("puzzles") + 1]
     except (ValueError, IndexError):
-        raise UnknownPuzzleError(status_code=status.HTTP_404_NOT_FOUND, detail="Unknown Puzzle")
+        raise UnknownPuzzleError(
+            status_code=status.HTTP_404_NOT_FOUND, detail="URL doesn't contain valid puzzle path."
+        )
     return puzzle_name
 
 
 async def block_disabled_puzzles(
     request: Request,
     db: Annotated["Session", Depends(get_db)],
-    puzzle_name: Annotated[str, Depends(catch_unknown_puzzles)],
+    puzzle_name: Annotated[str, Depends(get_puzzle_name_from_request)],
 ):
     """Dependency that prevents access to unknown or disabled puzzle endpoints"""
     # Use the pathlib library to deconstruct the url and find the name of the puzzle
@@ -37,7 +57,10 @@ async def block_disabled_puzzles(
     puzzle = db.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
 
     if puzzle is None:
-        raise UnknownPuzzleError(status_code=status.HTTP_404_NOT_FOUND, detail="Unknown Puzzle")
+        raise UnknownPuzzleError(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No puzzle with the name {puzzle_name} is registered in the database",
+        )
 
     if not puzzle.active:
         raise DisabledPuzzleError(status_code=status.HTTP_403_FORBIDDEN, detail="Disabled Puzzle")
