@@ -34,9 +34,7 @@ async def get_static_files(
 
 
 @router.get("/")
-async def index(
-    request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]
-):
+async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
     return templates.TemplateResponse(
         request=request,
         name="index.html",

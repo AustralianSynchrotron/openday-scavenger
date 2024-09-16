@@ -20,7 +20,10 @@
             "extensions": [
                 "ms-python.python",
                 "ms-python.vscode-pylance"
-            ]
+            ],
+			"settings": { 
+				"python.defaultInterpreterPath": "/root/.cache/uv/bin/python"
+			}
         }
     }
 }

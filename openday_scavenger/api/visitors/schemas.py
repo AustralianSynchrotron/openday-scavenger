@@ -15,6 +15,7 @@ class VisitorUpdate(BaseModel):
 
 class VisitorAuth(BaseModel):
     uid: str | None
+    is_authenticated: bool = False
 
 
 class VisitorPoolCreate(BaseModel):

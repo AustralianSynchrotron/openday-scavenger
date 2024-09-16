@@ -6,11 +6,11 @@
         </tr>
     </thead>
     <tbody>
-        {% for uid in visitor_pool_uids %}
+        {% for visitor in visitor_pool %}
         <tr>
-            <td>{{ uid }}</td>
+            <td>{{ visitor.uid }}</td>
             <td>
-                <a href="{{ base_url }}register/{{ uid }}">
+                <a href="{{ base_url }}register/{{ visitor.uid }}">
                     <i class="fa-solid fa-user-plus"></i>
                 </a>
             </td>
