@@ -1,11 +1,13 @@
 from fastapi import APIRouter
 
 from .demo.views import router as puzzle_demo_router
+from .periodic.views import router as puzzle_periodic_router
 
 router = APIRouter()
 
 # Include puzzle routes. Name entered into database should match the prefix.
 router.include_router(puzzle_demo_router, prefix="/demo")
+router.include_router(puzzle_periodic_router, prefix="/periodic")
 
 
 # Include a route to catch all invalid puzzle routes so we can throw a custom 404.
