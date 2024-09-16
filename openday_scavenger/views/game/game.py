@@ -22,7 +22,7 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 
 @router.get("/")
 async def render_root_page(
-    request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]
+    request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]
 ):
     """Render the starting page for visitors"""
     return templates.TemplateResponse(
@@ -44,7 +44,7 @@ async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(ge
     # uid of another visitor and hijacks their session. If they figure that out, props
     # to them for successfully hacking our little application. We might want to hire them.
     try:
-        _ = create_visitor(db, visitor_uid)
+        _ = create_visitor(db, visitor_uid=visitor_uid)
     except VisitorExistsError:
         pass
 

@@ -12,6 +12,7 @@ dependencies = [
     "reportlab>=4.2.2",
     "pydantic-settings>=2.4.0",
     "python-dotenv>=1.0.1",
+    "psycopg2>=2.9.9"
 ]
 
 [build-system]

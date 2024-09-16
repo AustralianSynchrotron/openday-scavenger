@@ -34,7 +34,7 @@ async def create_visitor(
     visitor_in: VisitorCreate, request: Request, db: Annotated["Session", Depends(get_db)]
 ):
     """Create a new visitor"""
-    _ = create(db, visitor_in.uid)
+    _ = create(db, visitor_uid=visitor_in.uid)
     return await _render_visitor_table(request, db)
 
 
@@ -43,7 +43,7 @@ async def update_visitor(
     visitor_uid: str, request: Request, db: Annotated["Session", Depends(get_db)]
 ):
     """Update a single puzzle and re-render the table"""
-    _ = check_out(db, visitor_uid)
+    _ = check_out(db, visitor_uid=visitor_uid)
     return await _render_visitor_table(request, db)
 
 
@@ -62,7 +62,7 @@ async def render_visitor_table(
 async def initialise_visitor_pool(
     request: Request,
     db: Annotated["Session", Depends(get_db)],
-    pool_in: VisitorPoolCreate | None = VisitorPoolCreate(),
+    pool_in: VisitorPoolCreate = VisitorPoolCreate(),
 ):
     create_visitor_pool(db, pool_in=pool_in)
     return await _render_visitor_pool_table(request, db)
@@ -70,10 +70,10 @@ async def initialise_visitor_pool(
 
 @router.get("/pool")
 async def render_visitor_pool_table(
-    request: Request, db: Annotated["Session", Depends(get_db)], number_of_entries: int = 10
+    request: Request, db: Annotated["Session", Depends(get_db)], limit: int = 10
 ):
     """Render the table of possible visitor uids on the admin page"""
-    return await _render_visitor_pool_table(request, db, number_of_entries)
+    return await _render_visitor_pool_table(request, db, limit)
 
 
 async def _render_visitor_table(
@@ -82,9 +82,7 @@ async def _render_visitor_table(
     uid_filter: str | None = None,
     still_playing: bool | None = None,
 ):
-    visitors = get_all_visitors(
-        db, uid_filter=uid_filter, still_playing=still_playing, with_stats=True
-    )
+    visitors = get_all_visitors(db, uid_filter=uid_filter, still_playing=still_playing)
     number_enabled_puzzles = len(get_all_puzzles(db, only_active=True))
 
     return templates.TemplateResponse(
@@ -99,12 +97,12 @@ async def _render_visitor_table(
 
 
 async def _render_visitor_pool_table(
-    request: Request, db: Annotated["Session", Depends(get_db)], number_of_entries: int = 10
+    request: Request, db: Annotated["Session", Depends(get_db)], limit: int = 10
 ):
-    visitor_pool = get_visitor_pool(db, number_of_entries=number_of_entries)
+    visitor_pool = get_visitor_pool(db, limit=limit)
 
     return templates.TemplateResponse(
         request=request,
         name="visitor_pool_table.html",
-        context={"visitor_pool_uids": visitor_pool, "base_url": config.BASE_URL},
+        context={"visitor_pool": visitor_pool, "base_url": config.BASE_URL},
     )

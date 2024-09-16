@@ -21,3 +21,8 @@ class PuzzleCompare(BaseModel):
     visitor: str | None
     name: str
     answer: str
+
+
+class ResponseTestCreate(BaseModel):
+    number_visitors: int = 3000
+    number_wrong_answers: int = 3

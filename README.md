@@ -14,12 +14,7 @@ During the Open Day a visitor is guided through the following steps:
 ## Installation
 The web application is written in Python, the language of choice for the Scientific Computing team at the Australian Synchrotron. The following sections explain two methods to install and run the application locally.
 
-### Option 1: Use Virtual Environments
-This is the quickest and easiest method to run the scavenger hunt web application. It uses a local database and demonstrates the power of virtual environments for local Python development.
-
-#### Setup
-##### Get the source
-Currently there is no released version of the project, therefore the first step is to clone the repo:
+Before choosing one of the methods, make sure you have the source code of the application. Currently there is no released version of the project, therefore the first step is to clone the repo:
 
 ```
 git clone git@github.com:AustralianSynchrotron/openday-scavenger.git  # Using ssh key (preferred)
@@ -27,6 +22,11 @@ or
 git clone https://github.com/AustralianSynchrotron/openday-scavenger.git # Using https with username/password credentials
 ```
 If testing the application, use the `main` branch.
+
+### Option 1: Use Virtual Environments
+This is the quickest and easiest method to run the scavenger hunt web application. It uses a local database and demonstrates the power of virtual environments for local Python development.
+
+#### Setup
 
 ##### Install dependencies
 The web application makes use of [`uv`](https://github.com/astral-sh/uv) for installing dependencies and creating the virtual environment.
@@ -91,8 +91,27 @@ DATABASE_NAME="scavenger_hunt.db"
 ```
 Restart the server and it will pick up the settings automatically.
 
-### Option 2: use devcontainers
-TBD
+### Option 2: Use devcontainers (with VSCode)
+If you would like a setup which is similar to a real production environment, use the provided [devcontainer](https://containers.dev). It uses a proper PostgreSQL database server instead of sqlite.
+
+> Before you can use devcontainers make sure you have Docker as well as the VSCode [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) extensions installed. Please refer to the dev container setup documentation on the VSCode page.
+
+Open the cloned repository in [VSCode](https://code.visualstudio.com). Usually it will detect that a `.devcontainer` folder is present and ask you whether you'd like to "Reopen folder to develop in a container". Press "Reopen in Container" and wait.
+
+If VSCode does not prompt you, click on the button on the very bottom left of VSCode and select "Reopen in Container" from the drop down menu at the top.
+
+Once the containers have finished starting up, browse to `http://localhost:8000` in a web browser.
+
+If you would like to see the content of the database with a database client (a GUI client we like is [DBeaver](https://dbeaver.io)), use the following settings:
+
+| Setting  | Value |
+| -------  | ----- |
+| host     | `localhost` |
+| port     | `5432` |
+| db       | `postgres` |
+| user     | `postgres` |
+| password | `postgres` |
+
 
 
 ## The Visitor Flow
@@ -191,7 +210,7 @@ from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 router = APIRouter()
 
 @router.get('/')
-async def index(request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]):
+async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
     pass
 ```
 
