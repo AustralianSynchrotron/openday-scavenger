@@ -115,13 +115,9 @@ async def submit_answer(
             and (puzzle_in.visitor is not None)
             and (visitor_has_completed_all_puzzles(db, visitor_uid=puzzle_in.visitor))
         ):
-            return templates.TemplateResponse(
-                request=request, name="puzzle_completed.html", context={"puzzle": puzzle_in.name}
-            )
+            return templates.TemplateResponse(request=request, name="puzzle_completed.html")
         else:
-            return templates.TemplateResponse(
-                request=request, name="puzzle_correct.html", context={"puzzle": puzzle_in.name}
-            )
+            return templates.TemplateResponse(request=request, name="puzzle_correct.html")
     else:
         return templates.TemplateResponse(
             request=request, name="puzzle_incorrect.html", context={"puzzle": puzzle_in.name}
