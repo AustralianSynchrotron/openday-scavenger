@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from typing import Annotated
 
@@ -8,9 +9,19 @@ from fastapi.templating import Jinja2Templates
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
+from .services import get_category_style
+
 router = APIRouter()
 
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static")
+
+# Load element_list
+with open(Path(__file__).resolve().parent / "static" / "data" / "element_list.json") as f:
+    elements = json.load(f)
+
+# Load element_lookup map
+with open(Path(__file__).resolve().parent / "static" / "data" / "element_lookup.json") as f:
+    element_lookup = json.load(f)
 
 
 @router.get("/static/{path:path}")
@@ -40,5 +51,11 @@ async def index(
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"puzzle": "demo", "visitor": visitor.uid},
+        context={
+            "puzzle": "demo",
+            "visitor": visitor.uid,
+            "elements": elements,
+            "element_lookup": element_lookup,
+            "get_category_style": get_category_style,
+        },
     )

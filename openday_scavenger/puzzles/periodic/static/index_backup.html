@@ -1,0 +1,194 @@
+<html>
+  <head>
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+
+    <link href="static/demo.css" rel="stylesheet" />
+    <link
+      id="favicon"
+      rel="icon"
+      type="image/x-icon"
+      href="/static/favicon.ico"
+    />
+  </head>
+  <body>
+    <h1>Element Puzzle</h1>
+
+    <style>
+      .periodic-table {
+        display: grid;
+        grid-template-columns: repeat(18, 1fr);
+        gap: 2px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .element {
+        border: 1px solid #000;
+        padding: 5px;
+        text-align: center;
+        font-size: 12px;
+      }
+      .empty {
+        border: none;
+      }
+    </style>
+    <div class="periodic-table">
+      <!-- Row 1 -->
+      <div class="element">H</div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="element">He</div>
+
+      <!-- Row 2 -->
+      <div class="element">Li</div>
+      <div class="element">Be</div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="element">B</div>
+      <div class="element">C</div>
+      <div class="element">N</div>
+      <div class="element">O</div>
+      <div class="element">F</div>
+      <div class="element">Ne</div>
+
+      <!-- Row 3 -->
+      <div class="element">Na</div>
+      <div class="element">Mg</div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="empty"></div>
+      <div class="element">Al</div>
+      <div class="element">Si</div>
+      <div class="element">P</div>
+      <div class="element">S</div>
+      <div class="element">Cl</div>
+      <div class="element">Ar</div>
+
+      <!-- Row 4 -->
+      <div class="element">K</div>
+      <div class="element">Ca</div>
+      <div class="element">Sc</div>
+      <div class="element">Ti</div>
+      <div class="element">V</div>
+      <div class="element">Cr</div>
+      <div class="element">Mn</div>
+      <div class="element">Fe</div>
+      <div class="element">Co</div>
+      <div class="element">Ni</div>
+      <div class="element">Cu</div>
+      <div class="element">Zn</div>
+      <div class="element">Ga</div>
+      <div class="element">Ge</div>
+      <div class="element">As</div>
+      <div class="element">Se</div>
+      <div class="element">Br</div>
+      <div class="element">Kr</div>
+
+      <!-- Row 5 -->
+      <div class="element">Rb</div>
+      <div class="element">Sr</div>
+      <div class="element">Y</div>
+      <div class="element">Zr</div>
+      <div class="element">Nb</div>
+      <div class="element">Mo</div>
+      <div class="element">Tc</div>
+      <div class="element">Ru</div>
+      <div class="element">Rh</div>
+      <div class="element">Pd</div>
+      <div class="element">Ag</div>
+      <div class="element">Cd</div>
+      <div class="element">In</div>
+      <div class="element">Sn</div>
+      <div class="element">Sb</div>
+      <div class="element">Te</div>
+      <div class="element">I</div>
+      <div class="element">Xe</div>
+
+      <!-- Row 6 -->
+      <div class="element">Cs</div>
+      <div class="element">Ba</div>
+      <div class="element">La</div>
+      <div class="element">Hf</div>
+      <div class="element">Ta</div>
+      <div class="element">W</div>
+      <div class="element">Re</div>
+      <div class="element">Os</div>
+      <div class="element">Ir</div>
+      <div class="element">Pt</div>
+      <div class="element">Au</div>
+      <div class="element">Hg</div>
+      <div class="element">Tl</div>
+      <div class="element">Pb</div>
+      <div class="element">Bi</div>
+      <div class="element">Po</div>
+      <div class="element">At</div>
+      <div class="element">Rn</div>
+
+      <!-- Row 7 -->
+      <div class="element">Fr</div>
+      <div class="element">Ra</div>
+      <div class="element">Ac</div>
+      <div class="element">Rf</div>
+      <div class="element">Db</div>
+      <div class="element">Sg</div>
+      <div class="element">Bh</div>
+      <div class="element">Hs</div>
+      <div class="element">Mt</div>
+      <div class="element">Ds</div>
+      <div class="element">Rg</div>
+      <div class="element">Cn</div>
+      <div class="element">Nh</div>
+      <div class="element">Fl</div>
+      <div class="element">Mc</div>
+      <div class="element">Lv</div>
+      <div class="element">Ts</div>
+      <div class="element">Og</div>
+    </div>
+
+    What energy in GeV does the accelerator of the Australian Synchrotron run
+    at?
+
+    <form id="form" hx-encoding="multipart/form-data" hx-post="/submission">
+      <input hidden type="text" id="name" name="name" value="{{ puzzle }}" />
+      <input
+        hidden
+        type="text"
+        id="visitor"
+        name="visitor"
+        value="{{ visitor }}"
+      />
+      <label for="energy">Energy:</label><br />
+      <input type="text" id="answer" name="answer" />
+      <button>Submit your answer</button>
+    </form>
+  </body>
+</html>

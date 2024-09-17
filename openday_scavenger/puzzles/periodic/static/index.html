@@ -1,24 +1,70 @@
 <html>
-    <head>
-        <script src="/static/js/htmx.min.js"></script>
-        <script src="/static/js/json-enc.js"></script>
-        
-        <link href="static/demo.css" rel="stylesheet">
-        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    </head>
-    <body>
-        <h1>Demo Puzzle</h1>
-        
-        What energy in GeV does the accelerator of the Australian Synchrotron run at?
-        
-        <form id='form' hx-encoding='multipart/form-data' hx-post='/submission'>
-            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-            <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <label for="energy">Energy:</label><br>
-            <input type="text" id="answer" name="answer">
-            <button>
-                Submit your answer
-            </button>
-        </form>
-    </body>
+  <head>
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+
+    <link href="static/css/styles.css" rel="stylesheet" />
+    <link
+      id="favicon"
+      rel="icon"
+      type="image/x-icon"
+      href="/static/favicon.ico"
+    />
+  </head>
+  <body>
+    <h1>Element Puzzle</h1>
+
+    <style>
+      .periodic-table {
+        display: grid;
+        grid-template-columns: repeat(18, 1fr);
+        gap: 2px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .element {
+        border: 1px solid #000;
+        padding: 5px;
+        text-align: center;
+        font-size: 12px;
+      }
+      .empty {
+        border: none;
+      }
+    </style>
+    <div class="periodic-table">
+      {% for element_symbol in elements %} {% set element =
+      element_lookup[element_symbol] %}
+      <div
+        class="element"
+        style="
+          color: {{ get_category_style(element['category'])['color'] }};
+          background-color: {{ get_category_style(element['category'])['backgroundColor'] }};
+          grid-column: {{ element['xpos'] }};
+          grid-row: {{ element['ypos'] }};
+          border-radius: 5px;
+        "
+      >
+        {{ element_symbol }}
+      </div>
+      {% endfor %}
+    </div>
+
+    What energy in GeV does the accelerator of the Australian Synchrotron run
+    at?
+
+    <form id="form" hx-encoding="multipart/form-data" hx-post="/submission">
+      <input hidden type="text" id="name" name="name" value="{{ puzzle }}" />
+      <input
+        hidden
+        type="text"
+        id="visitor"
+        name="visitor"
+        value="{{ visitor }}"
+      />
+      <label for="energy">Energy:</label><br />
+      <input type="text" id="answer" name="answer" />
+      <button>Submit your answer</button>
+    </form>
+  </body>
 </html>

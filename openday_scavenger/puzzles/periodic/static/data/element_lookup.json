@@ -1,0 +1,1182 @@
+{
+  "H": {
+    "name": "Hydrogen",
+    "atomic_mass": 1.008,
+    "category": "ReactiveNonmetal",
+    "number": 1,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_001_hydrogen/element_001_hydrogen.glb",
+    "symbol": "H",
+    "xpos": 1,
+    "ypos": 1
+  },
+  "He": {
+    "name": "Helium",
+    "atomic_mass": 4.0026022,
+    "category": "NobleGas",
+    "number": 2,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_002_helium/element_002_helium.glb",
+    "symbol": "He",
+    "xpos": 18,
+    "ypos": 1
+  },
+  "Li": {
+    "name": "Lithium",
+    "atomic_mass": 6.94,
+    "category": "AlkaliMetal",
+    "number": 3,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_003_lithium/element_003_lithium.glb",
+    "symbol": "Li",
+    "xpos": 1,
+    "ypos": 2
+  },
+  "Be": {
+    "name": "Beryllium",
+    "atomic_mass": 9.01218315,
+    "category": "AlkalineEarthMetal",
+    "number": 4,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_004_beryllium/element_004_beryllium.glb",
+    "symbol": "Be",
+    "xpos": 2,
+    "ypos": 2
+  },
+  "B": {
+    "name": "Boron",
+    "atomic_mass": 10.81,
+    "category": "Metalloid",
+    "number": 5,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_005_boron/element_005_boron.glb",
+    "symbol": "B",
+    "xpos": 13,
+    "ypos": 2
+  },
+  "C": {
+    "name": "Carbon",
+    "atomic_mass": 12.011,
+    "category": "ReactiveNonmetal",
+    "number": 6,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_006_carbon/element_006_carbon.glb",
+    "symbol": "C",
+    "xpos": 14,
+    "ypos": 2
+  },
+  "N": {
+    "name": "Nitrogen",
+    "atomic_mass": 14.007,
+    "category": "ReactiveNonmetal",
+    "number": 7,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_007_nitrogen/element_007_nitrogen.glb",
+    "symbol": "N",
+    "xpos": 15,
+    "ypos": 2
+  },
+  "O": {
+    "name": "Oxygen",
+    "atomic_mass": 15.999,
+    "category": "ReactiveNonmetal",
+    "number": 8,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_008_oxygen/element_008_oxygen.glb",
+    "symbol": "O",
+    "xpos": 16,
+    "ypos": 2
+  },
+  "F": {
+    "name": "Fluorine",
+    "atomic_mass": 18.9984031636,
+    "category": "ReactiveNonmetal",
+    "number": 9,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_009_fluorine/element_009_fluorine.glb",
+    "symbol": "F",
+    "xpos": 17,
+    "ypos": 2
+  },
+  "Ne": {
+    "name": "Neon",
+    "atomic_mass": 20.17976,
+    "category": "NobleGas",
+    "number": 10,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_010_neon/element_010_neon.glb",
+    "symbol": "Ne",
+    "xpos": 18,
+    "ypos": 2
+  },
+  "Na": {
+    "name": "Sodium",
+    "atomic_mass": 22.989769282,
+    "category": "AlkaliMetal",
+    "number": 11,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_011_sodium/element_011_sodium.glb",
+    "symbol": "Na",
+    "xpos": 1,
+    "ypos": 3
+  },
+  "Mg": {
+    "name": "Magnesium",
+    "atomic_mass": 24.305,
+    "category": "AlkalineEarthMetal",
+    "number": 12,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_012_magnesium/element_012_magnesium.glb",
+    "symbol": "Mg",
+    "xpos": 2,
+    "ypos": 3
+  },
+  "Al": {
+    "name": "Aluminium",
+    "atomic_mass": 26.98153857,
+    "category": "PostTransitionMetal",
+    "number": 13,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_013_aluminum/element_013_aluminum.glb",
+    "symbol": "Al",
+    "xpos": 13,
+    "ypos": 3
+  },
+  "Si": {
+    "name": "Silicon",
+    "atomic_mass": 28.085,
+    "category": "Metalloid",
+    "number": 14,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_014_silicon/element_014_silicon.glb",
+    "symbol": "Si",
+    "xpos": 14,
+    "ypos": 3
+  },
+  "P": {
+    "name": "Phosphorus",
+    "atomic_mass": 30.9737619985,
+    "category": "ReactiveNonmetal",
+    "number": 15,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_015_phosphorus/element_015_phosphorus.glb",
+    "symbol": "P",
+    "xpos": 15,
+    "ypos": 3
+  },
+  "S": {
+    "name": "Sulfur",
+    "atomic_mass": 32.06,
+    "category": "ReactiveNonmetal",
+    "number": 16,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_016_sulfur/element_016_sulfur.glb",
+    "symbol": "S",
+    "xpos": 16,
+    "ypos": 3
+  },
+  "Cl": {
+    "name": "Chlorine",
+    "atomic_mass": 35.45,
+    "category": "ReactiveNonmetal",
+    "number": 17,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_017_chlorine/element_017_chlorine.glb",
+    "symbol": "Cl",
+    "xpos": 17,
+    "ypos": 3
+  },
+  "Ar": {
+    "name": "Argon",
+    "atomic_mass": 39.9481,
+    "category": "NobleGas",
+    "number": 18,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_018_argon/element_018_argon.glb",
+    "symbol": "Ar",
+    "xpos": 18,
+    "ypos": 3
+  },
+  "K": {
+    "name": "Potassium",
+    "atomic_mass": 39.09831,
+    "category": "AlkaliMetal",
+    "number": 19,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_019_potassium/element_019_potassium.glb",
+    "symbol": "K",
+    "xpos": 1,
+    "ypos": 4
+  },
+  "Ca": {
+    "name": "Calcium",
+    "atomic_mass": 40.0784,
+    "category": "AlkalineEarthMetal",
+    "number": 20,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_020_calcium/element_020_calcium.glb",
+    "symbol": "Ca",
+    "xpos": 2,
+    "ypos": 4
+  },
+  "Sc": {
+    "name": "Scandium",
+    "atomic_mass": 44.9559085,
+    "category": "TransitionMetal",
+    "number": 21,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_021_scandium/element_021_scandium.glb",
+    "symbol": "Sc",
+    "xpos": 3,
+    "ypos": 4
+  },
+  "Ti": {
+    "name": "Titanium",
+    "atomic_mass": 47.8671,
+    "category": "TransitionMetal",
+    "number": 22,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_022_titanium/element_022_titanium.glb",
+    "symbol": "Ti",
+    "xpos": 4,
+    "ypos": 4
+  },
+  "V": {
+    "name": "Vanadium",
+    "atomic_mass": 50.94151,
+    "category": "TransitionMetal",
+    "number": 23,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_023_vanadium/element_023_vanadium.glb",
+    "symbol": "V",
+    "xpos": 5,
+    "ypos": 4
+  },
+  "Cr": {
+    "name": "Chromium",
+    "atomic_mass": 51.99616,
+    "category": "TransitionMetal",
+    "number": 24,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_024_chromium/element_024_chromium.glb",
+    "symbol": "Cr",
+    "xpos": 6,
+    "ypos": 4
+  },
+  "Mn": {
+    "name": "Manganese",
+    "atomic_mass": 54.9380443,
+    "category": "TransitionMetal",
+    "number": 25,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_025_manganese/element_025_manganese.glb",
+    "symbol": "Mn",
+    "xpos": 7,
+    "ypos": 4
+  },
+  "Fe": {
+    "name": "Iron",
+    "atomic_mass": 55.8452,
+    "category": "TransitionMetal",
+    "number": 26,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_026_iron/element_026_iron.glb",
+    "symbol": "Fe",
+    "xpos": 8,
+    "ypos": 4
+  },
+  "Co": {
+    "name": "Cobalt",
+    "atomic_mass": 58.9331944,
+    "category": "TransitionMetal",
+    "number": 27,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_027_cobalt/element_027_cobalt.glb",
+    "symbol": "Co",
+    "xpos": 9,
+    "ypos": 4
+  },
+  "Ni": {
+    "name": "Nickel",
+    "atomic_mass": 58.69344,
+    "category": "TransitionMetal",
+    "number": 28,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_028_nickel/element_028_nickel.glb",
+    "symbol": "Ni",
+    "xpos": 10,
+    "ypos": 4
+  },
+  "Cu": {
+    "name": "Copper",
+    "atomic_mass": 63.5463,
+    "category": "TransitionMetal",
+    "number": 29,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_029_copper/element_029_copper.glb",
+    "symbol": "Cu",
+    "xpos": 11,
+    "ypos": 4
+  },
+  "Zn": {
+    "name": "Zinc",
+    "atomic_mass": 65.382,
+    "category": "TransitionMetal",
+    "number": 30,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_030_zinc/element_030_zinc.glb",
+    "symbol": "Zn",
+    "xpos": 12,
+    "ypos": 4
+  },
+  "Ga": {
+    "name": "Gallium",
+    "atomic_mass": 69.7231,
+    "category": "PostTransitionMetal",
+    "number": 31,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_031_gallium/element_031_gallium.glb",
+    "symbol": "Ga",
+    "xpos": 13,
+    "ypos": 4
+  },
+  "Ge": {
+    "name": "Germanium",
+    "atomic_mass": 72.6308,
+    "category": "Metalloid",
+    "number": 32,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_032_germanium/element_032_germanium.glb",
+    "symbol": "Ge",
+    "xpos": 14,
+    "ypos": 4
+  },
+  "As": {
+    "name": "Arsenic",
+    "atomic_mass": 74.9215956,
+    "category": "Metalloid",
+    "number": 33,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_033_arsenic/element_033_arsenic.glb",
+    "symbol": "As",
+    "xpos": 15,
+    "ypos": 4
+  },
+  "Se": {
+    "name": "Selenium",
+    "atomic_mass": 78.9718,
+    "category": "ReactiveNonmetal",
+    "number": 34,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_034_selenium/element_034_selenium.glb",
+    "symbol": "Se",
+    "xpos": 16,
+    "ypos": 4
+  },
+  "Br": {
+    "name": "Bromine",
+    "atomic_mass": 79.904,
+    "category": "ReactiveNonmetal",
+    "number": 35,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_035_bromine/element_035_bromine.glb",
+    "symbol": "Br",
+    "xpos": 17,
+    "ypos": 4
+  },
+  "Kr": {
+    "name": "Krypton",
+    "atomic_mass": 83.7982,
+    "category": "NobleGas",
+    "number": 36,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_036_krypton/element_036_krypton.glb",
+    "symbol": "Kr",
+    "xpos": 18,
+    "ypos": 4
+  },
+  "Rb": {
+    "name": "Rubidium",
+    "atomic_mass": 85.46783,
+    "category": "AlkaliMetal",
+    "number": 37,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_037_rubidium/element_037_rubidium.glb",
+    "symbol": "Rb",
+    "xpos": 1,
+    "ypos": 5
+  },
+  "Sr": {
+    "name": "Strontium",
+    "atomic_mass": 87.621,
+    "category": "AlkalineEarthMetal",
+    "number": 38,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_038_strontium/element_038_strontium.glb",
+    "symbol": "Sr",
+    "xpos": 2,
+    "ypos": 5
+  },
+  "Y": {
+    "name": "Yttrium",
+    "atomic_mass": 88.905842,
+    "category": "TransitionMetal",
+    "number": 39,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_039_yttrium/element_039_yttrium.glb",
+    "symbol": "Y",
+    "xpos": 3,
+    "ypos": 5
+  },
+  "Zr": {
+    "name": "Zirconium",
+    "atomic_mass": 91.2242,
+    "category": "TransitionMetal",
+    "number": 40,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_040_zirconium/element_040_zirconium.glb",
+    "symbol": "Zr",
+    "xpos": 4,
+    "ypos": 5
+  },
+  "Nb": {
+    "name": "Niobium",
+    "atomic_mass": 92.906372,
+    "category": "TransitionMetal",
+    "number": 41,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_041_niobium/element_041_niobium.glb",
+    "symbol": "Nb",
+    "xpos": 5,
+    "ypos": 5
+  },
+  "Mo": {
+    "name": "Molybdenum",
+    "atomic_mass": 95.951,
+    "category": "TransitionMetal",
+    "number": 42,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_042_molybdenum/element_042_molybdenum.glb",
+    "symbol": "Mo",
+    "xpos": 6,
+    "ypos": 5
+  },
+  "Tc": {
+    "name": "Technetium",
+    "atomic_mass": 98,
+    "category": "TransitionMetal",
+    "number": 43,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_043_technetium/element_043_technetium.glb",
+    "symbol": "Tc",
+    "xpos": 7,
+    "ypos": 5
+  },
+  "Ru": {
+    "name": "Ruthenium",
+    "atomic_mass": 101.072,
+    "category": "TransitionMetal",
+    "number": 44,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_044_ruthenium/element_044_ruthenium.glb",
+    "symbol": "Ru",
+    "xpos": 8,
+    "ypos": 5
+  },
+  "Rh": {
+    "name": "Rhodium",
+    "atomic_mass": 102.905502,
+    "category": "TransitionMetal",
+    "number": 45,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_045_rhodium/element_045_rhodium.glb",
+    "symbol": "Rh",
+    "xpos": 9,
+    "ypos": 5
+  },
+  "Pd": {
+    "name": "Palladium",
+    "atomic_mass": 106.421,
+    "category": "TransitionMetal",
+    "number": 46,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_046_palladium/element_046_palladium.glb",
+    "symbol": "Pd",
+    "xpos": 10,
+    "ypos": 5
+  },
+  "Ag": {
+    "name": "Silver",
+    "atomic_mass": 107.86822,
+    "category": "TransitionMetal",
+    "number": 47,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_047_silver/element_047_silver.glb",
+    "symbol": "Ag",
+    "xpos": 11,
+    "ypos": 5
+  },
+  "Cd": {
+    "name": "Cadmium",
+    "atomic_mass": 112.4144,
+    "category": "TransitionMetal",
+    "number": 48,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_048_cadmium/element_048_cadmium.glb",
+    "symbol": "Cd",
+    "xpos": 12,
+    "ypos": 5
+  },
+  "In": {
+    "name": "Indium",
+    "atomic_mass": 114.8181,
+    "category": "PostTransitionMetal",
+    "number": 49,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_049_indium/element_049_indium.glb",
+    "symbol": "In",
+    "xpos": 13,
+    "ypos": 5
+  },
+  "Sn": {
+    "name": "Tin",
+    "atomic_mass": 118.7107,
+    "category": "PostTransitionMetal",
+    "number": 50,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_050_tin/element_050_tin.glb",
+    "symbol": "Sn",
+    "xpos": 14,
+    "ypos": 5
+  },
+  "Sb": {
+    "name": "Antimony",
+    "atomic_mass": 121.7601,
+    "category": "Metalloid",
+    "number": 51,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_051_antimony/element_051_antimony.glb",
+    "symbol": "Sb",
+    "xpos": 15,
+    "ypos": 5
+  },
+  "Te": {
+    "name": "Tellurium",
+    "atomic_mass": 127.603,
+    "category": "Metalloid",
+    "number": 52,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_052_tellurium/element_052_tellurium.glb",
+    "symbol": "Te",
+    "xpos": 16,
+    "ypos": 5
+  },
+  "I": {
+    "name": "Iodine",
+    "atomic_mass": 126.904473,
+    "category": "ReactiveNonmetal",
+    "number": 53,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_053_iodine/element_053_iodine.glb",
+    "symbol": "I",
+    "xpos": 17,
+    "ypos": 5
+  },
+  "Xe": {
+    "name": "Xenon",
+    "atomic_mass": 131.2936,
+    "category": "NobleGas",
+    "number": 54,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_054_xenon/element_054_xenon.glb",
+    "symbol": "Xe",
+    "xpos": 18,
+    "ypos": 5
+  },
+  "Cs": {
+    "name": "Cesium",
+    "atomic_mass": 132.905451966,
+    "category": "AlkaliMetal",
+    "number": 55,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_055_cesium/element_055_cesium.glb",
+    "symbol": "Cs",
+    "xpos": 1,
+    "ypos": 6
+  },
+  "Ba": {
+    "name": "Barium",
+    "atomic_mass": 137.3277,
+    "category": "AlkalineEarthMetal",
+    "number": 56,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_056_barium/element_056_barium.glb",
+    "symbol": "Ba",
+    "xpos": 2,
+    "ypos": 6
+  },
+  "La": {
+    "name": "Lanthanum",
+    "atomic_mass": 138.905477,
+    "category": "Lanthanide",
+    "number": 57,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_057_lanthanum/element_057_lanthanum.glb",
+    "symbol": "La",
+    "xpos": 3,
+    "ypos": 6
+  },
+  "Ce": {
+    "name": "Cerium",
+    "atomic_mass": 140.1161,
+    "category": "Lanthanide",
+    "number": 58,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_058_cerium/element_058_cerium.glb",
+    "symbol": "Ce",
+    "xpos": 4,
+    "ypos": 9
+  },
+  "Pr": {
+    "name": "Praseodymium",
+    "atomic_mass": 140.907662,
+    "category": "Lanthanide",
+    "number": 59,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_059_praseodymium/element_059_praseodymium.glb",
+    "symbol": "Pr",
+    "xpos": 5,
+    "ypos": 9
+  },
+  "Nd": {
+    "name": "Neodymium",
+    "atomic_mass": 144.2423,
+    "category": "Lanthanide",
+    "number": 60,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_060_neodymium/element_060_neodymium.glb",
+    "symbol": "Nd",
+    "xpos": 6,
+    "ypos": 9
+  },
+  "Pm": {
+    "name": "Promethium",
+    "atomic_mass": 145,
+    "category": "Lanthanide",
+    "number": 61,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_061_promethium/element_061_promethium.glb",
+    "symbol": "Pm",
+    "xpos": 7,
+    "ypos": 9
+  },
+  "Sm": {
+    "name": "Samarium",
+    "atomic_mass": 150.362,
+    "category": "Lanthanide",
+    "number": 62,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_062_samarium/element_062_samarium.glb",
+    "symbol": "Sm",
+    "xpos": 8,
+    "ypos": 9
+  },
+  "Eu": {
+    "name": "Europium",
+    "atomic_mass": 151.9641,
+    "category": "Lanthanide",
+    "number": 63,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_063_europium/element_063_europium.glb",
+    "symbol": "Eu",
+    "xpos": 9,
+    "ypos": 9
+  },
+  "Gd": {
+    "name": "Gadolinium",
+    "atomic_mass": 157.253,
+    "category": "Lanthanide",
+    "number": 64,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_064_gadolinium/element_064_gadolinium.glb",
+    "symbol": "Gd",
+    "xpos": 10,
+    "ypos": 9
+  },
+  "Tb": {
+    "name": "Terbium",
+    "atomic_mass": 158.925352,
+    "category": "Lanthanide",
+    "number": 65,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_065_terbium/element_065_terbium.glb",
+    "symbol": "Tb",
+    "xpos": 11,
+    "ypos": 9
+  },
+  "Dy": {
+    "name": "Dysprosium",
+    "atomic_mass": 162.5001,
+    "category": "Lanthanide",
+    "number": 66,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_066_dysprosium/element_066_dysprosium.glb",
+    "symbol": "Dy",
+    "xpos": 12,
+    "ypos": 9
+  },
+  "Ho": {
+    "name": "Holmium",
+    "atomic_mass": 164.930332,
+    "category": "Lanthanide",
+    "number": 67,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_067_holmium/element_067_holmium.glb",
+    "symbol": "Ho",
+    "xpos": 13,
+    "ypos": 9
+  },
+  "Er": {
+    "name": "Erbium",
+    "atomic_mass": 167.2593,
+    "category": "Lanthanide",
+    "number": 68,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_068_erbium/element_068_erbium.glb",
+    "symbol": "Er",
+    "xpos": 14,
+    "ypos": 9
+  },
+  "Tm": {
+    "name": "Thulium",
+    "atomic_mass": 168.934222,
+    "category": "Lanthanide",
+    "number": 69,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_069_thulium/element_069_thulium.glb",
+    "symbol": "Tm",
+    "xpos": 15,
+    "ypos": 9
+  },
+  "Yb": {
+    "name": "Ytterbium",
+    "atomic_mass": 173.0451,
+    "category": "Lanthanide",
+    "number": 70,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_070_ytterbium/element_070_ytterbium.glb",
+    "symbol": "Yb",
+    "xpos": 16,
+    "ypos": 9
+  },
+  "Lu": {
+    "name": "Lutetium",
+    "atomic_mass": 174.96681,
+    "category": "Lanthanide",
+    "number": 71,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_071_lutetium/element_071_lutetium.glb",
+    "symbol": "Lu",
+    "xpos": 17,
+    "ypos": 9
+  },
+  "Hf": {
+    "name": "Hafnium",
+    "atomic_mass": 178.492,
+    "category": "TransitionMetal",
+    "number": 72,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_072_hafnium/element_072_hafnium.glb",
+    "symbol": "Hf",
+    "xpos": 4,
+    "ypos": 6
+  },
+  "Ta": {
+    "name": "Tantalum",
+    "atomic_mass": 180.947882,
+    "category": "TransitionMetal",
+    "number": 73,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_073_tantalum/element_073_tantalum.glb",
+    "symbol": "Ta",
+    "xpos": 5,
+    "ypos": 6
+  },
+  "W": {
+    "name": "Tungsten",
+    "atomic_mass": 183.841,
+    "category": "TransitionMetal",
+    "number": 74,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_074_tungsten/element_074_tungsten.glb",
+    "symbol": "W",
+    "xpos": 6,
+    "ypos": 6
+  },
+  "Re": {
+    "name": "Rhenium",
+    "atomic_mass": 186.2071,
+    "category": "TransitionMetal",
+    "number": 75,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_075_rhenium/element_075_rhenium.glb",
+    "symbol": "Re",
+    "xpos": 7,
+    "ypos": 6
+  },
+  "Os": {
+    "name": "Osmium",
+    "atomic_mass": 190.233,
+    "category": "TransitionMetal",
+    "number": 76,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_076_osmium/element_076_osmium.glb",
+    "symbol": "Os",
+    "xpos": 8,
+    "ypos": 6
+  },
+  "Ir": {
+    "name": "Iridium",
+    "atomic_mass": 192.2173,
+    "category": "TransitionMetal",
+    "number": 77,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_077_iridium/element_077_iridium.glb",
+    "symbol": "Ir",
+    "xpos": 9,
+    "ypos": 6
+  },
+  "Pt": {
+    "name": "Platinum",
+    "atomic_mass": 195.0849,
+    "category": "TransitionMetal",
+    "number": 78,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_078_platinum/element_078_platinum.glb",
+    "symbol": "Pt",
+    "xpos": 10,
+    "ypos": 6
+  },
+  "Au": {
+    "name": "Gold",
+    "atomic_mass": 196.9665695,
+    "category": "TransitionMetal",
+    "number": 79,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_079_gold/element_079_gold.glb",
+    "symbol": "Au",
+    "xpos": 11,
+    "ypos": 6
+  },
+  "Hg": {
+    "name": "Mercury",
+    "atomic_mass": 200.5923,
+    "category": "TransitionMetal",
+    "number": 80,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_080_mercury/element_080_mercury.glb",
+    "symbol": "Hg",
+    "xpos": 12,
+    "ypos": 6
+  },
+  "Tl": {
+    "name": "Thallium",
+    "atomic_mass": 204.38,
+    "category": "PostTransitionMetal",
+    "number": 81,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_081_thallium/element_081_thallium.glb",
+    "symbol": "Tl",
+    "xpos": 13,
+    "ypos": 6
+  },
+  "Pb": {
+    "name": "Lead",
+    "atomic_mass": 207.21,
+    "category": "PostTransitionMetal",
+    "number": 82,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_082_lead/element_082_lead.glb",
+    "symbol": "Pb",
+    "xpos": 14,
+    "ypos": 6
+  },
+  "Bi": {
+    "name": "Bismuth",
+    "atomic_mass": 208.980401,
+    "category": "PostTransitionMetal",
+    "number": 83,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_083_bismuth/element_083_bismuth.glb",
+    "symbol": "Bi",
+    "xpos": 15,
+    "ypos": 6
+  },
+  "Po": {
+    "name": "Polonium",
+    "atomic_mass": 209,
+    "category": "PostTransitionMetal",
+    "number": 84,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_084_polonium/element_084_polonium.glb",
+    "symbol": "Po",
+    "xpos": 16,
+    "ypos": 6
+  },
+  "At": {
+    "name": "Astatine",
+    "atomic_mass": 210,
+    "category": "PostTransitionMetal",
+    "number": 85,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_085_astatine/element_085_astatine.glb",
+    "symbol": "At",
+    "xpos": 17,
+    "ypos": 6
+  },
+  "Rn": {
+    "name": "Radon",
+    "atomic_mass": 222,
+    "category": "NobleGas",
+    "number": 86,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_086_radon/element_086_radon.glb",
+    "symbol": "Rn",
+    "xpos": 18,
+    "ypos": 6
+  },
+  "Fr": {
+    "name": "Francium",
+    "atomic_mass": 223,
+    "category": "AlkaliMetal",
+    "number": 87,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_087_francium/element_087_francium.glb",
+    "symbol": "Fr",
+    "xpos": 1,
+    "ypos": 7
+  },
+  "Ra": {
+    "name": "Radium",
+    "atomic_mass": 226,
+    "category": "AlkalineEarthMetal",
+    "number": 88,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_088_radium/element_088_radium.glb",
+    "symbol": "Ra",
+    "xpos": 2,
+    "ypos": 7
+  },
+  "Ac": {
+    "name": "Actinium",
+    "atomic_mass": 227,
+    "category": "Actinide",
+    "number": 89,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_089_actinium/element_089_actinium.glb",
+    "symbol": "Ac",
+    "xpos": 3,
+    "ypos": 7
+  },
+  "Th": {
+    "name": "Thorium",
+    "atomic_mass": 232.03774,
+    "category": "Actinide",
+    "number": 90,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_090_thorium/element_090_thorium.glb",
+    "symbol": "Th",
+    "xpos": 4,
+    "ypos": 10
+  },
+  "Pa": {
+    "name": "Protactinium",
+    "atomic_mass": 231.035882,
+    "category": "Actinide",
+    "number": 91,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_091_protactinium/element_091_protactinium.glb",
+    "symbol": "Pa",
+    "xpos": 5,
+    "ypos": 10
+  },
+  "U": {
+    "name": "Uranium",
+    "atomic_mass": 238.028913,
+    "category": "Actinide",
+    "number": 92,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_092_uranium/element_092_uranium.glb",
+    "symbol": "U",
+    "xpos": 6,
+    "ypos": 10
+  },
+  "Np": {
+    "name": "Neptunium",
+    "atomic_mass": 237,
+    "category": "Actinide",
+    "number": 93,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_093_neptunium/element_093_neptunium.glb",
+    "symbol": "Np",
+    "xpos": 7,
+    "ypos": 10
+  },
+  "Pu": {
+    "name": "Plutonium",
+    "atomic_mass": 244,
+    "category": "Actinide",
+    "number": 94,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_094_plutonium/element_094_plutonium.glb",
+    "symbol": "Pu",
+    "xpos": 8,
+    "ypos": 10
+  },
+  "Am": {
+    "name": "Americium",
+    "atomic_mass": 243,
+    "category": "Actinide",
+    "number": 95,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_095_americium/element_095_americium.glb",
+    "symbol": "Am",
+    "xpos": 9,
+    "ypos": 10
+  },
+  "Cm": {
+    "name": "Curium",
+    "atomic_mass": 247,
+    "category": "Actinide",
+    "number": 96,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_096_curium/element_096_curium.glb",
+    "symbol": "Cm",
+    "xpos": 10,
+    "ypos": 10
+  },
+  "Bk": {
+    "name": "Berkelium",
+    "atomic_mass": 247,
+    "category": "Actinide",
+    "number": 97,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_097_berkelium/element_097_berkelium.glb",
+    "symbol": "Bk",
+    "xpos": 11,
+    "ypos": 10
+  },
+  "Cf": {
+    "name": "Californium",
+    "atomic_mass": 251,
+    "category": "Actinide",
+    "number": 98,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_098_californium/element_098_californium.glb",
+    "symbol": "Cf",
+    "xpos": 12,
+    "ypos": 10
+  },
+  "Es": {
+    "name": "Einsteinium",
+    "atomic_mass": 252,
+    "category": "Actinide",
+    "number": 99,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_099_einsteinium/element_099_einsteinium.glb",
+    "symbol": "Es",
+    "xpos": 13,
+    "ypos": 10
+  },
+  "Fm": {
+    "name": "Fermium",
+    "atomic_mass": 257,
+    "category": "Actinide",
+    "number": 100,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_100_fermium/element_100_fermium.glb",
+    "symbol": "Fm",
+    "xpos": 14,
+    "ypos": 10
+  },
+  "Md": {
+    "name": "Mendelevium",
+    "atomic_mass": 258,
+    "category": "Actinide",
+    "number": 101,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_101_mendelevium/element_101_mendelevium.glb",
+    "symbol": "Md",
+    "xpos": 15,
+    "ypos": 10
+  },
+  "No": {
+    "name": "Nobelium",
+    "atomic_mass": 259,
+    "category": "Actinide",
+    "number": 102,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_102_nobelium/element_102_nobelium.glb",
+    "symbol": "No",
+    "xpos": 16,
+    "ypos": 10
+  },
+  "Lr": {
+    "name": "Lawrencium",
+    "atomic_mass": 266,
+    "category": "Actinide",
+    "number": 103,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_103_lawrencium/element_103_lawrencium.glb",
+    "symbol": "Lr",
+    "xpos": 17,
+    "ypos": 10
+  },
+  "Rf": {
+    "name": "Rutherfordium",
+    "atomic_mass": 267,
+    "category": "TransitionMetal",
+    "number": 104,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_104_rutherfordium/element_104_rutherfordium.glb",
+    "symbol": "Rf",
+    "xpos": 4,
+    "ypos": 7
+  },
+  "Db": {
+    "name": "Dubnium",
+    "atomic_mass": 268,
+    "category": "TransitionMetal",
+    "number": 105,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_105_dubnium/element_105_dubnium.glb",
+    "symbol": "Db",
+    "xpos": 5,
+    "ypos": 7
+  },
+  "Sg": {
+    "name": "Seaborgium",
+    "atomic_mass": 269,
+    "category": "TransitionMetal",
+    "number": 106,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_106_seaborgium/element_106_seaborgium.glb",
+    "symbol": "Sg",
+    "xpos": 6,
+    "ypos": 7
+  },
+  "Bh": {
+    "name": "Bohrium",
+    "atomic_mass": 270,
+    "category": "TransitionMetal",
+    "number": 107,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_107_bohrium/element_107_bohrium.glb",
+    "symbol": "Bh",
+    "xpos": 7,
+    "ypos": 7
+  },
+  "Hs": {
+    "name": "Hassium",
+    "atomic_mass": 269,
+    "category": "TransitionMetal",
+    "number": 108,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_108_hassium/element_108_hassium.glb",
+    "symbol": "Hs",
+    "xpos": 8,
+    "ypos": 7
+  },
+  "Mt": {
+    "name": "Meitnerium",
+    "atomic_mass": 278,
+    "category": "UnknownTransitionMetal",
+    "number": 109,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_109_meitnerium/element_109_meitnerium.glb",
+    "symbol": "Mt",
+    "xpos": 9,
+    "ypos": 7
+  },
+  "Ds": {
+    "name": "Darmstadtium",
+    "atomic_mass": 281,
+    "category": "UnknownTransitionMetal",
+    "number": 110,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_110_darmstadtium/element_110_darmstadtium.glb",
+    "symbol": "Ds",
+    "xpos": 10,
+    "ypos": 7
+  },
+  "Rg": {
+    "name": "Roentgenium",
+    "atomic_mass": 282,
+    "category": "UnknownTransitionMetal",
+    "number": 111,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_111_roentgenium/element_111_roentgenium.glb",
+    "symbol": "Rg",
+    "xpos": 11,
+    "ypos": 7
+  },
+  "Cn": {
+    "name": "Copernicium",
+    "atomic_mass": 285,
+    "category": "UnknownTransitionMetal",
+    "number": 112,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_112_copernicium/element_112_copernicium.glb",
+    "symbol": "Cn",
+    "xpos": 12,
+    "ypos": 7
+  },
+  "Nh": {
+    "name": "Nihonium",
+    "atomic_mass": 286,
+    "category": "UnknownTransitionMetal",
+    "number": 113,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_113_nihonium/element_113_nihonium.glb",
+    "symbol": "Nh",
+    "xpos": 13,
+    "ypos": 7
+  },
+  "Fl": {
+    "name": "Flerovium",
+    "atomic_mass": 289,
+    "category": "UnknownPostTransitionMetal",
+    "number": 114,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_114_flerovium/element_114_flerovium.glb",
+    "symbol": "Fl",
+    "xpos": 14,
+    "ypos": 7
+  },
+  "Mc": {
+    "name": "Moscovium",
+    "atomic_mass": 289,
+    "category": "UnknownPostTransitionMetal",
+    "number": 115,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_115_moscovium/element_115_moscovium.glb",
+    "symbol": "Mc",
+    "xpos": 15,
+    "ypos": 7
+  },
+  "Lv": {
+    "name": "Livermorium",
+    "atomic_mass": 293,
+    "category": "UnknownPostTransitionMetal",
+    "number": 116,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_116_livermorium/element_116_livermorium.glb",
+    "symbol": "Lv",
+    "xpos": 16,
+    "ypos": 7
+  },
+  "Ts": {
+    "name": "Tennessine",
+    "atomic_mass": 294,
+    "category": "UnknownMetalloid",
+    "number": 117,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_117_tennessine/element_117_tennessine.glb",
+    "symbol": "Ts",
+    "xpos": 17,
+    "ypos": 7
+  },
+  "Og": {
+    "name": "Oganesson",
+    "atomic_mass": 294,
+    "category": "UnknownNobleGas",
+    "number": 118,
+    "bohr_model_3d": "https://storage.googleapis.com/search-ar-edu/periodic-table/element_118_oganesson/element_118_oganesson.glb",
+    "symbol": "Og",
+    "xpos": 18,
+    "ypos": 7
+  }
+}
