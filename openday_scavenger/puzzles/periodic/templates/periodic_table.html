@@ -1,0 +1,17 @@
+<div class="periodic-table">
+  {% for element_symbol in elements %} {% set element =
+  element_lookup[element_symbol] %}
+  <div
+    class="element {% if element_symbol not in options %}option{% endif %}"
+    style="
+      color: {{ get_category_style(element['category'])['color'] }};
+      background-color: {{ get_category_style(element['category'])['backgroundColor'] }};
+      grid-column: {{ element['xpos'] }};
+      grid-row: {{ element['ypos'] }};
+    "
+  >
+    <div class="element-number">{{ element['number'] }}</div>
+    <div class="element-symbol">{{ element_symbol }}</div>
+  </div>
+  {% endfor %}
+</div>

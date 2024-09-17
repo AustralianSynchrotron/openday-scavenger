@@ -1,0 +1,16 @@
+<form id="form" hx-encoding="multipart/form-data" hx-post="/submission">
+  <input hidden type="text" id="name" name="name" value="{{ puzzle }}" />
+  <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}" />
+  <label for="user_solution">Your answer (e.g "Fe"):</label><br />
+  <input
+    type="text"
+    id="answer"
+    name="answer"
+    pattern="[a-zA-Z]+"
+    placeholder=""
+  />
+  <button>Submit your answer</button>
+</form>
+
+<div id="response-good"></div>
+<div id="response-bad"></div>

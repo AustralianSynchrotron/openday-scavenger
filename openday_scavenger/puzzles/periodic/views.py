@@ -23,7 +23,7 @@ ANSWER = "Fe"
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static")
+templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
 
 # Load element_list
 with open(Path(__file__).resolve().parent / "static" / "data" / "element_list.json") as f:
