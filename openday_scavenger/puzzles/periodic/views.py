@@ -11,6 +11,16 @@ from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 from .services import get_category_style
 
+# Constants
+OPTIONS = ["H", "Fe", "Ta", "Pb", "O"]
+
+# QUESTION = "This element is essential for the production of hemoglobin in the human body and is often associated with red blood cells. What is it?"
+# QUESTION = "Known for its use in steel production, this element has the atomic number 26. What is it?"
+# QUESTION = 'The symbol for this element comes from its Latin name, "ferrum." Which element is this?'
+# QUESTION = "This element is found in Earth's core and contributes to the planet's magnetic field. What is it?"
+QUESTION = "In ancient times, this element was used to make weapons and tools, and it still forms the backbone of modern infrastructure. What is it?"
+ANSWER = "Fe"
+
 router = APIRouter()
 
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static")
@@ -52,10 +62,12 @@ async def index(
         request=request,
         name="index.html",
         context={
-            "puzzle": "demo",
+            "puzzle": "periodic",
             "visitor": visitor.uid,
             "elements": elements,
             "element_lookup": element_lookup,
             "get_category_style": get_category_style,
+            "options": OPTIONS,
+            "question": QUESTION,
         },
     )

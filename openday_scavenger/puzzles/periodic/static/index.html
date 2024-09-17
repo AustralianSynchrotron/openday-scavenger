@@ -36,22 +36,22 @@
       {% for element_symbol in elements %} {% set element =
       element_lookup[element_symbol] %}
       <div
-        class="element"
+        class="element {% if element_symbol not in options %}option{% endif %}"
         style="
           color: {{ get_category_style(element['category'])['color'] }};
           background-color: {{ get_category_style(element['category'])['backgroundColor'] }};
           grid-column: {{ element['xpos'] }};
           grid-row: {{ element['ypos'] }};
-          border-radius: 5px;
+          
         "
       >
-        {{ element_symbol }}
+        <div class="element-number">{{ element['number'] }}</div>
+        <div class="element-symbol">{{ element_symbol }}</div>
       </div>
       {% endfor %}
     </div>
 
-    What energy in GeV does the accelerator of the Australian Synchrotron run
-    at?
+    {{ question }}
 
     <form id="form" hx-encoding="multipart/form-data" hx-post="/submission">
       <input hidden type="text" id="name" name="name" value="{{ puzzle }}" />
@@ -62,7 +62,7 @@
         name="visitor"
         value="{{ visitor }}"
       />
-      <label for="energy">Energy:</label><br />
+      <label for="energy">Element Symbol(e.g "Fe"):</label><br />
       <input type="text" id="answer" name="answer" />
       <button>Submit your answer</button>
     </form>
