@@ -1,4 +1,6 @@
+import json
 from datetime import datetime
+from typing import Any
 from uuid import uuid4
 
 from sqlalchemy import Integer, Row, and_, cast, func
@@ -41,13 +43,16 @@ def get_all(
     return q.all()  # type: ignore
 
 
-def create(db_session: Session, *, visitor_uid: str) -> Visitor:
+def create(
+    db_session: Session, *, visitor_uid: str, extra: dict[str, Any] | None = None
+) -> Visitor:
     """
     Create a new visitor entry in the database.
 
     Args:
         db_session (Session): The SQLAlchemy session object.
         visitor_uid (str): The uid of the visitor that should be added to the database.
+        extra (dict): Extra information about the user that is stored as a JSON string.
 
 
     """
@@ -63,7 +68,11 @@ def create(db_session: Session, *, visitor_uid: str) -> Visitor:
         raise VisitorUIDInvalidError(f"UID {visitor_uid} not in visitor pool")
 
     # Create the visitor database model and add it to the database
-    visitor = Visitor(uid=visitor_uid, checked_in=datetime.now())
+    visitor = Visitor(
+        uid=visitor_uid,
+        checked_in=datetime.now(),
+        extra=json.dumps(extra) if extra is not None else None,
+    )
 
     try:
         db_session.add(visitor)
