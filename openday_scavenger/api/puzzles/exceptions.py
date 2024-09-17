@@ -27,3 +27,7 @@ class PuzzleCompletedError(HTTPException):
 
 class ForbiddenAccessTestEndpointError(RuntimeError):
     """Raised if somebody tries to access the test endpoint if it is turned off"""
+
+
+class AccessCreationError(RuntimeError):
+    """Raised if the access of a visitor to a puzzle could not be recorded"""

@@ -5,7 +5,7 @@ from io import BytesIO
 from segno import make_qr
 from sqlalchemy.orm import Session
 
-from openday_scavenger.api.puzzles.models import Puzzle, Response
+from openday_scavenger.api.puzzles.models import Access, Puzzle, Response
 from openday_scavenger.api.visitors.exceptions import VisitorUIDInvalidError
 from openday_scavenger.api.visitors.models import Visitor
 from openday_scavenger.api.visitors.schemas import VisitorPoolCreate
@@ -13,12 +13,27 @@ from openday_scavenger.api.visitors.service import create_visitor_pool, get_visi
 from openday_scavenger.config import get_settings
 
 from .exceptions import (
+    AccessCreationError,
     ForbiddenAccessTestEndpointError,
     PuzzleCreationError,
     PuzzleNotFoundError,
     PuzzleUpdatedError,
 )
 from .schemas import PuzzleCompare, PuzzleCreate, PuzzleUpdate
+
+__all__ = (
+    "get_all",
+    "count",
+    "get_all_responses",
+    "create",
+    "update",
+    "compare_answer",
+    "record_access",
+    "generate_qr_code",
+    "generate_qr_codes_pdf",
+    "generate_test_data",
+)
+
 
 config = get_settings()
 
@@ -222,6 +237,49 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
             raise
 
     return is_correct
+
+
+def record_access(db_session: Session, puzzle_name: str, visitor_uid: str) -> Access:
+    """
+    Record that a visitor has accessed a puzzle.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        puzzle_name (str): The name of the puzzle the visitor accessed.
+        visitor_uid (str): The uid of the visitor that accessed the puzzle.
+
+    Returns:
+        Access: The created access object.
+    """
+    # Get the database models for the puzzle.
+    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
+
+    if puzzle is None:
+        raise PuzzleNotFoundError(
+            f"A puzzle with the name {puzzle_name} could not be found in the database"
+        )
+
+    # Get the database model for the visitor.
+    visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
+
+    if visitor is None:
+        raise VisitorUIDInvalidError(f"Could not find visitor {visitor_uid} in the database.")
+
+    access = Access(
+        puzzle=puzzle,
+        visitor=visitor,
+        created_at=datetime.now(),
+    )
+
+    # Attempt adding the entry to the database. If it fails, roll back.
+    try:
+        db_session.add(access)
+        db_session.commit()
+    except Exception:
+        db_session.rollback()
+        raise AccessCreationError(f"Could not record the access to {puzzle_name} by {visitor_uid}")
+
+    return access
 
 
 def generate_qr_code(name: str, as_file_buff: bool = False) -> str | BytesIO:

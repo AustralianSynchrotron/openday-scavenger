@@ -18,6 +18,7 @@ class Puzzle(Base):
     location: Mapped[str] = mapped_column(String(200), nullable=True)
     notes: Mapped[str] = mapped_column(nullable=True)
 
+    access: Mapped[List["Access"]] = relationship(back_populates="puzzle")
     responses: Mapped[List["Response"]] = relationship(back_populates="puzzle")
 
     def __repr__(self) -> str:
@@ -36,7 +37,7 @@ class Response(Base):
     created_at: Mapped[datetime] = mapped_column()
 
     visitor: Mapped["Visitor"] = relationship(back_populates="responses")  # noqa F821 # type: ignore
-    puzzle: Mapped["Puzzle"] = relationship(back_populates="responses")
+    puzzle: Mapped["Puzzle"] = relationship(back_populates="responses")  # noqa F821 # type: ignore
 
     def __repr__(self) -> str:
         return (
@@ -44,3 +45,19 @@ class Response(Base):
             f"id={self.id!r}, visitor={self.visitor_id!r}, puzzle={self.puzzle_id!r},"
             f"answer={self.answer!r}, correct={self.is_correct!r})"
         )
+
+
+class Access(Base):
+    """Database table for recording a visitor accessing a puzzle"""
+
+    __tablename__ = "access"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    visitor_id: Mapped[int] = mapped_column(ForeignKey("visitor.id"))
+    puzzle_id: Mapped[int] = mapped_column(ForeignKey("puzzle.id"))
+    created_at: Mapped[datetime] = mapped_column()
+
+    puzzle: Mapped["Puzzle"] = relationship(back_populates="access")  # noqa F821 # type: ignore
+    visitor: Mapped["Visitor"] = relationship(back_populates="access")  # noqa F821 # type: ignore
+
+    def __repr__(self) -> str:
+        return f"Access(id={self.id!r}, puzzle={self.puzzle.name!r}, visitor={self.visitor.uid!r})"

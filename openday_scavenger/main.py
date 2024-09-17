@@ -13,7 +13,7 @@ from openday_scavenger.api.db import create_tables
 from openday_scavenger.api.puzzles.dependencies import (
     block_correctly_answered_puzzle,
     block_disabled_puzzles,
-    get_puzzle_name_from_request,
+    record_puzzle_access,
 )
 from openday_scavenger.api.puzzles.exceptions import (
     DisabledPuzzleError,
@@ -119,9 +119,9 @@ app.include_router(
     puzzle_router,
     prefix="/puzzles",
     dependencies=[
-        Depends(get_puzzle_name_from_request),
-        Depends(block_disabled_puzzles),
+        Depends(record_puzzle_access),
         Depends(block_correctly_answered_puzzle),
+        Depends(block_disabled_puzzles),
         Depends(auth_required),
     ],
 )
