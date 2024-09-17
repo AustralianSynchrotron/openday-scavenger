@@ -23,7 +23,7 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Ruff Lint
-        run: ruff check --output-format=github .
+        run: uvx ruff check --output-format=github .
 
       - name: Run tests
         # For example, using `pytest`
