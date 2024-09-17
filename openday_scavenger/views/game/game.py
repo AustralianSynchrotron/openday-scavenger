@@ -1,14 +1,14 @@
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, Depends, Form, Header, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCompare
-from openday_scavenger.api.puzzles.service import compare_answer
+from openday_scavenger.api.puzzles.service import compare_answer, get_all_responses
 from openday_scavenger.api.puzzles.service import count as count_puzzles
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.exceptions import VisitorExistsError
@@ -54,7 +54,11 @@ async def render_root_page(
 
 
 @router.get("/register/{visitor_uid}")
-async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(get_db)]):
+async def register_visitor(
+    visitor_uid: str,
+    db: Annotated["Session", Depends(get_db)],
+    user_agent: Annotated[str | None, Header()] = None,
+):
     """Register a new visitor and set the authentication cookie"""
 
     # Registration of a visitor means we check if the uid is available in the visitor pool, and if so
@@ -67,7 +71,7 @@ async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(ge
     # uid of another visitor and hijacks their session. If they figure that out, props
     # to them for successfully hacking our little application. We might want to hire them.
     try:
-        _ = create_visitor(db, visitor_uid=visitor_uid)
+        _ = create_visitor(db, visitor_uid=visitor_uid, extra={"user_agent": user_agent})
     except VisitorExistsError:
         pass
 
@@ -109,6 +113,14 @@ async def submit_answer(
     - if the answer was not correct, we say sorry and provide a button
       which will take them back to the puzzle page so they can try again.
     """
+    # Check if visitor has already given a correct answer for this puzzle
+    responses = get_all_responses(
+        db, filter_by_puzzle_name=puzzle_in.name, filter_by_visitor_uid=puzzle_in.visitor
+    )
+
+    if any([response.is_correct for response in responses]):
+        return {"success": True}  # TODO: Need to handle this better. A specific return code.
+
     if compare_answer(db, puzzle_in):
         if (
             (config.SESSIONS_ENABLED)

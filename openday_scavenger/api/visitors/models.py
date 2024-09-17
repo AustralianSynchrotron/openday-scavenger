@@ -15,6 +15,7 @@ class Visitor(Base):
     uid: Mapped[str] = mapped_column(String(6), index=True, unique=True)
     checked_in: Mapped[datetime] = mapped_column()
     checked_out: Mapped[datetime | None] = mapped_column(nullable=True, default=None)
+    extra: Mapped[str] = mapped_column(nullable=True, default=None)
 
     responses: Mapped[List["Response"]] = relationship(back_populates="visitor")  # noqa F821 # type: ignore
     correct_responses: Mapped[List["Response"]] = relationship(  # noqa F821 # type: ignore
