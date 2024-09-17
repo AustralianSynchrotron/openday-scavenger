@@ -1,4 +1,5 @@
 import json
+import random
 from pathlib import Path
 from typing import Annotated
 
@@ -12,14 +13,22 @@ from openday_scavenger.api.visitors.schemas import VisitorAuth
 from .services import get_category_style
 
 # Constants
+# selection of elements to choose from
 OPTIONS = ["H", "Fe", "Ta", "Pb", "O"]
 
-# QUESTION = "This element is essential for the production of hemoglobin in the human body and is often associated with red blood cells. What is it?"
-# QUESTION = "Known for its use in steel production, this element has the atomic number 26. What is it?"
-# QUESTION = 'The symbol for this element comes from its Latin name, "ferrum." Which element is this?'
-# QUESTION = "This element is found in Earth's core and contributes to the planet's magnetic field. What is it?"
-QUESTION = "In ancient times, this element was used to make weapons and tools, and it still forms the backbone of modern infrastructure. What is it?"
-ANSWER = "Fe"
+QUESTIONS = [
+    "This element is essential for the production of hemoglobin in the human body and is often associated with red blood cells. What is it?",
+    'The symbol for this element comes from its Latin name, "ferrum". Which element is this?',
+    "This element is found in Earth's core and contributes to the planet's magnetic field. What is it?",
+    "In ancient times, this element was used to make weapons and tools, and it still forms the backbone of modern infrastructure. What is it?",
+    "This element oxidizes in air, forming a red-brown layer commonly known as rust. What is it?",
+    "This transition metal is attracted to magnets and often used to create strong magnetic fields. What is it?",
+    "Found in both meteorites and the Earth&apos;s crust, this element has been used since the Iron Age. What is it?",
+]
+QUESTION = random.choice(QUESTIONS)
+
+# answer will be sotred in the database
+# ANSWER = "Fe"
 
 router = APIRouter()
 
