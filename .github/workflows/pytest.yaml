@@ -22,11 +22,12 @@ jobs:
       - name: Install the project
         run: uv sync --all-extras --dev
 
+      - name: Ruff Lint
+        run: ruff check --output-format=github .
+
       - name: Run tests
         # For example, using `pytest`
-        run: |
-          uv run pytest tests
-          ls -la 
+        run: uv run pytest tests
 
       - name: Upload coverage report
         if: always()
