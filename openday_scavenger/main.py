@@ -10,9 +10,14 @@ from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from openday_scavenger.api.db import create_tables
-from openday_scavenger.api.puzzles.dependencies import block_disabled_puzzles
+from openday_scavenger.api.puzzles.dependencies import (
+    block_correctly_answered_puzzle,
+    block_disabled_puzzles,
+    get_puzzle_name_from_request,
+)
 from openday_scavenger.api.puzzles.exceptions import (
     DisabledPuzzleError,
+    PuzzleCompletedError,
     UnknownPuzzleError,
 )
 from openday_scavenger.api.visitors.dependencies import auth_required
@@ -73,6 +78,14 @@ async def disabled_puzzle_exception_handler(request, exc):
     return templates.TemplateResponse(request=request, name="403_disabled_puzzle.html")
 
 
+@app.exception_handler(PuzzleCompletedError)
+async def completed_puzzle_exception_handler(request, exc):
+    """Catch a completed puzzle exception and render the relevant page"""
+    logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
+    templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
+    return templates.TemplateResponse(request=request, name="410_completed_puzzle.html")
+
+
 @app.exception_handler(StarletteHTTPException)
 async def custom_http_exception_handler(request, exc):
     """Catch HTTP exceptions, log the error and if it is a 404 render the 404 template"""
@@ -105,5 +118,10 @@ app.include_router(admin_router, prefix="/admin")
 app.include_router(
     puzzle_router,
     prefix="/puzzles",
-    dependencies=[Depends(block_disabled_puzzles), Depends(auth_required)],
+    dependencies=[
+        Depends(get_puzzle_name_from_request),
+        Depends(block_disabled_puzzles),
+        Depends(block_correctly_answered_puzzle),
+        Depends(auth_required),
+    ],
 )

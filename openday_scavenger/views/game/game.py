@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCompare
-from openday_scavenger.api.puzzles.service import compare_answer
+from openday_scavenger.api.puzzles.service import compare_answer, get_all_responses
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.exceptions import VisitorExistsError
 from openday_scavenger.api.visitors.schemas import VisitorAuth
@@ -74,6 +74,14 @@ async def submit_answer(
     puzzle_in: Annotated[PuzzleCompare, Form()], db: Annotated["Session", Depends(get_db)]
 ):
     """AJAX style endpoint to submit the answer to a puzzle"""
+
+    # Check if visitor has already given a correct answer for this puzzle
+    responses = get_all_responses(
+        db, filter_by_puzzle_name=puzzle_in.name, filter_by_visitor_uid=puzzle_in.visitor
+    )
+
+    if any([response.is_correct for response in responses]):
+        return {"success": True}  # TODO: Need to handle this better. A specific return code.
 
     if compare_answer(db, puzzle_in):
         return {"success": True}
