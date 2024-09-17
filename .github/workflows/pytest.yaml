@@ -24,7 +24,9 @@ jobs:
 
       - name: Run tests
         # For example, using `pytest`
-        run: uv run pytest tests
+        run: |
+          uv run pytest tests
+          ls -la 
 
       - name: Upload coverage report
         if: always()
