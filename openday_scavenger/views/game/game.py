@@ -9,10 +9,15 @@ from sqlalchemy.orm import Session
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCompare
 from openday_scavenger.api.puzzles.service import compare_answer, get_all_responses
+from openday_scavenger.api.puzzles.service import count as count_puzzles
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.exceptions import VisitorExistsError
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 from openday_scavenger.api.visitors.service import create as create_visitor
+from openday_scavenger.api.visitors.service import get_correct_responses
+from openday_scavenger.api.visitors.service import (
+    has_completed_all_puzzles as visitor_has_completed_all_puzzles,
+)
 from openday_scavenger.config import get_settings
 
 router = APIRouter()
@@ -22,11 +27,29 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 
 @router.get("/")
 async def render_root_page(
-    request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]
+    request: Request,
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    db: Annotated["Session", Depends(get_db)],
 ):
     """Render the starting page for visitors"""
+
+    # If the visitor has completed all puzzles, don't show the QR code scanner
+    # and send them back to the registration desk. Also get the progress of the visitor.
+    has_completed_all_puzzles = False
+    number_correct_responses = 0
+    if (config.SESSIONS_ENABLED) and (visitor.uid is not None):
+        has_completed_all_puzzles = visitor_has_completed_all_puzzles(db, visitor_uid=visitor.uid)
+        number_correct_responses = len(get_correct_responses(db, visitor_uid=visitor.uid))
+
     return templates.TemplateResponse(
-        request=request, name="index.html", context={"visitor": visitor}
+        request=request,
+        name="index.html",
+        context={
+            "visitor": visitor,
+            "number_active_puzzles": count_puzzles(db, only_active=True),
+            "number_correct_responses": number_correct_responses,
+            "has_completed_all_puzzles": has_completed_all_puzzles,
+        },
     )
 
 
@@ -71,10 +94,25 @@ async def register_visitor(
 
 @router.post("/submission")
 async def submit_answer(
-    puzzle_in: Annotated[PuzzleCompare, Form()], db: Annotated["Session", Depends(get_db)]
+    request: Request,
+    puzzle_in: Annotated[PuzzleCompare, Form()],
+    db: Annotated["Session", Depends(get_db)],
 ):
-    """AJAX style endpoint to submit the answer to a puzzle"""
+    """
+    Endpoint for submitting the puzzle answer.
 
+    This endpoint will check whether the visitor's answer was
+    correct and return the appropriate HTML page:
+    - if the answer was correct and the visitor has completed
+      all the puzzles, we congratulate the visitor and send them
+      back to the registration desk so they can pick up their prize.
+    - if the answer was correct and the visitor has not completed
+      all the puzzles, we congratulate the visitor for solving the
+      puzzle and provide them with a button which sends them back
+      to the main starting page with the QR scanner.
+    - if the answer was not correct, we say sorry and provide a button
+      which will take them back to the puzzle page so they can try again.
+    """
     # Check if visitor has already given a correct answer for this puzzle
     responses = get_all_responses(
         db, filter_by_puzzle_name=puzzle_in.name, filter_by_visitor_uid=puzzle_in.visitor
@@ -84,6 +122,15 @@ async def submit_answer(
         return {"success": True}  # TODO: Need to handle this better. A specific return code.
 
     if compare_answer(db, puzzle_in):
-        return {"success": True}
+        if (
+            (config.SESSIONS_ENABLED)
+            and (puzzle_in.visitor is not None)
+            and (visitor_has_completed_all_puzzles(db, visitor_uid=puzzle_in.visitor))
+        ):
+            return templates.TemplateResponse(request=request, name="puzzle_completed.html")
+        else:
+            return templates.TemplateResponse(request=request, name="puzzle_correct.html")
     else:
-        return {"success": False}
+        return templates.TemplateResponse(
+            request=request, name="puzzle_incorrect.html", context={"puzzle": puzzle_in.name}
+        )

@@ -31,8 +31,8 @@ def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
         db_session (Session): The SQLAlchemy session object.
         only_active (bool): Set this to True to only return active puzzles.
 
-        Returns:
-            list[Puzzle]: List of puzzles in the database.
+    Returns:
+        list[Puzzle]: List of puzzles in the database.
     """
     # Construct the database query dynamically, taking into account
     # whether only active puzzles should be returned.
@@ -42,6 +42,27 @@ def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
         q = q.filter(Puzzle.active)
 
     return q.order_by(Puzzle.name).all()
+
+
+def count(db_session: Session, *, only_active: bool = False) -> int:
+    """
+    Convenience method to count the number of puzzles.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        only_active (bool): Set this to True to only count active puzzles.
+
+    Returns:
+        int: The number of puzzles.
+    """
+    # Construct the database query dynamically, taking into account
+    # whether only active puzzles should be counted.
+    q = db_session.query(Puzzle)
+
+    if only_active:
+        q = q.filter(Puzzle.active)
+
+    return q.count()
 
 
 def get_all_responses(
