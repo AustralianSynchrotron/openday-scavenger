@@ -25,6 +25,9 @@ jobs:
       - name: Ruff Lint
         run: uvx ruff check --output-format=github .
 
+      - name: Ruff Format
+        run: uvx ruff format
+
       - name: Run tests
         # For example, using `pytest`
         run: uv run pytest tests
