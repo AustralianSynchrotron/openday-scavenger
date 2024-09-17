@@ -1,0 +1,34 @@
+name: Run Pytest on PR
+
+on:
+  push:
+    branches:
+      - sm-github-action  # or the branch you want to target
+
+jobs:
+  uv-example:
+    name: python
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install the project
+        run: uv sync --all-extras --dev
+
+      - name: Run tests
+        # For example, using `pytest`
+        run: uv run pytest tests
+
+      # - name: Upload coverage report
+      #   if: always()
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: coverage-report
+      #     path: .coverage
