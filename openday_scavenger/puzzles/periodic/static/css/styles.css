@@ -2,19 +2,29 @@ body {
   background-color: LightSteelBlue;
 }
 
+.periodic-table {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  gap: 2px;
+  margin: 0 auto;
+}
+
 .element {
   display: flex;
   flex-direction: column;
-  border-radius: 5px;
+  border-radius: 4px;
+  border: 1px solid #000;
+  padding: 0.25rem;
+  text-align: center;
 }
 
 .element.option {
-  background-color: #000 !important;
+  background-color: #6c6c6c !important;
 }
 
 .element:hover:not(.option) {
-  transform: scale(1.1);
-  transition: transform 0.2s ease-in-out;
+  transform: scale(1.12);
+  transition: transform 0.3s ease-in-out;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   z-index: 1;
@@ -28,5 +38,72 @@ body {
 
 .element-symbol {
   font-size: 1rem;
+  font-weight: bold;
+}
+
+/* Question */
+.question {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* Style for the form */
+form {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for form elements */
+form input[type="text"],
+form input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #35bfc9;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #2aa3b0;
+}
+
+/* Style for the response message */
+#response-good {
+  text-align: center;
+  font-size: 18px;
+  color: #28a745;
+  margin-top: 20px;
+}
+#response-bad {
+  text-align: center;
+  font-size: 18px;
+  color: #990312;
+  margin-top: 20px;
+}
+
+/* Style for error messages */
+.error {
+  color: #dc3545;
   font-weight: bold;
 }

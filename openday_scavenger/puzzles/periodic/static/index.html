@@ -12,59 +12,52 @@
     />
   </head>
   <body>
-    <h1>Element Puzzle</h1>
+    <main>
+      <h1 class="title">Element Puzzle</h1>
 
-    <style>
-      .periodic-table {
-        display: grid;
-        grid-template-columns: repeat(18, 1fr);
-        gap: 2px;
-        max-width: 1000px;
-        margin: 0 auto;
-      }
-      .element {
-        border: 1px solid #000;
-        padding: 5px;
-        text-align: center;
-        font-size: 12px;
-      }
-      .empty {
-        border: none;
-      }
-    </style>
-    <div class="periodic-table">
-      {% for element_symbol in elements %} {% set element =
-      element_lookup[element_symbol] %}
-      <div
-        class="element {% if element_symbol not in options %}option{% endif %}"
-        style="
+      <div class="periodic-table">
+        {% for element_symbol in elements %} {% set element =
+        element_lookup[element_symbol] %}
+        <div
+          class="element {% if element_symbol not in options %}option{% endif %}"
+          style="
           color: {{ get_category_style(element['category'])['color'] }};
           background-color: {{ get_category_style(element['category'])['backgroundColor'] }};
           grid-column: {{ element['xpos'] }};
           grid-row: {{ element['ypos'] }};
           
         "
-      >
-        <div class="element-number">{{ element['number'] }}</div>
-        <div class="element-symbol">{{ element_symbol }}</div>
+        >
+          <div class="element-number">{{ element['number'] }}</div>
+          <div class="element-symbol">{{ element_symbol }}</div>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
 
-    {{ question }}
+      <div class="question">{{ question }}</div>
 
-    <form id="form" hx-encoding="multipart/form-data" hx-post="/submission">
-      <input hidden type="text" id="name" name="name" value="{{ puzzle }}" />
-      <input
-        hidden
-        type="text"
-        id="visitor"
-        name="visitor"
-        value="{{ visitor }}"
-      />
-      <label for="energy">Element Symbol(e.g "Fe"):</label><br />
-      <input type="text" id="answer" name="answer" />
-      <button>Submit your answer</button>
-    </form>
+      <form id="form" hx-encoding="multipart/form-data" hx-post="/submission">
+        <input hidden type="text" id="name" name="name" value="{{ puzzle }}" />
+        <input
+          hidden
+          type="text"
+          id="visitor"
+          name="visitor"
+          value="{{ visitor }}"
+        />
+        <label for="user_solution">Your answer (e.g "Fe"):</label><br />
+        <input
+          type="text"
+          id="answer"
+          name="answer"
+          pattern="[a-zA-Z]+"
+          placeholder=""
+        />
+        <button>Submit your answer</button>
+      </form>
+
+      <div id="response-good"></div>
+      <div id="response-bad"></div>
+    </main>
   </body>
 </html>
