@@ -29,11 +29,26 @@ venv = ".venv"
 
 [tool.uv]
 dev-dependencies = [
+    "coverage>=7.6.1",
     "mypy>=1.11.2",
     "pyright>=1.1.379",
+    "pytest-mock>=3.14.0",
+    "pytest>=8.3.3",
     "ruff>=0.6.4",
 ]
 
 [tool.ruff]
 line-length = 100
 lint.extend-select = ["I"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=openday_scavenger --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["openday_scavenger"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 60
