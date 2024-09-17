@@ -7,6 +7,7 @@ body {
   grid-template-columns: repeat(18, 1fr);
   gap: 2px;
   margin: 0 auto;
+  user-select: none;
 }
 
 .element {
@@ -18,11 +19,11 @@ body {
   text-align: center;
 }
 
-.element.option {
+.element:not(.option) {
   background-color: #6c6c6c !important;
 }
 
-.element:hover:not(.option) {
+.element.option:hover {
   transform: scale(1.12);
   transition: transform 0.3s ease-in-out;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
