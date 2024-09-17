@@ -36,7 +36,7 @@ async def render_root_page(
     # If the visitor has completed all puzzles, don't show the QR code scanner
     # and send them back to the registration desk. Also get the progress of the visitor.
     has_completed_all_puzzles = False
-    number_correct_responses = 1
+    number_correct_responses = 0
     if (config.SESSIONS_ENABLED) and (visitor.uid is not None):
         has_completed_all_puzzles = visitor_has_completed_all_puzzles(db, visitor_uid=visitor.uid)
         number_correct_responses = len(get_correct_responses(db, visitor_uid=visitor.uid))
