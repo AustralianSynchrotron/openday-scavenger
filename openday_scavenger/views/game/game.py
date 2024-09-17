@@ -119,8 +119,9 @@ async def submit_answer(
     )
 
     if any([response.is_correct for response in responses]):
-        return {"success": True}  # TODO: Need to handle this better. A specific return code.
+        return templates.TemplateResponse(request=request, name="puzzle_correct.html")
 
+    # Compare the answer and render the appropriate page
     if compare_answer(db, puzzle_in):
         if (
             (config.SESSIONS_ENABLED)
