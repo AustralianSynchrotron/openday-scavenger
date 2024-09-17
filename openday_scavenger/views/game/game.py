@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, Depends, Form, Header, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -31,7 +31,11 @@ async def render_root_page(
 
 
 @router.get("/register/{visitor_uid}")
-async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(get_db)]):
+async def register_visitor(
+    visitor_uid: str,
+    db: Annotated["Session", Depends(get_db)],
+    user_agent: Annotated[str | None, Header()] = None,
+):
     """Register a new visitor and set the authentication cookie"""
 
     # Registration of a visitor means we check if the uid is available in the visitor pool, and if so
@@ -44,7 +48,7 @@ async def register_visitor(visitor_uid: str, db: Annotated["Session", Depends(ge
     # uid of another visitor and hijacks their session. If they figure that out, props
     # to them for successfully hacking our little application. We might want to hire them.
     try:
-        _ = create_visitor(db, visitor_uid=visitor_uid)
+        _ = create_visitor(db, visitor_uid=visitor_uid, extra={"user_agent": user_agent})
     except VisitorExistsError:
         pass
 
