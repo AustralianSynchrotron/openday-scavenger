@@ -19,6 +19,7 @@ from typing import Generator
 
 import pytest
 from fastapi.testclient import TestClient
+from pytest_mock.plugin import MockerFixture
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import Base, create_tables, engine, get_db
@@ -52,16 +53,25 @@ def empty_db() -> Generator[Session, None, None]:
 
 
 @pytest.fixture(scope="function")
-def mock_client():
+def mock_client(mocker: MockerFixture, empty_db: Session):
     """
     Fixture to provide a test client for each test function.
 
     This fixture creates a TestClient instance for the FastAPI app,
     which can be used to simulate HTTP requests in tests.
 
+    Args:
+        mocker (MockerFixture): The pytest-mock fixture used to patch dependencies.
+        empty_db (Session): The database fixture.
+
     Yields:
         client (TestClient): A test client for the FastAPI app.
     """
 
+    def _get_empty_db():
+        return empty_db
+
+    # Needed to ensure the same database is used for service calls and routes.
+    mocker.patch.dict(app.dependency_overrides, {get_db: _get_empty_db})
     with TestClient(app) as client:
         yield client
