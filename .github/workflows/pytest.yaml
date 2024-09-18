@@ -1,9 +1,9 @@
 name: Test | Lint | Format | on PR
 
 on:
-  push:
+  pull_request:
     branches:
-      - sm-github-action  # or the branch you want to target
+      - main
 
 jobs:
   test:
