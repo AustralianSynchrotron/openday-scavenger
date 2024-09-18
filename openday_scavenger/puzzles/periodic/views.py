@@ -14,7 +14,8 @@ from .services import get_category_style
 
 # Constants
 # selection of elements to choose from
-OPTIONS = ["H", "Fe", "Ta", "Pb", "O"]
+# OPTIONS = ["H", "Fe", "Ta", "Pb", "O"]
+OPTIONS = []
 
 QUESTIONS = [
     "This element is essential for the production of hemoglobin in the human body and is often associated with red blood cells. What is it?",
