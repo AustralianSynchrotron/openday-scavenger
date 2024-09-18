@@ -215,13 +215,6 @@ async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_au
     pass
 ```
 
-After you made the request you will receive a response with the `JSON` body containing a boolean value indicating whether the asnwer was correct or not:
-```JSON
-{
-    "success": True
-}
-```
-
 The reason for storing the correct answer in the database is twofold:
 - we don't want to reveal the correct answer in the source code
 - we can quickly fix an incorrect answer by modifying the database entry
@@ -230,31 +223,37 @@ The reason for storing the correct answer in the database is twofold:
 
 
 ## Architecture
-The architecture of the web application is informed by the Scientific Computing standard for RESTful APIs. The standard the team follows is very closely modelled after structures such as the [Netflix Dispatch service](https://github.com/Netflix/dispatch) or the abstraction model described [here](https://camillovisini.com/coding/abstracting-fastapi-services).
+The architecture of the web application is informed by the Scientific Computing standard for RESTful API services. The standard the team follows is very closely modelled after structures such as the [Netflix Dispatch service](https://github.com/Netflix/dispatch) or the abstraction model described [here](https://camillovisini.com/coding/abstracting-fastapi-services).
 
-The following diagram illustrates the two layers our services are generally split into. Requests to the service are made using parameters defined in `pydantic` schemas. The routes responding to requests are implemented in a view module focusing solely on the validation of input and assembly of the response. In order to accomplish this, the routes make calls to functions defined in the service module. The service module hosts all business logic and data access calls. This allows the business logic to be used across multiple routes and easy to test. The service functions take `pydantic` schemas as inputs which can, but don't need to be, the same schemas as the ones used in the view module. In order to make things easier, often the service functions use standard arguments in addition or instead of `pydantic` models.
-
-A service function takes the `pydantic` schema and, depending on the use case, translates it into a `SQLAlchemy` model for database calls. The result of the database call is a `SQLAlchemy` model which is returned to the route in the view model. The route then translates the `SQLAlchemy` model into a `pydantic` schema for the response.
+The following diagram illustrates the two layers our services are generally split into and the data protocols that are used between these layers. 
 
 ![Service layer architecture](docs/RestfulServiceLayerDesign.png)
 
-The scavenger hunt application differs to the Scientific Computing standard RESTful API in that it renders web pages and provides a way for developers to extend it with puzzles. The folder structure is as follows:
+Requests to a service are made using parameters defined in `pydantic` schemas. The routes responding to requests are implemented in a view module focusing solely on the validation of input and assembly of the response. In order to accomplish this, routes make calls to functions defined in the service module, which hosts the business logic and data access calls. This allows the business logic to be used across multiple routes and easy to test. The service functions take `pydantic` schemas as inputs which can, but don't need to be, the same schemas as the ones used in the view module. In order to make things easier, often the service functions use standard function arguments in addition or instead of `pydantic` models as input.
+
+A service function interacts with the database using `SQLAlchemy`. The result of a transaction with the database is a `SQLAlchemy` model which is returned to the route in the view model. The route then translates the `SQLAlchemy` model into a `pydantic` schema for the response.
+
+> We don't tend to use a CRUD layer between the service layer and the database as we found it added unnecessary complexity.
+
+The scavenger hunt application differs to a Scientific Computing standard RESTful API service in that it renders web pages and provides a way for developers to extend it with puzzles. This resulted in a slightly different folder structure compared to our standard:
 
 ```
 |- openday_scavenger
-|  |- api
-|  |  |- puzzles            #common service functions for puzzles management
-|  |  |- visitors           #common service functions for visitor handling
-|  |- puzzles
+|  |- api                   #RESTful API like structure
+|  |  |- puzzles            #service functions, db models and dependencies for puzzle management
+|  |  |- visitors           #service functions, db models and dependencies for visitor handling
+|  |- puzzles               #folder for the puzzles
+|  |  |- demo               #demo puzzle folder
+|  |  |  |- static          #folder for all static assets for the demo puzzle
+|  |  |  |- views.py        #folder for all the routes of the demo puzzle
 |  |- static
-|  |  |- css
-|  |  |- html
-|  |  |- js
-|  |  |- webfonts
+|  |  |- css                #common CSS files
+|  |  |- html               #common HTML files
+|  |  |- js                 #common JavaScript files
+|  |  |- webfonts           #common fonts
 |  |- views
-|  |  |- admin
-|  |  |- game
-
+|  |  |- admin              #routes that render all admin HTML pages
+|  |  |- game               #routes that render all game related HTML pages
 ```
 
 
