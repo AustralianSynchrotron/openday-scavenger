@@ -124,6 +124,7 @@ All contributions are done via Pull Requests (PR). You can either fork the repos
 
 For the Pull Request please request either Andreas or Stephen as a reviewer.
 
+Along with the PR requirement, the `main` branch is also protected by a status check. The status check runs a [GitHub Action](https://github.com/AustralianSynchrotron/openday-scavenger/actions/workflows/pytest.yaml) that checks the linting and formatting with `ruff` and runs the tests with `pytest`. The use of the pre-commit hook should ensure the linter and formatter pass.
 
 ## Add a Puzzle
 The heart and soul of the scavenger hunt web application are its puzzles. This sections describes the process of adding a puzzle and integrating it into the user experience and administration flow.
