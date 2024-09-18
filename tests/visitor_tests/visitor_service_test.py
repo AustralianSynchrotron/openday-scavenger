@@ -101,3 +101,7 @@ def test_checkout_visitor(empty_db):
     assert visitor.is_checked_out
     visitor = get_all(empty_db, still_playing=True)
     assert len(visitor) == 0
+
+
+def test_github_action():
+    assert False
