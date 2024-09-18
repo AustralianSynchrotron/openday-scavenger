@@ -131,6 +131,18 @@ standard = [
 ]
 
 [[package]]
+name = "fpdf2"
+version = "2.4.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pillow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/cc/0a/c878cd214263493e5251826fba05b30c9865ec1120bce258f8ac97dbe34f/fpdf2-2.4.2.tar.gz", hash = "sha256:4e4ff40a9f5a42d54d5336150afd78de18158301a4655e6e3713210253bf6c52", size = 71891 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2f/8b/c5e17479f8ad56e414bc936dcee6db509ad563bc80809fbcb6ba9279cee1/fpdf2-2.4.2-py2.py3-none-any.whl", hash = "sha256:15b1c73740a6545f363f6f8bac1fc170da573b0527e4ed8ede06cb5fe37163b2", size = 117976 },
+]
+
+[[package]]
 name = "greenlet"
 version = "3.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -312,12 +324,12 @@ source = { editable = "." }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "jinja2" },
-    { name = "pillow" },
     { name = "pydantic-settings" },
     { name = "python-dotenv" },
     { name = "reportlab" },
     { name = "segno" },
     { name = "sqlalchemy" },
+    { name = "word-search-generator" },
 ]
 
 [package.optional-dependencies]
@@ -336,13 +348,13 @@ dev = [
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.114.0" },
     { name = "jinja2", specifier = ">=3.1.4" },
-    { name = "pillow", specifier = ">=9.5.0" },
     { name = "psycopg2", marker = "extra == 'postgres'", specifier = ">=2.9.9" },
     { name = "pydantic-settings", specifier = ">=2.4.0" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "reportlab", specifier = ">=4.2.2" },
     { name = "segno", specifier = ">=1.6.1" },
     { name = "sqlalchemy", specifier = ">=2.0.32" },
+    { name = "word-search-generator", specifier = ">=3.5.1" },
 ]
 
 [package.metadata.requires-dev]
@@ -737,4 +749,17 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/72/f6/b8b30a3b134dfdb4ccd1694befa48fddd43783957c988a1dab175732af33/websockets-13.0.1-cp313-cp313-win32.whl", hash = "sha256:254ecf35572fca01a9f789a1d0f543898e222f7b69ecd7d5381d8d8047627bdb", size = 151782 },
     { url = "https://files.pythonhosted.org/packages/3e/88/d94ccc006c69583168aa9dd73b3f1885c8931f2c676f4bdd8cbfae91c7b6/websockets-13.0.1-cp313-cp313-win_amd64.whl", hash = "sha256:ca48914cdd9f2ccd94deab5bcb5ac98025a5ddce98881e5cce762854a5de330b", size = 152212 },
     { url = "https://files.pythonhosted.org/packages/fd/bd/d34c4b7918453506d2149208b175368738148ffc4ba256d7fd8708956732/websockets-13.0.1-py3-none-any.whl", hash = "sha256:b80f0c51681c517604152eb6a572f5a9378f877763231fddb883ba2f968e8817", size = 145262 },
+]
+
+[[package]]
+name = "word-search-generator"
+version = "3.5.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "fpdf2" },
+    { name = "pillow" },
+    { name = "typing-extensions" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ef/50/f0ab3d1d3778ddce0de47bc64a51078683ca7d4e86dfcec5053b5adc563c/word_search_generator-3.5.1-py3-none-any.whl", hash = "sha256:516ee609da9000a665611050fbc94c4647e89323796ad39a77113f30f8d0fd4c", size = 40991 },
 ]
