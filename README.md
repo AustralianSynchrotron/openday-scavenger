@@ -230,7 +230,34 @@ The reason for storing the correct answer in the database is twofold:
 
 
 ## Architecture
-TBD
+The architecture of the web application is informed by the Scientific Computing standard for RESTful APIs. The standard the team follows is very closely modelled after structures such as the [Netflix Dispatch service](https://github.com/Netflix/dispatch) or the abstraction model described [here](https://camillovisini.com/coding/abstracting-fastapi-services).
+
+The following diagram illustrates the two layers our services are generally split into. Requests to the service are made using parameters defined in `pydantic` schemas. The routes responding to requests are implemented in a view module focusing solely on the validation of input and assembly of the response. In order to accomplish this, the routes make calls to functions defined in the service module. The service module hosts all business logic and data access calls. This allows the business logic to be used across multiple routes and easy to test. The service functions take `pydantic` schemas as inputs which can, but don't need to be, the same schemas as the ones used in the view module. In order to make things easier, often the service functions use standard arguments in addition or instead of `pydantic` models.
+
+A service function takes the `pydantic` schema and, depending on the use case, translates it into a `SQLAlchemy` model for database calls. The result of the database call is a `SQLAlchemy` model which is returned to the route in the view model. The route then translates the `SQLAlchemy` model into a `pydantic` schema for the response.
+
+![Service layer architecture](docs/RestfulServiceLayerDesign.png)
+
+The scavenger hunt application differs to the Scientific Computing standard RESTful API in that it renders web pages and provides a way for developers to extend it with puzzles. The folder structure is as follows:
+
+```
+|- openday_scavenger
+|  |- api
+|  |  |- puzzles            #common service functions for puzzles management
+|  |  |- visitors           #common service functions for visitor handling
+|  |- puzzles
+|  |- static
+|  |  |- css
+|  |  |- html
+|  |  |- js
+|  |  |- webfonts
+|  |- views
+|  |  |- admin
+|  |  |- game
+
+```
+
+
 
 
 ## Technologies and Libraries
