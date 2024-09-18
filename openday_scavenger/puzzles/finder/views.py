@@ -58,6 +58,22 @@ PuzzleWords = {
 }
 
 
+def create_puzzle( path:Path):
+    puzzle_name = set(list(path.parts)).intersection(list(PuzzleWords.keys())).pop()
+    
+    # word list for defined dictionary
+    words = PuzzleWords[puzzle_name]
+    ww = ", ".join([w for w in words])
+    puzzle_dim = min(max([len(w) for w in words]),12)
+    # Generate a new word search puzzle
+    ws = WordSearch(words = ww, size = puzzle_dim)
+
+    # get puzzle data
+    dd = get_puzzle_data(ws) # solution hidden
+    ds = get_puzzle_data(ws, solution=True) # solution shown
+    question="Can you find all the words?"
+    return question, dd,ds
+
 @router.get("/static/{path:path}")
 async def get_static_files(
     path: Path,
@@ -115,8 +131,10 @@ async def new_finder(
 
 @router.get("/")
 async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
+    question, data, data_as_solution = create_puzzle(Path(request.url.path) )
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"puzzle": "finder", "visitor": visitor.uid},
+        context={"puzzle": "finder", "visitor": visitor.uid,"question":question,"data":data,"data_as_solution":data_as_solution},
     )
