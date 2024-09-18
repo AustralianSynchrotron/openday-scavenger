@@ -10,7 +10,7 @@ __all__ = ["get_settings"]
 
 
 # Type definitions for the database systems and URIs the application supports
-Allowed_DB_Types = Literal["sqlite", "postgresql"]
+Allowed_DB_Types = Literal["sqlite", "postgresql+psycopg2"]
 
 DatabaseDsn = Annotated[
     MultiHostUrl,
@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     COOKIE_MAX_AGE: int = 86400  # in seconds: 24 hours = 86400 seconds
 
     SESSIONS_ENABLED: bool = True
+    TEST_ENDPOINT_ENABLED: bool = False
 
     model_config = SettingsConfigDict(env_file=".env")
 
