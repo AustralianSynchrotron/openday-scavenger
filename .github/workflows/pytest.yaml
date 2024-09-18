@@ -6,8 +6,8 @@ on:
       - sm-github-action  # or the branch you want to target
 
 jobs:
-  uv-example:
-    name: python
+  test:
+    name: test-lint-format
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,6 @@ jobs:
         run: uvx ruff format
 
       - name: Run tests
-        # For example, using `pytest`
         run: uv run pytest tests
 
       - name: Upload coverage report
