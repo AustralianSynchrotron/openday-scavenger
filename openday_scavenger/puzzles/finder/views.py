@@ -23,6 +23,31 @@ router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
 
 
+# define puzzle quiz and word lists
+PuzzleQuiz = {
+    "synch_finder": {
+        "question": "Can you find all the words related to the Synchrotron?",
+        "words": ["synchrotron", "beamline", "magnet", "xrays", "lightsource", "accelerator"],
+    },
+    "mx3_finder": {
+        "question": "Can you find all the words related to Macromolecular Crystallography?",
+        "words": ["high", "performance", "microfocus", "crystals", "protein"],
+    },
+    "mct_finder": {
+        "question": "Can you find all the words related to Micro-Computed Tomography?",
+        "words": ["monochromatic", "pink", "white", "xray", "beams", "structures", "spatial", "resolution"],
+    },
+    "mex_finder": {
+        "question": "Can you find all the words related to the Medium Energy X-ray (MEX) beamlines?",
+        "words": ["soft", "hard", "xray", "tuneable", "microprobe", "routine", "spectroscopy"],
+    },
+    "xas_finder": {
+        "question": "Can you find all the words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
+        "words": ["absorption", "transmission", "fluorescence", "monochromater", "oxidation", "photons"],
+    },
+}
+
+
 def get_puzzle_data(
     ws: WordSearch,
     solution: bool = False,
@@ -47,15 +72,6 @@ def get_puzzle_data(
     if format == 'json':
         data = json.dumps(data)
     return data
-
-
-# define word lists for different finder puzzles
-PuzzleWords = {
-    "finder": ["synchrotron", "beamline", "magnet", "xrays"],
-    "finder1": ["dog", "cat", "pig", "horse", "donkey", "turtle", "goat", "sheep"],
-    "finder2": ["happy", "sad", "angry", "mad", "confused", "perplexed", "grumpy", "annoyed"],
-    "finder3": ["one", "two", "three", "four", "five", "six", "seven", "eight"]
-}
 
 
 @router.get("/static/{path:path}")
@@ -84,16 +100,18 @@ async def new_finder(
     request: Request,
     visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)],
 ):
-    # create the finder puzzle - maybe this can be part of the request in future?
-    puzzle_dim = 10 # puzzle size
-
     # check request for path and then get words
+    # puzzle_name = Path(request.url.path).name # eventually
     path = Path(request.url.path)
-    puzzle_name = set(list(path.parts)).intersection(list(PuzzleWords.keys())).pop()
+    puzzle_name = set(list(path.parts)).intersection(list(PuzzleQuiz.keys())).pop()
 
-    # word list for defined dictionary
-    words = PuzzleWords[puzzle_name]
+    # question and word list for defined dictionary
+    question = PuzzleQuiz[puzzle_name]["question"]
+    words = PuzzleQuiz[puzzle_name]["words"]
     ww = ", ".join([w for w in words])
+
+    # create the finder puzzle - maybe this can be part of the request in future?
+    puzzle_dim = max([len(w) for w in words]) #10 # puzzle size
 
     # Generate a new word search puzzle
     ws = WordSearch(words = ww, size = puzzle_dim)
@@ -107,6 +125,9 @@ async def new_finder(
         request=request,
         name="finder_words.html",
         context={
+            "question": question,
+            "word_string": ww,
+            "word_list": words,
             "data": dd,
             "solution": ds,
         },
