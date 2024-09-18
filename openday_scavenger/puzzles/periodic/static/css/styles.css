@@ -62,8 +62,8 @@ form {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-form input[type="text"],
-form input[type="submit"] {
+#form input[type="text"],
+#form input[type="submit"] {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -71,7 +71,7 @@ form input[type="submit"] {
   border-radius: 5px;
 }
 
-button {
+#form button {
   background-color: #35bfc9;
   border: none;
   color: white;
@@ -85,7 +85,7 @@ button {
   border-radius: 5px;
 }
 
-button:hover {
+#formbutton:hover {
   background-color: #2aa3b0;
 }
 
@@ -151,6 +151,17 @@ button:hover {
   color: #333;
 }
 
+.popup-content .element-details-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+}
+
+.element-details {
+  width: 80%;
+}
+
 .popup-content p {
   margin: 10px 0;
   color: #666;
@@ -174,4 +185,40 @@ button:hover {
 
 .popup-content .element-detail {
   font-weight: bold;
+}
+
+.btn-container {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.big-btn {
+  background-color: #35bfc9;
+  width: 120px;
+  height: 120px;
+  margin: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.big-button:hover {
+  transform: scale(1.1);
+}
+
+.btn-google {
+  color: white;
+}
+
+.btn-answer {
+  color: white;
+}
+
+.btn-answer:not(.option) {
+  display: none;
 }

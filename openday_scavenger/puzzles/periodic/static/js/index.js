@@ -1,24 +1,3 @@
-// When the page loads, add an event listener to the periodic table
-// When the user clicks on an element, set the answer input to the element's symbol
-// document.addEventListener("DOMContentLoaded", function () {
-//   const periodicTable = document.querySelector(".periodic-table");
-//   const answerInput = document.getElementById("answer");
-
-//   periodicTable.addEventListener("click", function (event) {
-//     const clickedElement = event.target.closest(".element");
-
-//     if (!clickedElement || !clickedElement.classList.contains("option")) {
-//       return;
-//     }
-
-//     if (clickedElement) {
-//       const elementSymbol =
-//         clickedElement.querySelector(".element-symbol").textContent;
-//       answerInput.value = elementSymbol;
-//     }
-//   });
-// });
-
 function formatCategory(category) {
   return category.replace(/([A-Z])/g, " $1").trim();
 }
@@ -89,11 +68,26 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       // Fade in the popup
       popup.style.display = "block";
-      popup.style.transition = "opacity 0.3s ease-in-out";
+      popup.style.transition = "opacity 0.2s ease-in-out";
       popup.style.opacity = "0";
       setTimeout(() => {
         popup.style.opacity = "1";
       }, 10);
     });
+  });
+
+  const btnGoogle = document.getElementById("btn-google");
+  btnGoogle.addEventListener("click", function () {
+    const element_name = document.getElementById("element-name").textContent;
+    window.open(`https://www.google.com/search?q=${element_name}`, "_blank");
+  });
+
+  const btnAnswer = document.getElementById("btn-answer");
+  btnAnswer.addEventListener("click", function () {
+    const symbol = document.getElementById("element-symbol").textContent;
+    document.getElementById("answer").value = symbol;
+
+    // Close the popup
+    popup.style.display = "none";
   });
 });
