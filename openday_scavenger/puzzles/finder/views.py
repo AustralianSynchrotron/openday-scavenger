@@ -6,10 +6,17 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
-from word_search_generator import WordSearch, utils
-
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
+
+from word_search_generator import WordSearch, utils
+"""
+# NOTE: LS needed to install these binaries on my mac
+# for word_searh_generator pillow dependency to work
+# brew install libtiff libjpeg webp little-cms2brew install libtiff libjpeg webp little-cms2
+# from this post:
+# https://stackoverflow.com/questions/44043906/the-headers-or-library-files-could-not-be-found-for-jpeg-installing-pillow-on
+"""
 
 router = APIRouter()
 
@@ -42,6 +49,15 @@ def get_puzzle_data(
     return data
 
 
+# define word lists for different finder puzzles
+PuzzleWords = {
+    "finder": ["synchrotron", "beamline", "magnet", "xrays"],
+    "finder1": ["dog", "cat", "pig", "horse", "donkey", "turtle", "goat", "sheep"],
+    "finder2": ["happy", "sad", "angry", "mad", "confused", "perplexed", "grumpy", "annoyed"],
+    "finder3": ["one", "two", "three", "four", "five", "six", "seven", "eight"]
+}
+
+
 @router.get("/static/{path:path}")
 async def get_static_files(
     path: Path,
@@ -62,17 +78,21 @@ async def get_static_files(
         )
 
 
-# function to create and return the finder puzzle
+# function to create and return the finder puzzle from a list of words
 @router.get("/new_finder")
 async def new_finder(
     request: Request,
     visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)],
 ):
-    # create the finder puzzle
+    # create the finder puzzle - maybe this can be part of the request in future?
     puzzle_dim = 10 # puzzle size
 
-    # word list - eventually get this from a file
-    words = ["dog", "cat", "pig", "horse", "donkey", "turtle", "goat", "sheep"]
+    # check request for path and then get words
+    path = Path(request.url.path)
+    puzzle_name = set(list(path.parts)).intersection(list(PuzzleWords.keys())).pop()
+
+    # word list for defined dictionary
+    words = PuzzleWords[puzzle_name]
     ww = ", ".join([w for w in words])
 
     # Generate a new word search puzzle
@@ -81,52 +101,6 @@ async def new_finder(
     # get puzzle data
     dd = get_puzzle_data(ws) # solution hidden
     ds = get_puzzle_data(ws, solution=True) # solution shown
-
-    # send the puzzle data to the template
-    return templates.TemplateResponse(
-        request=request,
-        name="finder_words.html",
-        context={
-            "data": dd,
-            "solution": ds,
-        },
-    )
-
-
-# function to test the new finder endpoint
-@router.get("/test_new_finder")
-async def test_new_finder(
-    request: Request,
-    visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)],
-):
-    # create the finder puzzle
-    puzzle_dim = 10 # puzzle size
-
-    # word list - eventually get this from a file
-    words = ["dog", "cat", "pig", "horse", "donkey", "turtle", "goat", "sheep"]
-
-    # start with example data
-    dd = {
-        "puzzle": [
-            ["A", "B", "C", "D", "E"],
-            ["F", "G", "H", "I", "J"],
-            ["K", "L", "M", "N", "O"],
-            ["P", "Q", "R", "S", "T"],
-            ["U", "V", "W", "X", "Y"],
-        ],
-        "words": words
-    }
-
-    ds = {
-        "puzzle": [
-            [" ", " ", "C", "D", "E"],
-            [" ", " ", "H", "I", "J"],
-            ["K", " ", "M", " ", "O"],
-            ["P", "Q", "R", "S", "T"],
-            [" ", "V", "W", " ", " "],
-        ],
-        "words": words
-    }
 
     # send the puzzle data to the template
     return templates.TemplateResponse(
