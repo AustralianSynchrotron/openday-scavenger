@@ -40,7 +40,7 @@ async def get_static_files(
 @router.get("/shuffled")
 async def shuffle_word(
     request: Request,
-    visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)],
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
 ):
     # create a shuffled version of the word
     word = "".join(random.sample(INITIAL_WORD, len(INITIAL_WORD)))
@@ -54,9 +54,7 @@ async def shuffle_word(
 
 
 @router.get("/")
-async def index(
-    request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]
-):
+async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
