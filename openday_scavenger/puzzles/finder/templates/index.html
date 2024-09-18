@@ -12,9 +12,10 @@
         Finder puzzle will eventually go here.
 
         <p id="data"><b>{{ data }}</b></p>
+        <p id="solution"><b>{{ solution }}</b></p>
 
         <!-- create a button, using htmx, that sends a get request to /shuffled -->
-        <button hx-get="test_new_finder" hx-trigger="click" hx-target="#data" hx-swap="outerHTML">
+        <button hx-get="new_finder" hx-trigger="click" hx-target="#data" hx-swap="outerHTML">
             Get finder
         </button>
 
