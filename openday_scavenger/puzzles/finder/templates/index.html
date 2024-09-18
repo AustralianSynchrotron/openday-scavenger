@@ -10,6 +10,14 @@
         <h1>Finder Puzzle</h1>
         
         Finder puzzle will eventually go here.
+
+        <p id="data"><b>{{ data }}</b></p>
+
+        <!-- create a button, using htmx, that sends a get request to /shuffled -->
+        <button hx-get="test_new_finder" hx-trigger="click" hx-target="#data" hx-swap="outerHTML">
+            Get finder
+        </button>
+
         What energy in GeV does the accelerator of the Australian Synchrotron run at?
         
         <form id='form' hx-encoding='multipart/form-data' hx-post='/submission'>
