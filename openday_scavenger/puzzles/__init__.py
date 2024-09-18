@@ -7,10 +7,11 @@ router = APIRouter()
 
 # Include puzzle routes. Name entered into database should match the prefix.
 router.include_router(puzzle_demo_router, prefix="/demo")
-router.include_router(puzzle_finder_router, prefix="/finder")
-router.include_router(puzzle_finder_router, prefix="/finder1")
-router.include_router(puzzle_finder_router, prefix="/finder2")
-router.include_router(puzzle_finder_router, prefix="/finder3")
+router.include_router(puzzle_finder_router, prefix="/synch_finder")
+router.include_router(puzzle_finder_router, prefix="/mx3_finder")
+router.include_router(puzzle_finder_router, prefix="/mct_finder")
+router.include_router(puzzle_finder_router, prefix="/mex_finder")
+router.include_router(puzzle_finder_router, prefix="/xas_finder")
 
 
 # Include a route to catch all invalid puzzle routes so we can throw a custom 404.

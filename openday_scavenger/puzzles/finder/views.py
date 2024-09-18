@@ -23,11 +23,36 @@ router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
 
 
+# define puzzle quiz and word lists
+PuzzleQuiz = {
+    "synch_finder": {
+        "question": "Can you find all the words related to the Synchrotron?",
+        "words": ["synchrotron", "beamline", "magnet", "xrays", "lightsource", "accelerator"],
+    },
+    "mx3_finder": {
+        "question": "Can you find all the words related to Macromolecular Crystallography?",
+        "words": ["high", "performance", "microfocus", "crystals", "protein"],
+    },
+    "mct_finder": {
+        "question": "Can you find all the words related to Micro-Computed Tomography?",
+        "words": ["monochromatic", "pink", "white", "xray", "beams", "structures", "spatial", "resolution"],
+    },
+    "mex_finder": {
+        "question": "Can you find all the words related to the Medium Energy X-ray (MEX) beamlines?",
+        "words": ["soft", "hard", "xray", "tuneable", "microprobe", "routine", "spectroscopy"],
+    },
+    "xas_finder": {
+        "question": "Can you find all the words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
+        "words": ["absorption", "transmission", "fluorescence", "monochromater", "oxidation", "photons"],
+    },
+}
+
+
 def get_puzzle_data(
-    ws: WordSearch,
-    solution: bool = False,
-    format: str = 'dict'
-) -> dict|str:
+        ws: WordSearch,
+        solution: bool = False,
+        format: str = 'dict'
+    ) -> dict|str:
     """Write current puzzle to dict or JSON format.
 
     Args:
@@ -49,30 +74,24 @@ def get_puzzle_data(
     return data
 
 
-# define word lists for different finder puzzles
-PuzzleWords = {
-    "finder": ["synchrotron", "beamline", "magnet", "xrays"],
-    "finder1": ["dog", "cat", "pig", "horse", "donkey", "turtle", "goat", "sheep"],
-    "finder2": ["happy", "sad", "angry", "mad", "confused", "perplexed", "grumpy", "annoyed"],
-    "finder3": ["one", "two", "three", "four", "five", "six", "seven", "eight"]
-}
-
-
-def create_puzzle( path:Path):
-    puzzle_name = set(list(path.parts)).intersection(list(PuzzleWords.keys())).pop()
+def create_puzzle(path: Path):
     
-    # word list for defined dictionary
-    words = PuzzleWords[puzzle_name]
+    # word list and question from puzzle dictionary
+    puzzle_name = path.name 
+    question = PuzzleQuiz[puzzle_name]["question"]
+    words = PuzzleQuiz[puzzle_name]["words"]
     ww = ", ".join([w for w in words])
     puzzle_dim = max([len(w) for w in words]) 
+    
     # Generate a new word search puzzle
     ws = WordSearch(words = ww, size = puzzle_dim)
 
     # get puzzle data
     dd = get_puzzle_data(ws) # solution hidden
     ds = get_puzzle_data(ws, solution=True) # solution shown
-    question="Can you find all the words?"
-    return question, dd,ds
+
+    return question, dd, ds
+
 
 @router.get("/static/{path:path}")
 async def get_static_files(
@@ -94,41 +113,6 @@ async def get_static_files(
         )
 
 
-# function to create and return the finder puzzle from a list of words
-@router.get("/new_finder")
-async def new_finder(
-    request: Request,
-    visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)],
-):
-    # create the finder puzzle - maybe this can be part of the request in future?
-    puzzle_dim = 10 # puzzle size
-
-    # check request for path and then get words
-    path = Path(request.url.path)
-    puzzle_name = set(list(path.parts)).intersection(list(PuzzleWords.keys())).pop()
-
-    # word list for defined dictionary
-    words = PuzzleWords[puzzle_name]
-    ww = ", ".join([w for w in words])
-
-    # Generate a new word search puzzle
-    ws = WordSearch(words = ww, size = puzzle_dim)
-
-    # get puzzle data
-    dd = get_puzzle_data(ws) # solution hidden
-    ds = get_puzzle_data(ws, solution=True) # solution shown
-
-    # send the puzzle data to the template
-    return templates.TemplateResponse(
-        request=request,
-        name="finder_words.html",
-        context={
-            "data": dd,
-            "solution": ds,
-        },
-    )
-
-
 @router.get("/")
 async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
     question, data, data_as_solution = create_puzzle(Path(request.url.path) )
@@ -136,5 +120,11 @@ async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_au
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"puzzle": "finder", "visitor": visitor.uid,"question":question,"data":data,"data_as_solution":data_as_solution},
+        context={
+            "puzzle": "finder",
+            "visitor": visitor.uid,
+            "question": question,
+            "data": data,
+            "data_as_solution": data_as_solution
+        },
     )
