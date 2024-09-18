@@ -59,7 +59,9 @@ async def visitor_uid_invalid_exception_handler(request, exc):
     """Catch an invalid uid"""
     logger.error(f"{request.url} {str(exc)}", exc_info=exc)
     templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
-    return templates.TemplateResponse(request=request, name="404_invalid_uid.html")
+    return templates.TemplateResponse(
+        request=request, name="404_invalid_uid.html", status_code=status.HTTP_404_NOT_FOUND
+    )
 
 
 @app.exception_handler(UnknownPuzzleError)
@@ -67,7 +69,9 @@ async def unknown_puzzle_exception_handler(request, exc):
     """Catch an unknown puzzle exception and render the relevant page"""
     logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
     templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
-    return templates.TemplateResponse(request=request, name="404_unknown_puzzle.html")
+    return templates.TemplateResponse(
+        request=request, name="404_unknown_puzzle.html", status_code=status.HTTP_404_NOT_FOUND
+    )
 
 
 @app.exception_handler(DisabledPuzzleError)
@@ -75,7 +79,9 @@ async def disabled_puzzle_exception_handler(request, exc):
     """Catch a disabled puzzle exception and render the relevant page"""
     logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
     templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
-    return templates.TemplateResponse(request=request, name="403_disabled_puzzle.html")
+    return templates.TemplateResponse(
+        request=request, name="403_disabled_puzzle.html", status_code=status.HTTP_403_FORBIDDEN
+    )
 
 
 @app.exception_handler(PuzzleCompletedError)
@@ -83,7 +89,9 @@ async def completed_puzzle_exception_handler(request, exc):
     """Catch a completed puzzle exception and render the relevant page"""
     logger.error(f"{request.url} {str(exc)}\n{exc.detail}", exc_info=exc)
     templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static" / "html")
-    return templates.TemplateResponse(request=request, name="410_completed_puzzle.html")
+    return templates.TemplateResponse(
+        request=request, name="410_completed_puzzle.html", status_code=status.HTTP_410_GONE
+    )
 
 
 @app.exception_handler(StarletteHTTPException)
