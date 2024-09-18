@@ -27,13 +27,22 @@ from openday_scavenger.main import app
 
 @pytest.fixture(scope="function")
 def empty_db() -> Generator[Session, None, None]:
+    """
+    Fixture to provide an empty database session for each test function.
+
+    This fixture creates the database tables, provides a session for the test,
+    and then drops all tables after the test is complete to ensure the tables
+    are empty for the next test.
+
+    Yields:
+        session (Session): An SQLAlchemy session object for database operations.
+
+    Cleanup:
+        Closes the session and drops all tables after the test.
+    """
+
     create_tables()
     session = next(get_db())
-
-    # Ensure the database is empty before each test
-    for table in reversed(Base.metadata.sorted_tables):
-        session.execute(table.delete())
-    session.commit()
 
     yield session
 
@@ -44,5 +53,15 @@ def empty_db() -> Generator[Session, None, None]:
 
 @pytest.fixture(scope="function")
 def mock_client():
+    """
+    Fixture to provide a test client for each test function.
+
+    This fixture creates a TestClient instance for the FastAPI app,
+    which can be used to simulate HTTP requests in tests.
+
+    Yields:
+        client (TestClient): A test client for the FastAPI app.
+    """
+
     with TestClient(app) as client:
         yield client
