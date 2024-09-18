@@ -111,7 +111,7 @@ button:hover {
     width: 80%;
     margin-left: 8%;
     margin-right: 8%;
-    grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto;
+    grid-template-columns: repeat(11,auto);
     
 }
 
@@ -121,3 +121,23 @@ button:hover {
     text-align: center;
     font-size: 30px;
 }
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin-left: 8%;
+    margin-right: 8%;
+ 
+}
+
+.column {
+    display: block;
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: .75rem;
+}
+
+
+ 

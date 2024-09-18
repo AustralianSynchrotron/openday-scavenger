@@ -64,7 +64,7 @@ def create_puzzle( path:Path):
     # word list for defined dictionary
     words = PuzzleWords[puzzle_name]
     ww = ", ".join([w for w in words])
-    puzzle_dim = min(max([len(w) for w in words]),12)
+    puzzle_dim = max([len(w) for w in words]) 
     # Generate a new word search puzzle
     ws = WordSearch(words = ww, size = puzzle_dim)
 
