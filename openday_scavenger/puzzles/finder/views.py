@@ -121,7 +121,7 @@ async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_au
         request=request,
         name="index.html",
         context={
-            "puzzle": "finder",
+            "puzzle": Path(request.url.path).name,
             "visitor": visitor.uid,
             "question": question,
             "data": data,
