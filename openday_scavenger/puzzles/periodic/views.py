@@ -11,26 +11,7 @@ from fastapi.templating import Jinja2Templates
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
-from .services import get_category_style, get_questions
-
-# Constants
-# selection of elements to choose from
-# TODO: randomise this except for the answer
-# OPTIONS = ["H", "Fe", "Ta", "Pb", "O"]
-OPTIONS = []
-
-QUESTIONS = [
-    "This element is essential for the production of hemoglobin in the human body and is often associated with red blood cells. What is it?",
-    'The symbol for this element comes from its Latin name, "ferrum". Which element is this?',
-    "This element is found in Earth's core and contributes to the planet's magnetic field. What is it?",
-    "In ancient times, this element was used to make weapons and tools, and it still forms the backbone of modern infrastructure. What is it?",
-    "This element oxidizes in air, forming a red-brown layer commonly known as rust. What is it?",
-    "This transition metal is attracted to magnets and often used to create strong magnetic fields. What is it?",
-    "Found in both meteorites and the Earth&apos;s crust, this element has been used since the Iron Age. What is it?",
-]
-
-# answer will be sotred in the database
-# ANSWER = "Fe"
+from .services import get_answer, get_category_style, get_options, get_questions
 
 router = APIRouter()
 
@@ -72,14 +53,12 @@ async def index(
     # Get the path from the request and extract the suffix
     path = request.url.path
     puzzle_name = path.split("/")[-2] if path.endswith("/") else path.split("/")[-1]
-
     suffix = re.sub(r"/$", "", puzzle_name.split("_")[-1])
-
-    print(f"suffix: {suffix}")
 
     # Get questions and answer based on the path
     questions = get_questions(suffix)
-    # answer = get_answer(suffix)
+    answer = get_answer(suffix)
+    options = get_options(suffix)
 
     # choose a random question
     question = random.choice(questions)
@@ -93,7 +72,8 @@ async def index(
             "elements": elements,
             "element_lookup": element_lookup,
             "get_category_style": get_category_style,
-            "options": OPTIONS,
+            "options": options,
             "question": question,
+            "answer": answer,
         },
     )

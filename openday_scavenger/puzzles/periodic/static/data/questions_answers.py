@@ -1,3 +1,32 @@
+import json
+import random
+from pathlib import Path
+
+with open(Path(__file__).resolve().parent / "element_list.json") as f:
+    elements = json.load(f)
+
+
+def generate_options(answer: str, count: int = 5):
+    """Generate random options including the answer element"""
+
+    # Ensure the answer is in the options
+    options = [answer]
+
+    # Remove the answer from the list of possible options
+    remaining_elements = [e for e in elements if e != answer]
+
+    # Randomly select additional options
+    additional_options = random.sample(remaining_elements, count - 1)
+    options.extend(additional_options)
+
+    return options
+
+
+# constants
+GENERAL_ANSWER = "Au"
+XAS_ANSWER = "Fe"
+MEX_ANSWER = "Cu"
+
 questions_answers = {
     "general": {
         "questions": [
@@ -5,7 +34,8 @@ questions_answers = {
             "General question 2",
             "General question 3",
         ],
-        "answer": "Au",
+        "answer": GENERAL_ANSWER,
+        "options": generate_options(GENERAL_ANSWER),
     },
     "xas": {
         "questions": [
@@ -16,7 +46,8 @@ questions_answers = {
             "This element oxidizes in air, forming a red-brown layer commonly known as rust. What is it?",
             "This transition metal is attracted to magnets and often used to create strong magnetic fields. What is it?",
         ],
-        "answer": "Fe",
+        "answer": XAS_ANSWER,
+        "options": generate_options(XAS_ANSWER),
     },
     "mex": {
         "questions": [
@@ -24,6 +55,7 @@ questions_answers = {
             "mex question 2",
             "mex question 3",
         ],
-        "answer": "Cu",
+        "answer": MEX_ANSWER,
+        "options": generate_options(MEX_ANSWER),
     },
 }

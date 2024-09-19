@@ -56,3 +56,7 @@ def get_questions(suffix: str):
 
 def get_answer(suffix: str):
     return questions_answers[suffix]["answer"]
+
+
+def get_options(suffix):
+    return questions_answers[suffix]["options"]
