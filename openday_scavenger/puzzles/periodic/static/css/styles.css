@@ -87,26 +87,8 @@ form {
   border-radius: 5px;
 }
 
-#formbutton:hover {
+#form button:hover {
   background-color: #2aa3b0;
-}
-
-#response-good {
-  text-align: center;
-  font-size: 18px;
-  color: #28a745;
-  margin-top: 20px;
-}
-#response-bad {
-  text-align: center;
-  font-size: 18px;
-  color: #990312;
-  margin-top: 20px;
-}
-
-.error {
-  color: #dc3545;
-  font-weight: bold;
 }
 /************** Form End **************/
 
