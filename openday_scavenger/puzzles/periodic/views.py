@@ -14,6 +14,7 @@ from .services import get_category_style
 
 # Constants
 # selection of elements to choose from
+# TODO: randomise this except for the answer
 # OPTIONS = ["H", "Fe", "Ta", "Pb", "O"]
 OPTIONS = []
 
@@ -26,7 +27,6 @@ QUESTIONS = [
     "This transition metal is attracted to magnets and often used to create strong magnetic fields. What is it?",
     "Found in both meteorites and the Earth&apos;s crust, this element has been used since the Iron Age. What is it?",
 ]
-QUESTION = random.choice(QUESTIONS)
 
 # answer will be sotred in the database
 # ANSWER = "Fe"
@@ -68,6 +68,9 @@ async def get_static_files(
 async def index(
     request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]
 ):
+    # choose a random question
+    question = random.choice(QUESTIONS)
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -78,6 +81,6 @@ async def index(
             "element_lookup": element_lookup,
             "get_category_style": get_category_style,
             "options": OPTIONS,
-            "question": QUESTION,
+            "question": question,
         },
     )
