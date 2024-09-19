@@ -3,10 +3,9 @@ function formatCategory(category) {
 }
 
 const fetchElementLookup = async () => {
+  const path = window.location.pathname;
   try {
-    const response = await fetch(
-      "/puzzles/periodic/static/data/element_lookup.json"
-    );
+    const response = await fetch(`${path}static/data/element_lookup.json`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
