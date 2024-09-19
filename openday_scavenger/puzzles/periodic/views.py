@@ -1,5 +1,6 @@
 import json
 import random
+import re
 from pathlib import Path
 from typing import Annotated
 
@@ -10,7 +11,7 @@ from fastapi.templating import Jinja2Templates
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
-from .services import get_category_style
+from .services import get_category_style, get_questions
 
 # Constants
 # selection of elements to choose from
@@ -68,14 +69,26 @@ async def get_static_files(
 async def index(
     request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]
 ):
+    # Get the path from the request and extract the suffix
+    path = request.url.path
+    puzzle_name = path.split("/")[-2] if path.endswith("/") else path.split("/")[-1]
+
+    suffix = re.sub(r"/$", "", puzzle_name.split("_")[-1])
+
+    print(f"suffix: {suffix}")
+
+    # Get questions and answer based on the path
+    questions = get_questions(suffix)
+    # answer = get_answer(suffix)
+
     # choose a random question
-    question = random.choice(QUESTIONS)
+    question = random.choice(questions)
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": "periodic",
+            "puzzle": puzzle_name,
             "visitor": visitor.uid,
             "elements": elements,
             "element_lookup": element_lookup,

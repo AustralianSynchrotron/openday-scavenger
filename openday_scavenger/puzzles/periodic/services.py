@@ -1,15 +1,4 @@
-# from enum import Enum
-
-# class PeriodicCategory(Enum):
-#     AlkaliMetal = "AlkaliMetal"
-#     AlkalineEarthMetal = "AlkalineEarthMetal"
-#     TransitionMetal = "TransitionMetal"
-#     PostTransitionMetal = "PostTransitionMetal"
-#     Metalloid = "Metalloid"
-#     ReactiveNonmetal = "ReactiveNonmetal"
-#     NobleGas = "NobleGas"
-#     Lanthanide = "Lanthanide"
-#     Actinide = "Actinide"
+from .static.data.questions_answers import questions_answers
 
 
 def get_category_style(category: str):
@@ -59,3 +48,11 @@ def get_category_style(category: str):
             "backgroundColor": "#E7E7EA",
         },
     )
+
+
+def get_questions(suffix: str):
+    return questions_answers[suffix]["questions"]
+
+
+def get_answer(suffix: str):
+    return questions_answers[suffix]["answer"]
