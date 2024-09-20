@@ -62,6 +62,15 @@ button:hover {
     background-color: #2aa3b0;
 }
 
+.btn-custom {
+    background-color: #35bfc9;
+    color: white;
+}
+.btn-custom:hover {
+    background-color: #2aa3b0;
+    color: white;
+}
+
 /* Style for the response message */
 #response-good {
     text-align: center;
