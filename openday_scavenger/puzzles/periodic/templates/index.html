@@ -1,6 +1,7 @@
+{% set title = "🧈 Element Quiz 🪨" %}
 <html>
   <head>
-    <title>Element Puzzle</title>
+    <title>{{ title }}</title>
     <link
       id="favicon"
       rel="icon"
@@ -26,15 +27,12 @@
   </head>
   <body>
     <main>
-      <h1 class="title">Element Puzzle</h1>
+      <h1 class="title">{{ title }}</h1>
 
       {% include 'periodic_table.html' %}
-
-      <div class="question">{{ question }}</div>
-
-      {%include 'form.html' %}
-      
-      {%include 'popup.html' %}
+      {% include 'question.html' %}
+      {% include 'form.html' %}
+      {% include 'popup.html' %}
     </main>
   </body>
 </html>

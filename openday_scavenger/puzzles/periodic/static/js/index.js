@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   });
 
+  // Buttons in popup
   const btnGoogle = document.getElementById("btn-google");
   btnGoogle.addEventListener("click", function () {
     const element_name = document.getElementById("element-name").textContent;
@@ -88,5 +89,20 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Close the popup
     popup.style.display = "none";
+  });
+
+  // Hnt functionality
+  const btnHint = document.getElementById("btn-hint");
+  const periodicTable = document.getElementById("periodic-table");
+  let hintVisible = false;
+
+  btnHint.addEventListener("click", function () {
+    hintVisible = !hintVisible;
+    btnHint.textContent = hintVisible ? "Hide hints" : "Give me some hints";
+    if (hintVisible) {
+      periodicTable.classList.add("hint-visible");
+    } else {
+      periodicTable.classList.remove("hint-visible");
+    }
   });
 });

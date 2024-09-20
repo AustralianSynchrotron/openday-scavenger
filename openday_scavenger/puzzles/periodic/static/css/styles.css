@@ -2,6 +2,13 @@ body {
   background-color: LightSteelBlue;
 }
 
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
 /************** Periodic Table Start **************/
 .periodic-table {
   display: grid;
@@ -19,13 +26,14 @@ body {
   padding: 0.25rem;
   text-align: center;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.element:not(.option) {
+.periodic-table.hint-visible .element:not(.option) {
   background-color: #6c6c6c !important;
 }
 
-.element.option:hover {
+.periodic-table.hint-visible .element.option:hover {
   transform: scale(1.12);
   transition: transform 0.3s ease-in-out;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
@@ -45,6 +53,14 @@ body {
 /************** Periodic Table End **************/
 
 /***** Question *****/
+.question-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
 .question {
   text-align: center;
   font-size: 1.5rem;
@@ -52,6 +68,9 @@ body {
   margin-top: 20px;
 }
 
+#btn-hint {
+  width: 180px;
+}
 /*****************************************/
 /************** Form Start **************/
 form {
@@ -212,17 +231,5 @@ form {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-}
-
-.btn-google {
-  color: white;
-}
-
-.btn-answer {
-  color: white;
-}
-
-.btn-answer:not(.option) {
-  display: none;
 }
 /************** Popup End **************/
