@@ -94,15 +94,27 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Hnt functionality
   const btnHint = document.getElementById("btn-hint");
   const periodicTable = document.getElementById("periodic-table");
-  let hintVisible = false;
+  let hintState = "hidden";
 
   btnHint.addEventListener("click", function () {
-    hintVisible = !hintVisible;
-    btnHint.textContent = hintVisible ? "Hide hints" : "Give me some hints";
-    if (hintVisible) {
-      periodicTable.classList.add("hint-visible");
-    } else {
-      periodicTable.classList.remove("hint-visible");
+    switch (hintState) {
+      case "hidden":
+        hintState = "show_more";
+        btnHint.textContent = "More hints please 🙏";
+        periodicTable.classList.add("options-more-visible");
+        periodicTable.classList.remove("options-less-visible");
+        break;
+      case "show_more":
+        hintState = "show_less";
+        btnHint.textContent = "Hide hints (refresh to see a different question)";
+        periodicTable.classList.remove("options-more-visible");
+        periodicTable.classList.add("options-less-visible");
+        break;
+      case "show_less":
+        hintState = "hidden";
+        btnHint.textContent = "🤯 Give me some hints";
+        periodicTable.classList.remove("options-less-visible");
+        break;
     }
   });
 });

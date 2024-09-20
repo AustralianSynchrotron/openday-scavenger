@@ -2,7 +2,10 @@
   {% for element_symbol in elements %} {% set element =
   element_lookup[element_symbol] %}
   <div
-    class="element {% if element_symbol in options or options|length == 0 %}option{% endif %}"
+    class="element 
+      {% if element_symbol in options_less or options_less|length == 0 %}options-less{% endif %} 
+      {% if element_symbol in options_more or options_more|length == 0 %}options-more{% endif %}
+    "
     style="
       color: {{ get_category_style(element['category'])['color'] }};
       background-color: {{ get_category_style(element['category'])['backgroundColor'] }};

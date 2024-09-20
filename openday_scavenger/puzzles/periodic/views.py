@@ -11,7 +11,7 @@ from fastapi.templating import Jinja2Templates
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
-from .services import get_answer, get_category_style, get_options, get_questions
+from .services import get_category_style, get_options_less, get_options_more, get_questions
 
 router = APIRouter()
 
@@ -55,10 +55,10 @@ async def index(
     puzzle_name = path.split("/")[-2] if path.endswith("/") else path.split("/")[-1]
     suffix = re.sub(r"/$", "", puzzle_name.split("_")[-1])
 
-    # Get questions and answer based on the path
+    # Get questions and hints based on the path
     questions = get_questions(suffix)
-    answer = get_answer(suffix)
-    options = get_options(suffix)
+    options_less = get_options_less(suffix)
+    options_more = get_options_more(suffix)
 
     # choose a random question
     question = random.choice(questions)
@@ -72,8 +72,8 @@ async def index(
             "elements": elements,
             "element_lookup": element_lookup,
             "get_category_style": get_category_style,
-            "options": options,
             "question": question,
-            "answer": answer,
+            "options_less": options_less,
+            "options_more": options_more,
         },
     )
