@@ -1,4 +1,3 @@
-import random
 from pathlib import Path
 from typing import Annotated
 
@@ -9,18 +8,18 @@ from fastapi.templating import Jinja2Templates
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
+from .service import get_full_puzzle_name, get_initial_word, shuffle_word
+
 router = APIRouter()
 
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
-
-INITIAL_WORD = "PROBATIONS"  # not the solution, but an anagram of it :D
 
 
 @router.get("/static/{path:path}")
 async def get_static_files(
     path: Path,
 ):
-    """Serve files from a local static folder"""
+    """get_static_files Serve files from a local static folder"""
     # This route is required as the current version of FastAPI doesn't allow
     # the mounting of folders on APIRouter. This is an open issue:
     # https://github.com/fastapi/fastapi/discussions/9070
@@ -38,12 +37,13 @@ async def get_static_files(
 
 # function that returns a shuffled version of the word
 @router.get("/shuffled")
-async def shuffle_word(
+async def get_shuffled_word(
     request: Request,
-    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    initial_word: Annotated[str, Depends(get_initial_word)],
 ):
+    """get_shuffled_word Send a scrambled version of the word to the client"""
     # create a shuffled version of the word
-    word = "".join(random.sample(INITIAL_WORD, len(INITIAL_WORD)))
+    word = shuffle_word(initial_word)
     return templates.TemplateResponse(
         request=request,
         name="scrambled_word.html",
@@ -54,13 +54,18 @@ async def shuffle_word(
 
 
 @router.get("/")
-async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
+async def index(
+    request: Request,
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    full_puzzle_name: Annotated[str, Depends(get_full_puzzle_name)],
+    initial_word: Annotated[str, Depends(get_initial_word)],
+):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": "shuffleanagram",
+            "puzzle": full_puzzle_name,
             "visitor": visitor.uid,
-            "scrambled_word": INITIAL_WORD,
+            "scrambled_word": initial_word,
         },
     )
