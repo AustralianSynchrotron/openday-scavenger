@@ -1,36 +1,41 @@
 <html>
 
 <head>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script src="/static/js/htmx.min.js"></script>
     <script src="/static/js/json-enc.js"></script>
-    <link href="static/styles.css" rel="stylesheet">
     <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link href="static/styles.css" rel="stylesheet">
 </head>
 
-<body id="body">
-    <h1>Anagram Puzzle!</h1>
-    <!--  -->
-    <p> What's a synchrotron-related anagram of the following word?</p>
+<body id="body" class="container">
+    <h1 class="text-center my-4">Anagram Puzzle!</h1>
+    <p class="text-center">What's a synchrotron-related anagram of the following word?</p>
 
-    <p id="scrambled_word"><b>{{ scrambled_word }}</b></p>
+    <p id="scrambled_word" class="text-center"><b>{{ scrambled_word }}</b></p>
 
-    <!-- create a button, using htmx, that sends a get request to /shuffled -->
-    <button hx-get="shuffled" hx-trigger="click" hx-target="#scrambled_word" hx-swap="outerHTML">
-        Shuffle
-    </button>
+    <div class="text-center my-3">
+        <button class="btn btn-custom" hx-get="shuffled" hx-trigger="click" hx-target="#scrambled_word" hx-swap="outerHTML">
+            Shuffle
+        </button>
+    </div>
 
-
-    <form id='form' method='POST' action='/submission'>
+    <form id='form' method='POST' action='/submission' class="text-center">
         <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
         <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-        <label for="user_solution">Your answer:</label><br>
-        <!-- use validation to lowercase the answer before submitting -->
-        <input type="text" id="answer" name="answer" pattern="[a-z]+" placeholder="(lowercase letters only)">
-        <button>
+        <div class="form-group">
+            <label for="user_solution">Your answer:</label><br>
+            <input type="text" id="answer" name="answer" pattern="[a-z]+" placeholder="(lowercase letters only)" class="form-control d-inline-block w-50">
+        </div>
+        <button class="btn btn-custom">
             Submit your answer
         </button>
     </form>
-
 </body>
 
 </html>
