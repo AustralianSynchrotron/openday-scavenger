@@ -12,34 +12,56 @@
         <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
     </head>
     
-    <body>
+    <body class="admin-bg-grey">
         <div class="container-fluid">
             <div class="row flex-nowrap">
-                <aside class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-                    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                        <a href="/admin" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                            <span class="fs-5 d-none d-sm-inline">Admin</span>
-                        </a>
-                        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                <aside class="col-auto px-0 admin-nav-sidebar">
+                    <div class="d-flex flex-column align-items-center align-items-sm-start px-0 pt-4 text-white min-vh-100">
+                        <h1 class="mx-4 mb-5 d-none d-sm-inline">Scavenger Hunt<br />
+                            <small>Administration</small>
+                        </h1>
+                        <ul class="nav d-flex flex-column w-100" id="menu">
+                            {% if active_page == "dashboard" %}
+                            <li class="nav-item active">
+                            {% else %}
                             <li class="nav-item">
-                                <a href="/admin/visitors" class="nav-link align-middle px-0">
+                            {% endif %}
+                                <a href="/admin" class="nav-link align-middle">
+                                    <i class="fa-solid fa-display"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span>
+                                </a>
+                            </li>
+                            {% if active_page == "visitors" %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                                <a href="/admin/visitors" class="nav-link align-middle">
                                     <i class="fa-solid fa-users"></i> <span class="ms-1 d-none d-sm-inline">Visitors</span>
                                 </a>
                             </li>
+                            {% if active_page == "puzzles" %}
+                            <li class="nav-item active">
+                            {% else %}
                             <li class="nav-item">
-                                <a href="/admin/puzzles" class="nav-link align-middle px-0">
+                            {% endif %}
+                                <a href="/admin/puzzles" class="nav-link align-middle">
                                     <i class="fa-solid fa-puzzle-piece"></i> <span class="ms-1 d-none d-sm-inline">Puzzles</span>
                                 </a>
                             </li>
+                            {% if active_page == "responses" %}
+                            <li class="nav-item active">
+                            {% else %}
                             <li class="nav-item">
-                                <a href="/admin/responses" class="nav-link align-middle px-0">
+                            {% endif %}
+                                <a href="/admin/responses" class="nav-link align-middle">
                                     <i class="fa-solid fa-comment"></i> <span class="ms-1 d-none d-sm-inline">Responses</span>
                                 </a>
                             </li>
-                        </ul>                      
+                        </ul>
+                        <img src="/static/images/logo.svg" class="mt-auto mb-3">
                     </div>
                 </aside>
-                <div class="col bg-light py-3">
+                <div class="col py-3 admin-page-content">
                     {% block content %}{% endblock %}
                 </div>
             </div>

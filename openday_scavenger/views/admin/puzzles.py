@@ -25,7 +25,9 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 @router.get("/")
 async def render_puzzle_page(request: Request):
     """Render the puzzle admin page"""
-    return templates.TemplateResponse(request=request, name="puzzles.html")
+    return templates.TemplateResponse(
+        request=request, name="puzzles.html", context={"active_page": "puzzles"}
+    )
 
 
 @router.post("/")

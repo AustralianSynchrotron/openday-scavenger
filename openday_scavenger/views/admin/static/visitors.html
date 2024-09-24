@@ -1,22 +1,12 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="my-3 p-3 bg-body rounded shadow-sm">
-    <h5 class="border-bottom pb-2 mb-0">Add a new Visitor</h5>
-    <div>
-        <form id='visitor-add-form' class="mt-3" hx-encoding='multipart/form-data' hx-post='/admin/visitors' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table">
-            <div class="mb-3">
-                <label for="uid" class="form-label">UID:</label>
-                <input type="text" id="uid" name="uid" class="form-control">
-            </div>
-            <button class="btn btn-primary">
-                <i class="fa-solid fa-add"></i>
-                Add
-            </button>
-        </form>
-    </div>
-</div>
-<div class="my-3 p-3 bg-body rounded shadow-sm">
+<h1 class="mx-3 admin-page-title">
+    <i class="fa-solid fa-users"></i> Visitor Administration<br />
+    <small>The list of playing visitors</small>
+</h1>
+
+<div class="my-4 mx-3 p-3 bg-body shadow-sm admin-panel-container">
     <h5 class="border-bottom pb-2 mb-0">Visitors</h5>
     <form id='visitor-filter-form' class="mt-3" hx-encoding='multipart/form-data' hx-trigger="input from:#search-form, input from:[type='checkbox']" hx-get='/admin/visitors/table' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table"> 
         <div class="mb-3">
@@ -44,7 +34,24 @@
     </form>
     <div id="visitor-table" hx-get="/admin/visitors/table" hx-trigger="load" hx-swap="innerHTML"></div>
 </div>
-<div class="my-3 p-3 bg-body rounded shadow-sm">
+
+<div class="my-4 mx-3 p-3 bg-body shadow-sm admin-panel-container">
+    <h5 class="border-bottom pb-2 mb-0">Add a new Visitor</h5>
+    <div>
+        <form id='visitor-add-form' class="mt-3" hx-encoding='multipart/form-data' hx-post='/admin/visitors' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table">
+            <div class="mb-3">
+                <label for="uid" class="form-label">UID:</label>
+                <input type="text" id="uid" name="uid" class="form-control">
+            </div>
+            <button class="btn btn-primary">
+                <i class="fa-solid fa-add"></i>
+                Add
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="my-4 mx-3 p-3 bg-body shadow-sm admin-panel-container">
     <h5 class="border-bottom pb-2 mb-0">Visitor Pool</h5>
     <form id='visitor-pool-form' class="mt-3" hx-encoding='multipart/form-data' hx-post='/admin/visitors/pool' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-pool-table"> 
         <div class="mb-3">

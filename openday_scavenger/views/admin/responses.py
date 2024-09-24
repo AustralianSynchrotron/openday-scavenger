@@ -17,7 +17,9 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static"
 @router.get("/")
 async def render_response_page(request: Request):
     """Render the responses admin page"""
-    return templates.TemplateResponse(request=request, name="responses.html")
+    return templates.TemplateResponse(
+        request=request, name="responses.html", context={"active_page": "responses"}
+    )
 
 
 @router.get("/table")

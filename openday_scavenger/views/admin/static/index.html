@@ -1,8 +1,31 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div>
-    <a href="/admin/puzzles">Puzzle Management</a>
-    <a href="/admin/visitors">Visitor Management</a>
+<h1 class="mx-3 admin-page-title">
+    <i class="fa-solid fa-display"></i> Dashboard<br />
+    <small>All the stats in one place</small>
+</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col my-4 mx-3 p-3 shadow-sm admin-stats-panel admin-bg-purple">
+            <h1>{{ number_active_puzzles }}</h1>
+            <small class="pb-2 mb-0">puzzles are active</small>
+        </div>
+        <div class="col my-4 mx-3 p-3 shadow-sm admin-stats-panel admin-bg-blue">
+            <h1>{{ number_active_visitors }}</h1>
+            <small class="pb-2 mb-0">visitors are currently playing</small>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col my-4 mx-3 p-3 shadow-sm admin-stats-panel admin-bg-aqua">
+            <h1>{{ number_responses }}</h1>
+            <small class="pb-2 mb-0">responses from visitors</small>
+        </div>
+        <div class="col my-4 mx-3 p-3 shadow-sm admin-stats-panel admin-bg-yellow">
+            <h1>{{ number_correct_responses }}</h1>
+            <small class="pb-2 mb-0">correct responses from visitors</small>
+        </div>
+    </div>
 </div>
 {% endblock %}

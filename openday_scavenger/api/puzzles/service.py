@@ -32,6 +32,7 @@ __all__ = (
     "get_all",
     "count",
     "get_all_responses",
+    "count_responses",
     "create",
     "update",
     "compare_answer",
@@ -151,6 +152,27 @@ def get_all_responses(
         q = q.join(Response.visitor).filter(Visitor.uid.ilike(f"{filter_by_visitor_uid}%"))
 
     return q.all()
+
+
+def count_responses(db_session: Session, *, only_correct: bool = False) -> int:
+    """
+    Convenience method to count the number of responses.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        only_correct (bool): Set this to True to only count correct responses.
+
+    Returns:
+        int: The number of responses.
+    """
+    # Construct the database query dynamically, taking into account
+    # whether only correct responses should be counted.
+    q = db_session.query(Response)
+
+    if only_correct:
+        q = q.filter(Response.is_correct)
+
+    return q.count()
 
 
 def create(db_session: Session, puzzle_in: PuzzleCreate) -> Puzzle:
