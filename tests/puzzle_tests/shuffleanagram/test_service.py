@@ -3,9 +3,10 @@ import pytest
 from openday_scavenger.puzzles.shuffleanagram.service import (
     INITIAL_WORDS,
     PUZZLE_FAMILY,
+    _shuffle_word,
     get_initial_word,
+    get_shuffled_word,
     get_subpuzzle_name,
-    shuffle_word,
 )
 
 
@@ -81,7 +82,7 @@ class TestShuffleAnagram:
         ]
         + [k for k in INITIAL_WORDS],
     )
-    async def test_shuffle_word(self, word_in: str) -> None:
+    async def test_get_shuffled_word(self, word_in: str) -> None:
         """
         Test the shuffle_word function.
 
@@ -95,7 +96,7 @@ class TestShuffleAnagram:
             The shuffled word is a permutation of the input word.
         """
 
-        word_out = await shuffle_word(word_in)
+        word_out = await get_shuffled_word(word_in)
         assert word_out != word_in
         assert sorted(word_out) == sorted(word_in)
 
@@ -107,11 +108,11 @@ class TestShuffleAnagram:
             "bbbbbb",
         ],
     )
-    async def test_shuffle_word_silly(self, word_in: str) -> None:
+    async def test__shuffle_word_silly(self, word_in: str) -> None:
         """
-        Test the shuffle_word function.
+        Test the _shuffle_word function.
 
-        This test verifies that the shuffle_word function eventually returns even if we pass an input word that is all the same character.
+        This test verifies that the _shuffle_word function eventually returns even if we pass an input word that is all the same character.
 
         Args:
             word_in (str): The word to shuffle. Must be all same letters for this test to make sense.
@@ -122,5 +123,5 @@ class TestShuffleAnagram:
         assert (
             len(set(word_in)) == 1
         ), "This test only makes sense for words with all the same characters"
-        word_out = await shuffle_word(word_in)
+        word_out = await _shuffle_word(word_in)
         assert word_out == word_in

@@ -32,7 +32,7 @@ async def get_initial_word(subpuzzle_name: Annotated[str, Depends(get_subpuzzle_
     return INITIAL_WORDS.get(subpuzzle_name, "PROBATIONS")
 
 
-async def shuffle_word(word_in: str) -> str:
+async def _shuffle_word(word_in: str) -> str:
     """shuffle_word Shuffle the word"""
     # while loop because I got caught out by a test where the shuffled word was the same as the input word
     word_out = word_in
@@ -44,3 +44,10 @@ async def shuffle_word(word_in: str) -> str:
         # but just in case we decide to be really really silly and have a puzzle like "aaaa"...
 
     return word_out
+
+
+async def get_shuffled_word(initial_word: Annotated[str, Depends(get_initial_word)]) -> str:
+    """shuffled_word Get the shuffled word for the puzzle.
+    Should be used with Depends"""
+    word = await _shuffle_word(initial_word)
+    return word
