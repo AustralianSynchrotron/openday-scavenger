@@ -1,6 +1,7 @@
 import random
+from typing import Annotated
 
-from fastapi import Request
+from fastapi import Depends
 
 from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
 
@@ -17,19 +18,17 @@ INITIAL_WORDS: dict[str, str] = {
 }
 
 
-async def get_subpuzzle_name(request: Request) -> str:
+async def get_subpuzzle_name(puzzle_name: Annotated[str, Depends(get_puzzle_name)]) -> str:
     """get_subpuzzle_name Return the puzzle name from the full puzzle name,
     e.g. shuffleanagram-probations -> probations
     Should be used with Depends"""
-    puzzle_name = await get_puzzle_name(request)
     return puzzle_name.split("-")[-1]
 
 
-async def get_initial_word(request: Request) -> str:
+async def get_initial_word(subpuzzle_name: Annotated[str, Depends(get_subpuzzle_name)]) -> str:
     """get_initial_word Get the initial word for the puzzle.
     Should be used with Depends"""
 
-    subpuzzle_name = await get_subpuzzle_name(request)
     return INITIAL_WORDS.get(subpuzzle_name, "PROBATIONS")
 
 
