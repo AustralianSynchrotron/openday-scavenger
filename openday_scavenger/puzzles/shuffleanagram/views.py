@@ -5,10 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
+from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
-from .service import get_full_puzzle_name, get_initial_word, shuffle_word
+from .service import get_initial_word, shuffle_word
 
 router = APIRouter()
 
@@ -43,7 +44,7 @@ async def get_shuffled_word(
 ):
     """get_shuffled_word Send a scrambled version of the word to the client"""
     # create a shuffled version of the word
-    word = shuffle_word(initial_word)
+    word = await shuffle_word(initial_word)
     return templates.TemplateResponse(
         request=request,
         name="scrambled_word.html",
@@ -57,14 +58,14 @@ async def get_shuffled_word(
 async def index(
     request: Request,
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
-    full_puzzle_name: Annotated[str, Depends(get_full_puzzle_name)],
+    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
     initial_word: Annotated[str, Depends(get_initial_word)],
 ):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": full_puzzle_name,
+            "puzzle": puzzle_name,
             "visitor": visitor.uid,
             "scrambled_word": initial_word,
         },
