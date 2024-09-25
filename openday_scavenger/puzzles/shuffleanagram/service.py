@@ -22,7 +22,7 @@ async def get_subpuzzle_name(puzzle_name: Annotated[str, Depends(get_puzzle_name
     """get_subpuzzle_name Return the puzzle name from the full puzzle name,
     e.g. shuffleanagram-probations -> probations
     Should be used with Depends"""
-    return puzzle_name.split("-")[-1]
+    return puzzle_name.partition(f"{PUZZLE_FAMILY}-")[-1]
 
 
 async def get_initial_word(subpuzzle_name: Annotated[str, Depends(get_subpuzzle_name)]) -> str:
@@ -34,5 +34,13 @@ async def get_initial_word(subpuzzle_name: Annotated[str, Depends(get_subpuzzle_
 
 async def shuffle_word(word_in: str) -> str:
     """shuffle_word Shuffle the word"""
-    word_out = "".join(random.sample(word_in, len(word_in)))
+    # while loop because I got caught out by a test where the shuffled word was the same as the input word
+    word_out = word_in
+    attempts = 0
+    while (word_out == word_in) and (attempts < 100):
+        word_out = "".join(random.sample(word_in, len(word_in)))
+        attempts += 1
+        # I am aware that putting a loop guard in here is ridiculous,
+        # but just in case we decide to be really really silly and have a puzzle like "aaaa"...
+
     return word_out
