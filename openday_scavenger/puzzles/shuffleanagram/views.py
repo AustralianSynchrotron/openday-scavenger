@@ -9,7 +9,8 @@ from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
-from .service import get_initial_word, shuffle_word
+from .service import get_initial_word
+from .service import get_shuffled_word as get_scrambled_word
 
 router = APIRouter()
 
@@ -40,16 +41,15 @@ async def get_static_files(
 @router.get("/shuffled")
 async def get_shuffled_word(
     request: Request,
-    initial_word: Annotated[str, Depends(get_initial_word)],
+    scrambled_word: Annotated[str, Depends(get_scrambled_word)],
 ):
     """get_shuffled_word Send a scrambled version of the word to the client"""
     # create a shuffled version of the word
-    word = await shuffle_word(initial_word)
     return templates.TemplateResponse(
         request=request,
         name="scrambled_word.html",
         context={
-            "scrambled_word": word,
+            "scrambled_word": scrambled_word,
         },
     )
 
