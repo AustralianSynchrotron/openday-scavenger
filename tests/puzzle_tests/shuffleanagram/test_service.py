@@ -2,30 +2,19 @@ import pytest
 
 from openday_scavenger.puzzles.shuffleanagram.service import (
     INITIAL_WORDS,
-    PUZZLE_FAMILY,
     _shuffle_word,
     get_initial_word,
     get_shuffled_word,
     get_subpuzzle_name,
 )
 
+# I'm using the fixture known_puzzle_and_subpuzzle_names to parametrize the tests
+# so that any test added to the router will be automatically tested.
+# Each time that known_puzzle_and_subpuzzle_names is used, it's as if I were using
+# @pytest.mark.parametrize(["puzzle_name", "subpuzzle_name"], [...])
 
-def get_shuffleanagram_puzzle_names_added_to_router() -> list[str]:
-    from pathlib import Path
-
-    from starlette.routing import Route
-
-    from openday_scavenger.puzzles import router as puzzle_router
-
-    puzzle_names = []
-    for route in puzzle_router.routes:
-        assert isinstance(route, Route)  # for linter
-        if route.path.startswith(f"/{PUZZLE_FAMILY}"):
-            puzzle_names.append(Path(route.path).parts[1])
-    return puzzle_names
-
-
-SHUFFLEANAGRAM_ADDED_PUZZLES = get_shuffleanagram_puzzle_names_added_to_router()
+# To make it easier to remember that using the fixture is the same as parametrizing,
+# I'm putting _parametrized at the end of the test name
 
 
 @pytest.mark.asyncio
@@ -47,12 +36,27 @@ class TestShuffleAnagram:
         Asserts:
             The subpuzzle name is correct.
         """
-
         subpuzzle_name = await get_subpuzzle_name(puzzle_name)
         assert subpuzzle_name == expected
 
-    @pytest.mark.parametrize("puzzle_name", SHUFFLEANAGRAM_ADDED_PUZZLES)
-    async def test_puzzles_added_to_router_correctly(self, puzzle_name: str) -> None:
+    async def test_get_subpuzzle_name_parametrized(
+        self, known_puzzle_and_subpuzzle_names: tuple[str, str]
+    ) -> None:
+        """
+        Test the get_subpuzzle_name function.
+
+        This test verifies that the get_subpuzzle_name function returns the correct subpuzzle name.
+
+        Asserts:
+            The subpuzzle name is correct.
+        """
+        puzzle_name, expected = known_puzzle_and_subpuzzle_names
+        subpuzzle_name = await get_subpuzzle_name(puzzle_name)
+        assert subpuzzle_name == expected
+
+    async def test_puzzle_added_to_router_correctly_parametrized(
+        self, known_puzzle_and_subpuzzle_names: tuple[str, str]
+    ) -> None:
         """
         Test the puzzle names added to the router.
 
@@ -61,14 +65,12 @@ class TestShuffleAnagram:
         - its subpuzzle name is a key in the dict of initial words
         - the corresponding initial word is the same as the subpuzzle name
 
-        the puzzle names added to the router are correct.
-
-        Asserts:
-            The puzzle name is in the list of added puzzles.
         """
+        puzzle_name, _subpuzzle_name = known_puzzle_and_subpuzzle_names
         subpuzzle_name = await get_subpuzzle_name(puzzle_name)
         assert subpuzzle_name
         assert subpuzzle_name in INITIAL_WORDS
+        assert subpuzzle_name == _subpuzzle_name
         _initial_word = await get_initial_word(subpuzzle_name)
         assert _initial_word.lower() == subpuzzle_name.lower()
 
