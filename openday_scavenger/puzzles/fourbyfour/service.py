@@ -1,11 +1,12 @@
-import base64
 import json
+import random
 from functools import lru_cache
+from pathlib import Path
 from typing import Annotated
 
 from pydantic import BaseModel, Field
 
-SOLUTION = "1:abcd-2:efgh-3:ijkl-4:mnop"  # not the real solution, we'll get that from the db
+SOLUTION = "car_models:mnop;farm_animals:efgh;fruit:ijkl;i.t._companies:abcd"  # not the real solution, we'll get that from the db. Also the words will change.
 
 
 @lru_cache
@@ -15,33 +16,17 @@ def get_solution_from_db() -> str:
     return SOLUTION
 
 
-def parse_solution(solution: str) -> dict[int, set[str]]:
+def parse_solution(solution: str) -> dict[str, set[str]]:
     """Parse the solution string into a dictionary of category ID to a set of word ids"""
     categories = {}
-    for category in solution.split("-"):
+    for category in solution.split(";"):
         category_id, word_ids = category.split(":")
-        categories[int(category_id)] = set(word_ids)
+        categories[category_id] = set(word_ids)
     return categories
 
 
-def get_parsed_solution() -> dict[int, set[str]]:
+def get_parsed_solution() -> dict[str, set[str]]:
     return parse_solution(get_solution_from_db())
-
-
-def encode_json_to_base64(json_obj):
-    # Convert the JSON object to a JSON string
-    json_str = json.dumps(json_obj)
-
-    # Encode the JSON string to bytes
-    json_bytes = json_str.encode("utf-8")
-
-    # Encode the bytes to Base64
-    base64_bytes = base64.b64encode(json_bytes)
-
-    # Convert Base64 bytes to a string
-    base64_str = base64_bytes.decode("utf-8")
-
-    return base64_str
 
 
 class Word(BaseModel):
@@ -54,11 +39,13 @@ class Word(BaseModel):
 
 
 class Category(BaseModel):
-    id: int
-    name: str
-    description: str = ""
+    id: str
     words: list[Word] = []
     is_solved: bool = False
+
+    @property
+    def name(self) -> str:
+        return self.id.replace("_", " ").title()
 
     def add_words(self, word: Word) -> None:
         self.words.append(word)
@@ -73,8 +60,25 @@ class PuzzleStatus(BaseModel):
     mistakes_available: int = 4
     selectable_at_once: int = 4
 
+    @classmethod
+    def new(cls) -> "PuzzleStatus":
+        # get and parse solution
+        # solution is a dict of category ID to a set of word IDs
+        _sol = get_parsed_solution()
+        categories = [Category(id=category_id) for category_id in _sol.keys()]
+        _word_ids_in_sol = [word_id for word_ids in _sol.values() for word_id in word_ids]
+        with open(Path(__file__).resolve().parent / "static" / "words.json") as f:
+            _words = json.load(f)["items"]
+
+        # create the words
+        words = [Word.model_validate(_word) for _word in _words if _word["id"] in _word_ids_in_sol]
+
+        # shuffle the words
+        random.shuffle(words)
+        return cls(categories=categories, words=words)
+
     @property
-    def solution(self) -> dict[int, set[str]]:
+    def solution(self) -> dict[str, set[str]]:
         return get_parsed_solution()
 
     @property
@@ -85,13 +89,13 @@ class PuzzleStatus(BaseModel):
     def can_submit(self) -> bool:
         return self.n_selected_words == self.selectable_at_once
 
-    def get_word(self, word_id: int) -> Word:
+    def get_word(self, word_id: str) -> Word:
         for word in self.words:
             if word.id == word_id:
                 return word
         raise ValueError("Word not found")
 
-    def get_category(self, category_id: int) -> Category:
+    def get_category(self, category_id: str) -> Category:
         for category in self.categories:
             if category.id == category_id:
                 return category
@@ -100,7 +104,7 @@ class PuzzleStatus(BaseModel):
     def get_selected_words(self) -> list[Word]:
         return [word for word in self.words if word.is_selected]
 
-    def toggle_word_selection(self, word_id: int) -> None:
+    def toggle_word_selection(self, word_id: str) -> None:
         """Toggle a word's status between selected and not selected.
         Make sure that the number of selected words does not exceed the
         selectable_at_once limit.
@@ -125,6 +129,9 @@ class PuzzleStatus(BaseModel):
         for word in self.words:
             word.is_selected = False
 
+    def shuffle_words(self) -> None:
+        random.shuffle(self.words)
+
     def submit_selection(self) -> None:
         """When user submits a selection of 4 words, check against the solution
         if the selected words are all in the same category"""
@@ -143,6 +150,9 @@ class PuzzleStatus(BaseModel):
                 for word in selected_words:
                     category.add_words(word)
                     self.words.remove(word)
+                if all(category.is_solved for category in self.categories):
+                    print("Well done! You solved the puzzle!")
+                    # TODO: trigger something? i.e. show a message to the user/submit to the backend?
                 return
         # if we reach this point, the selection was incorrect.
         # was this the last mistake?
@@ -152,3 +162,28 @@ class PuzzleStatus(BaseModel):
         # still raise so we can show a message to the user
         raise ValueError("Selection is incorrect")
         # TODO: # implement "one away"
+
+    def __repr__(self) -> str:
+        msg = "PuzzleStatus:\n"
+        # categories
+        msg += "Categories:\n"
+        for category in self.categories:
+            if category.is_solved:
+                msg += f"  {category.id}.{category.name}\n"
+                msg += "   " + ", ".join(word.word for word in category.words) + "\n"
+        # words not yet in categories
+        if self.words:
+            msg += "Words:\n"
+            for ii, word in enumerate(self.words):
+                if ii % 4 == 0:
+                    msg += "  "
+                msg += f"({word.id}){word.word.upper() if word.is_selected else word.word}\t\t"
+                if ii % 4 == 3:
+                    msg += "\n"
+        # mistakes available
+        msg += "Mistakes remaining: "
+        msg += "o" * self.mistakes_available
+        msg += "x" * (4 - self.mistakes_available)
+        msg += "\n"
+
+        return msg
