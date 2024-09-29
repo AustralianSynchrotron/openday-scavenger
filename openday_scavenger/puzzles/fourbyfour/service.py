@@ -1,10 +1,17 @@
 import json
 import random
+from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
 
+from fastapi import Depends
 from pydantic import BaseModel, Field
+
+from openday_scavenger.api.visitors.dependencies import get_auth_visitor
+from openday_scavenger.api.visitors.schemas import VisitorAuth
+
+from .exceptions import GameOverException, PuzzleSolvedException
 
 SOLUTION = "car_models:mnop;farm_animals:efgh;fruit:ijkl;i.t._companies:abcd"  # not the real solution, we'll get that from the db. Also the words will change.
 
@@ -27,6 +34,12 @@ def parse_solution(solution: str) -> dict[str, set[str]]:
 
 def get_parsed_solution() -> dict[str, set[str]]:
     return parse_solution(get_solution_from_db())
+
+
+@lru_cache
+def get_words_from_file() -> list[dict[str, str]]:
+    with open(Path(__file__).resolve().parent / "static" / "words.json") as f:
+        return json.load(f)["items"]
 
 
 class Word(BaseModel):
@@ -66,12 +79,11 @@ class PuzzleStatus(BaseModel):
         # solution is a dict of category ID to a set of word IDs
         _sol = get_parsed_solution()
         categories = [Category(id=category_id) for category_id in _sol.keys()]
-        _word_ids_in_sol = [word_id for word_ids in _sol.values() for word_id in word_ids]
-        with open(Path(__file__).resolve().parent / "static" / "words.json") as f:
-            _words = json.load(f)["items"]
 
         # create the words
-        words = [Word.model_validate(_word) for _word in _words if _word["id"] in _word_ids_in_sol]
+        _word_ids_in_sol = [_id for _ids in _sol.values() for _id in _ids]
+        _words_in_sol = [_w for _w in get_words_from_file() if _w["id"] in _word_ids_in_sol]
+        words = [Word.model_validate(_w) for _w in _words_in_sol]
 
         # shuffle the words
         random.shuffle(words)
@@ -151,14 +163,13 @@ class PuzzleStatus(BaseModel):
                     category.add_words(word)
                     self.words.remove(word)
                 if all(category.is_solved for category in self.categories):
-                    print("Well done! You solved the puzzle!")
-                    # TODO: trigger something? i.e. show a message to the user/submit to the backend?
+                    raise PuzzleSolvedException("Well done! You solved the puzzle!")
                 return
         # if we reach this point, the selection was incorrect.
         # was this the last mistake?
         self.mistakes_available -= 1
         if self.mistakes_available == 0:
-            raise ValueError("GAME OVER")  # how do we implement this...?
+            raise GameOverException("GAME OVER")  # how do we implement this...?
         # still raise so we can show a message to the user
         raise ValueError("Selection is incorrect")
         # TODO: # implement "one away"
@@ -187,3 +198,17 @@ class PuzzleStatus(BaseModel):
         msg += "\n"
 
         return msg
+
+
+status_registry: dict[str | None, "PuzzleStatus"] = defaultdict(PuzzleStatus.new)
+
+
+def get_status_registry() -> dict[str | None, "PuzzleStatus"]:
+    return status_registry
+
+
+async def get_status(
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    status_registry: Annotated[dict[str | None, PuzzleStatus], Depends(get_status_registry)],
+) -> PuzzleStatus:
+    return status_registry[visitor.uid]
