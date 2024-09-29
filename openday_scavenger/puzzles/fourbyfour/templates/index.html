@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Four by Four Puzzle</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- htmx -->
+    <script src="/static/js/htmx.min.js"></script>
+    <!-- Custom CSS -->
+    <link href="static/styles.css" rel="stylesheet">
+</head>
+
+<body class="container">
+    <h1 class="text-center my-4">Create four groups of four!</h1>
+
+    {% if message %}
+    <div class="alert alert-warning text-center" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {% if game_over %}
+    <div class="alert alert-danger text-center" role="alert">
+        Would you like to <a href="#" class="alert-link" hx-delete="/puzzles/{{ puzzle }}/" hx-target="body"
+            hx-swap="outerHTML">start again</a>?
+    </div>
+    {% endif %}
+
+    <!-- Make a div for the solved, categories, if any.
+     Loop over status.categories, and if status.categories[i].solved is true, display the category
+     as a rectangle that is as wide as 4 of the normal word boxes -->
+    <div class="grid-container">
+        <!-- Solved categories, if any -->
+        {% for category in status.categories %}
+        {% if category.is_solved %}
+
+        <div class="grid-item" style="grid-column: span 4;">
+            {{ category.name }}
+        </div>
+
+        {% endif %}
+        {% endfor %}
+
+        <!-- remaining words  -->
+        {% for word in status.words %}
+        <div class="grid-item {% if word.is_selected %}selected{% endif %}"
+            hx-put="/puzzles/{{ puzzle }}/{{ word.id }}/selection" hx-trigger="click" hx-target="body"
+            hx-swap="outerHTML">
+            {{ word.word }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center my-4">
+        <p>Mistakes remaining:</p>
+        {% for _ in range(status.mistakes_available) %}
+        <span class="mistake-pip"></span>
+        {% endfor %}
+    </div>
+
+    <div class="text-center my-4">
+        <button class="btn btn-primary rounded-pill mx-2" hx-get="/puzzles/{{ puzzle }}/shuffled" hx-trigger="click"
+            hx-target="body" hx-swap="outerHTML">Shuffle</button>
+        <button class="btn btn-secondary rounded-pill mx-2" hx-delete="/puzzles/{{ puzzle }}/selection"
+            hx-trigger="click" hx-target="body" hx-swap="outerHTML" {% if status.n_selected_words==0 %}disabled{% endif
+            %}>Deselect all</button>
+
+        <button class="btn btn-success rounded-pill mx-2" hx-post="/puzzles/{{ puzzle }}/selection-submission"
+            hx-trigger="click" hx-target="body" hx-swap="outerHTML" {% if status.n_selected_words
+            !=status.selectable_at_once %}disabled{% endif %}>Submit</button>
+
+    </div>
+</body>
+
+</html>
