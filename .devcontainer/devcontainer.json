@@ -12,7 +12,7 @@
 	"forwardPorts": [8000, 5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "uv sync && uv run fastapi dev ./openday_scavenger/main.py --reload",
+	"postCreateCommand": "uv sync --all-extras && uv run fastapi dev ./openday_scavenger/main.py --reload",
 
 	// Configure tool-specific properties.
 	"customizations": {
@@ -21,7 +21,7 @@
                 "ms-python.python",
                 "ms-python.vscode-pylance"
             ],
-			"settings": { 
+			"settings": {
 				"python.defaultInterpreterPath": "/root/.cache/uv/bin/python"
 			}
         }
