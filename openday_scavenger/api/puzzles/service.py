@@ -70,6 +70,28 @@ def get_all(
     return q.order_by(Puzzle.name).all()
 
 
+def get(db_session: Session, puzzle_name: str) -> Puzzle:
+    """
+    Return a single puzzle from the database.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        puzzle_name (str): The name of the puzzle that should be returned.
+
+    Returns:
+        Puzzle: The puzzle with the given name.
+    """
+    # Get the puzzle from the database with the provided name.
+    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
+
+    if puzzle is None:
+        raise PuzzleNotFoundError(
+            f"A puzzle with the name {puzzle_name} could not be found in the database"
+        )
+
+    return puzzle
+
+
 def count(db_session: Session, *, only_active: bool = False) -> int:
     """
     Convenience method to count the number of puzzles.

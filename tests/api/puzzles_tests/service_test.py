@@ -1,7 +1,9 @@
+import pytest
 from sqlalchemy.orm import Session
 
+from openday_scavenger.api.puzzles.exceptions import PuzzleNotFoundError
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate
-from openday_scavenger.api.puzzles.service import create, get_all
+from openday_scavenger.api.puzzles.service import create, get, get_all
 
 
 def test_get_all_empty(empty_db: Session) -> None:
@@ -54,3 +56,21 @@ def test_get_all_filter_not_found(empty_db: Session) -> None:
     # get a puzzle that doesn't exist
     puzzles = get_all(empty_db, filter_by_name_startswith="notfound")
     assert len(puzzles) == 0
+
+
+def test_get_not_found(empty_db: Session) -> None:
+    with pytest.raises(PuzzleNotFoundError):
+        get(empty_db, puzzle_name="notfound")
+
+
+def test_get(empty_db: Session) -> None:
+    # create a puzzle in the database
+    puzzle_in = PuzzleCreate(name="demo", answer="demo", active=True)
+    create(empty_db, puzzle_in=puzzle_in)
+
+    puzzle = get(empty_db, puzzle_name="demo")
+    assert puzzle.name == puzzle_in.name
+    assert puzzle.answer == puzzle_in.answer
+    assert puzzle.active == puzzle_in.active
+    assert puzzle.location is None
+    assert puzzle.notes is None
