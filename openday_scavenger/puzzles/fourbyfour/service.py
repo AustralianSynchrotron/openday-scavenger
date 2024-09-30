@@ -1,8 +1,6 @@
-import json
 import random
 from collections import defaultdict
 from functools import lru_cache
-from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends
@@ -13,7 +11,9 @@ from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 from .exceptions import GameOverException, PuzzleSolvedException
 
-SOLUTION = "car_models:mnop;farm_animals:efgh;fruit:ijkl;i.t._companies:abcd"  # not the real solution, we'll get that from the db. Also the words will change.
+# solution must have categories in alphabetical order
+# and words in alphabetical order within each category
+SOLUTION = "car_models:beetle,bronco,mustang,panda;farm_animals:chicken,cow,horse,pig;fruit:apple,banana,grape,orange;i.t._companies:alphabet,meta,microsoft,nvidia"  # not the real solution, we'll get that from the db. Also the words will change.
 
 
 @lru_cache
@@ -28,18 +28,12 @@ def parse_solution(solution: str) -> dict[str, set[str]]:
     categories = {}
     for category in solution.split(";"):
         category_id, word_ids = category.split(":")
-        categories[category_id] = set(word_ids)
+        categories[category_id] = set(word_ids.split(","))
     return categories
 
 
 def get_parsed_solution() -> dict[str, set[str]]:
     return parse_solution(get_solution_from_db())
-
-
-@lru_cache
-def get_words_from_file() -> list[dict[str, str]]:
-    with open(Path(__file__).resolve().parent / "static" / "words.json") as f:
-        return json.load(f)["items"]
 
 
 class Word(BaseModel):
@@ -81,9 +75,7 @@ class PuzzleStatus(BaseModel):
         categories = [Category(id=category_id) for category_id in _sol.keys()]
 
         # create the words
-        _word_ids_in_sol = [_id for _ids in _sol.values() for _id in _ids]
-        _words_in_sol = [_w for _w in get_words_from_file() if _w["id"] in _word_ids_in_sol]
-        words = [Word.model_validate(_w) for _w in _words_in_sol]
+        words = [Word(id=_w, word=_w) for _, _ww in _sol.items() for _w in _ww]
 
         # shuffle the words
         random.shuffle(words)
@@ -204,7 +196,7 @@ class PuzzleStatus(BaseModel):
         # categories are listed in the same order as they were created from the solution
         for category in self.categories:
             _sol = f"{category.id}:"
-            _sol += "".join(sorted([word.id for word in category.words]))
+            _sol += ",".join(sorted([word.id for word in category.words]))
             solution.append(_sol)
         return ";".join(solution)
 
