@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from openday_scavenger.api.db import Base
@@ -13,7 +13,7 @@ class Puzzle(Base):
     __tablename__ = "puzzle"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(index=True, unique=True)
-    answer: Mapped[str] = mapped_column(String(100))
+    answer: Mapped[str] = mapped_column(Text)
     active: Mapped[bool] = mapped_column(default=False)
     location: Mapped[str] = mapped_column(String(200), nullable=True)
     notes: Mapped[str] = mapped_column(nullable=True)
@@ -32,7 +32,7 @@ class Response(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     visitor_id: Mapped[int] = mapped_column(ForeignKey("visitor.id"))
     puzzle_id: Mapped[int] = mapped_column(ForeignKey("puzzle.id"))
-    answer: Mapped[str] = mapped_column(String(100))
+    answer: Mapped[str] = mapped_column(Text)
     is_correct: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[datetime] = mapped_column()
 
