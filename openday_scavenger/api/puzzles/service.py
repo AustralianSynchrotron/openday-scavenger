@@ -42,7 +42,7 @@ def get_all(
     db_session: Session,
     *,
     only_active: bool = False,
-    filter_by_puzzle_name: str | None = None,
+    filter_by_name_startswith: str | None = None,
 ) -> list[Puzzle]:
     """
     Return all puzzles in the database, with optional filtering.
@@ -64,8 +64,8 @@ def get_all(
     if only_active:
         q = q.filter(Puzzle.active)
 
-    if (filter_by_puzzle_name is not None) and (filter_by_puzzle_name != ""):
-        q = q.filter(Puzzle.name.ilike(f"{filter_by_puzzle_name}%"))
+    if (filter_by_name_startswith is not None) and (filter_by_name_startswith != ""):
+        q = q.filter(Puzzle.name.ilike(f"{filter_by_name_startswith}%"))
 
     return q.order_by(Puzzle.name).all()
 

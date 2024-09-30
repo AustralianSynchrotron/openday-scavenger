@@ -41,16 +41,16 @@ def test_get_all_filter(empty_db: Session) -> None:
 
     # filter by name one by one (querying for "start with this name" should return only one result)
     for name in puzzle_names:
-        puzzles = get_all(empty_db, filter_by_puzzle_name=name)
+        puzzles = get_all(empty_db, filter_by_name_startswith=name)
         assert len(puzzles) == 1
 
     # add a puzzle that shares a prefix with another puzzle
     create(empty_db, puzzle_in=PuzzleCreate(name="foo_bar", answer="foo_bar", active=True))
-    puzzles = get_all(empty_db, filter_by_puzzle_name="foo")
+    puzzles = get_all(empty_db, filter_by_name_startswith="foo")
     assert len(puzzles) == 2
 
 
 def test_get_all_filter_not_found(empty_db: Session) -> None:
     # get a puzzle that doesn't exist
-    puzzles = get_all(empty_db, filter_by_puzzle_name="notfound")
+    puzzles = get_all(empty_db, filter_by_name_startswith="notfound")
     assert len(puzzles) == 0
