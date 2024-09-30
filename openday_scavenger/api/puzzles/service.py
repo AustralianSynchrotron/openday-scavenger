@@ -192,11 +192,7 @@ def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate) -> Pu
         Puzzle: The modified puzzle.
     """
     # Find the puzzle that should be updated in the database
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
-    if puzzle is None:
-        raise PuzzleNotFoundError(
-            f"A puzzle with the name {puzzle_name} could not be found in the database"
-        )
+    puzzle = get(db_session, puzzle_name)
 
     # We transform the input data which contains the fields with the new values
     # to a dictionary and in the process filter out any fields that have not been explicitly set.
@@ -230,12 +226,7 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
         puzzle_in (PuzzleCompare): The object containing the visitor's answer that should be compared.
     """
     # Get the database models for the puzzle so we can perform the answer comparison.
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()
-
-    if puzzle is None:
-        raise PuzzleNotFoundError(
-            f"A puzzle with the name {puzzle_in.name} could not be found in the database"
-        )
+    puzzle = get(db_session, puzzle_in.name)
 
     # We compare the provided answer with the stored answer. Currently this is a very simple
     # case sensitive string comparison. We can add more complicated comparison modes here later.
@@ -285,12 +276,7 @@ def record_access(db_session: Session, puzzle_name: str, visitor_uid: str) -> Ac
         Access: The created access object.
     """
     # Get the database models for the puzzle.
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
-
-    if puzzle is None:
-        raise PuzzleNotFoundError(
-            f"A puzzle with the name {puzzle_name} could not be found in the database"
-        )
+    puzzle = get(db_session, puzzle_name)
 
     # Get the database model for the visitor.
     visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
