@@ -38,13 +38,21 @@ __all__ = (
 config = get_settings()
 
 
-def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
+def get_all(
+    db_session: Session,
+    *,
+    only_active: bool = False,
+    filter_by_puzzle_name: str | None = None,
+) -> list[Puzzle]:
     """
-    Return all puzzles in the database, optionally only the active ones.
+    Return all puzzles in the database, with optional filtering.
+    optionally only the active ones.
 
     Args:
         db_session (Session): The SQLAlchemy session object.
         only_active (bool): Set this to True to only return active puzzles.
+        filter_by_puzzle_name (str): Only return responses
+            where the puzzle name starts with this string.
 
     Returns:
         list[Puzzle]: List of puzzles in the database.
@@ -55,6 +63,9 @@ def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
 
     if only_active:
         q = q.filter(Puzzle.active)
+
+    if (filter_by_puzzle_name is not None) and (filter_by_puzzle_name != ""):
+        q = q.filter(Puzzle.name.ilike(f"{filter_by_puzzle_name}%"))
 
     return q.order_by(Puzzle.name).all()
 
