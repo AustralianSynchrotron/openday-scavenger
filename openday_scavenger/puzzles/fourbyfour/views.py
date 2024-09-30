@@ -10,7 +10,7 @@ from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 from .exceptions import GameOverException, PuzzleSolvedException
-from .service import PuzzleStatus, get_status, get_status_registry
+from .service import PuzzleStatus, delete_status, get_status, get_status_registry, reset_status
 
 router = APIRouter()
 
@@ -123,6 +123,9 @@ async def submit_selection(
     except PuzzleSolvedException as e:
         msg = str(e)
         register_success = True
+        # Remove the status of the visitor after the puzzle is solved
+        # so that it does not accumulate in memory
+        await delete_status(visitor, get_status_registry())
     except Exception as e:
         msg = str(e)
 
@@ -145,18 +148,15 @@ async def reset(
     request: Request,
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    clean_status: Annotated[PuzzleStatus, Depends(reset_status)],
 ):
-    registry = get_status_registry()
-    registry[visitor.uid] = PuzzleStatus.new()
-    status = registry[visitor.uid]
-
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
             "puzzle": puzzle_name,
             "visitor": visitor.uid,
-            "status": status,
+            "status": clean_status,
         },
     )
 

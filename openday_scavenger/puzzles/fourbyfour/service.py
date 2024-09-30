@@ -199,6 +199,15 @@ class PuzzleStatus(BaseModel):
 
         return msg
 
+    def export_solution(self) -> str:
+        solution = []
+        # categories are listed in the same order as they were created from the solution
+        for category in self.categories:
+            _sol = f"{category.id}:"
+            _sol += "".join(sorted([word.id for word in category.words]))
+            solution.append(_sol)
+        return ";".join(solution)
+
 
 status_registry: dict[str | None, "PuzzleStatus"] = defaultdict(PuzzleStatus.new)
 
@@ -212,3 +221,18 @@ async def get_status(
     status_registry: Annotated[dict[str | None, PuzzleStatus], Depends(get_status_registry)],
 ) -> PuzzleStatus:
     return status_registry[visitor.uid]
+
+
+async def reset_status(
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    status_registry: Annotated[dict[str | None, PuzzleStatus], Depends(get_status_registry)],
+) -> PuzzleStatus:
+    status_registry[visitor.uid] = PuzzleStatus.new()
+    return status_registry[visitor.uid]
+
+
+async def delete_status(
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    status_registry: Annotated[dict[str | None, PuzzleStatus], Depends(get_status_registry)],
+) -> None:
+    status_registry.pop(visitor.uid, None)
