@@ -76,13 +76,13 @@
     </div>
 
     <div class="text-center my-4">
-        <button class="btn btn-primary rounded-pill mx-2" hx-get="/puzzles/{{ puzzle }}/shuffled" hx-trigger="click"
+        <button class="btn btn-outline-secondary rounded-pill mx-2" hx-get="/puzzles/{{ puzzle }}/shuffled" hx-trigger="click"
             hx-target="body" hx-swap="outerHTML">Shuffle</button>
-        <button class="btn btn-secondary rounded-pill mx-2" hx-delete="/puzzles/{{ puzzle }}/selection"
+        <button class="btn btn-outline-secondary rounded-pill mx-2" hx-delete="/puzzles/{{ puzzle }}/selection"
             hx-trigger="click" hx-target="body" hx-swap="outerHTML" {% if status.n_selected_words==0 %}disabled{% endif
             %}>Deselect all</button>
 
-        <button class="btn btn-success rounded-pill mx-2" hx-post="/puzzles/{{ puzzle }}/selection-submission"
+        <button class="btn btn-outline-secondary rounded-pill mx-2" hx-post="/puzzles/{{ puzzle }}/selection-submission"
             hx-trigger="click" hx-target="body" hx-swap="outerHTML" {% if status.n_selected_words
             !=status.selectable_at_once %}disabled{% endif %}>Submit</button>
 
