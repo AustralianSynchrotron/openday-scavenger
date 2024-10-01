@@ -51,7 +51,7 @@ def get_all(
     Args:
         db_session (Session): The SQLAlchemy session object.
         only_active (bool): Set this to True to only return active puzzles.
-        filter_by_puzzle_name (str): Only return responses
+        filter_by_name_startswith (str): Only return responses
             where the puzzle name starts with this string.
 
     Returns:
