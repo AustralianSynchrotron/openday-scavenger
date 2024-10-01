@@ -14,7 +14,7 @@ from openday_scavenger.puzzles.fourbyfour.service import SOLUTION, PuzzleStatus
 PUZZLE_NAME = "fourbyfour"
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def initialised_db() -> Generator[Session, None, None]:
     """
     Fixture to provide a database session populated with puzzles.
@@ -54,7 +54,7 @@ def initialised_db() -> Generator[Session, None, None]:
     Base.metadata.drop_all(bind=engine)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def mock_init_client(initialised_db: Session) -> Generator[TestClient, None, None]:
     """
     Fixture to provide a test client for each test function.
@@ -83,8 +83,7 @@ def mock_init_client(initialised_db: Session) -> Generator[TestClient, None, Non
     with TestClient(app) as client:
         yield client
 
-    app.dependency_overrides.pop(get_db)
-    app.dependency_overrides.pop(auth_required)
+    app.dependency_overrides = {}
 
 
 @pytest.fixture(scope="function")

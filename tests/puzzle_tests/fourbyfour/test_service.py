@@ -16,8 +16,8 @@ from openday_scavenger.puzzles.fourbyfour.service import (
 )
 
 
-@pytest.mark.asyncio
 class TestFourByFour:
+    @pytest.mark.asyncio
     async def test_status_registry_singleton(self) -> None:
         assert id(status_registry) == id(get_status_registry())
 
@@ -169,18 +169,21 @@ class TestFourByFour:
 
         assert new_puzzle.export_solution() == get_solution_from_db()
 
+    @pytest.mark.asyncio
     async def test_get_status(self) -> None:
         visitor = Mock(uid=None)
         ss = await get_status(visitor, get_status_registry())
 
         assert isinstance(ss, PuzzleStatus)
 
+    @pytest.mark.asyncio
     async def test_reset_status(self) -> None:
         visitor = Mock(uid=None)
         ss = await get_status(visitor, get_status_registry())
         new_ss = await reset_status(visitor, get_status_registry())
         assert new_ss is not ss
 
+    @pytest.mark.asyncio
     async def test_delete_status(self) -> None:
         visitor = Mock(uid="foo")
         _ = await get_status(visitor, get_status_registry())
