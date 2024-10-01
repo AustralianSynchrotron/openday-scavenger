@@ -161,10 +161,11 @@ class PuzzleStatus(BaseModel):
         # was this the last mistake?
         self.mistakes_available -= 1
         if self.mistakes_available == 0:
-            raise GameOverException("GAME OVER")  # how do we implement this...?
+            # raise game over, so we can handle it differently in the views
+            raise GameOverException("GAME OVER")
         # still raise so we can show a message to the user
         raise ValueError("Selection is incorrect")
-        # TODO: # implement "one away"
+        # TODO: # implement "one away?" hint
 
     def __repr__(self) -> str:
         msg = "PuzzleStatus:\n"
