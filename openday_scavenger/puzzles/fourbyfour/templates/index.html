@@ -25,6 +25,18 @@
 <body class="container">
     <h1 class="text-center my-4">Create four groups of four!</h1>
 
+    <!-- if the puzzle has been successfully finished, register with the admin logic.
+     Needs to be up there or it risks not triggering (it's executed once the first time it's in view) -->
+    {% if register_success %}
+    <form id='auto-submit-form' class="text-center" hx-encoding='multipart/form-data' hx-post='/submission'
+        hx-trigger="intersect once delay:1s" hx-target="body" hx-swap="outerHTML">
+        <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+        <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+        <input hidden type="text" id="answer" name="answer" value="{{ status.export_solution() }}">
+        <div style="visibility: hidden; height: 1px;">Submitting...</div>
+    </form>
+    {% endif %}
+
     {% if message %}
     <div class="alert alert-warning text-center" role="alert">
         {{ message }}
@@ -88,16 +100,6 @@
 
     </div>
 
-    <!-- if the puzzle has been successfully finished, register with the admin logic -->
-    {% if register_success %}
-    <form id='auto-submit-form' class="text-center" hx-encoding='multipart/form-data' hx-post='/submission'
-        hx-trigger="intersect once delay:2s" hx-target="body" hx-swap="outerHTML">
-        <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-        <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-        <input hidden type="text" id="answer" name="answer" value="{{ status.export_solution() }}">
-        <div style="visibility: hidden; height: 1px;">Submitting...</div>
-    </form>
-    {% endif %}
 </body>
 
 </html>
