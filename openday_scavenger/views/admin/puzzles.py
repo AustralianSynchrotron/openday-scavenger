@@ -10,8 +10,8 @@ from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
     create,
-    generate_qr_code,
-    generate_qr_codes_pdf,
+    generate_puzzle_qr_code,
+    generate_puzzle_qr_codes_pdf,
     get_all,
     update,
 )
@@ -57,14 +57,14 @@ async def update_puzzle(
 
 @router.get("/{puzzle_name}/qr")
 async def render_qr_code(puzzle_name: str, request: Request):
-    qr = generate_qr_code(puzzle_name)
+    qr = generate_puzzle_qr_code(puzzle_name)
 
     return templates.TemplateResponse(request=request, name="qr.html", context={"qr": qr})
 
 
 @router.get("/download-pdf")
 async def download_qr_codes(db: Annotated["Session", Depends(get_db)]):
-    pdf_io = generate_qr_codes_pdf(db)
+    pdf_io = generate_puzzle_qr_codes_pdf(db)
 
     return StreamingResponse(
         pdf_io,
