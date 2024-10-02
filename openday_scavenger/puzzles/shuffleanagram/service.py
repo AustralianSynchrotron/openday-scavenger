@@ -21,19 +21,40 @@ INITIAL_WORDS: dict[str, str] = {
 async def get_subpuzzle_name(puzzle_name: Annotated[str, Depends(get_puzzle_name)]) -> str:
     """get_subpuzzle_name Return the puzzle name from the full puzzle name,
     e.g. shuffleanagram-probations -> probations
-    Should be used with Depends"""
+    Should be used with Depends
+
+    Args:
+        puzzle_name (str): The full puzzle name as returned by get_puzzle_name
+
+    Returns:
+        str: The subpuzzle name. This is the part of the puzzle name after the family name and the hyphen
+    """
     return puzzle_name.partition(f"{PUZZLE_FAMILY}-")[-1]
 
 
 async def get_initial_word(subpuzzle_name: Annotated[str, Depends(get_subpuzzle_name)]) -> str:
     """get_initial_word Get the initial word for the puzzle.
-    Should be used with Depends"""
+    Should be used with Depends
+
+    Args:
+        subpuzzle_name (str): The subpuzzle name
+
+    Returns:
+        str: The initial word for the puzzle
+    """
 
     return INITIAL_WORDS.get(subpuzzle_name, "PROBATIONS")
 
 
 async def _shuffle_word(word_in: str) -> str:
-    """shuffle_word Shuffle the word"""
+    """shuffle_word Shuffle the word
+
+    Args:
+        word_in (str): The word to shuffle
+
+    Returns:
+        str: The shuffled word
+    """
     # while loop because I got caught out by a test where the shuffled word was the same as the input word
     word_out = word_in
     attempts = 0
@@ -48,6 +69,13 @@ async def _shuffle_word(word_in: str) -> str:
 
 async def get_shuffled_word(initial_word: Annotated[str, Depends(get_initial_word)]) -> str:
     """shuffled_word Get the shuffled word for the puzzle.
-    Should be used with Depends"""
+    Should be used with Depends
+
+    Args:
+        initial_word (str): The initial word to shuffle
+
+    Returns:
+        str: The shuffled word
+    """
     word = await _shuffle_word(initial_word)
     return word

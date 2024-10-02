@@ -33,8 +33,12 @@ class TestShuffleAnagram:
 
         This test verifies that the get_subpuzzle_name function returns the correct subpuzzle name.
 
+        Args:
+            puzzle_name (str): The full name of the puzzle.
+            expected (str): The expected subpuzzle name.
+
         Asserts:
-            The subpuzzle name is correct.
+            The subpuzzle name is as expected.
         """
         subpuzzle_name = await get_subpuzzle_name(puzzle_name)
         assert subpuzzle_name == expected
@@ -46,7 +50,11 @@ class TestShuffleAnagram:
         Test the get_subpuzzle_name function.
 
         This test verifies that the get_subpuzzle_name function returns the correct subpuzzle name.
+        Parametrized so that it tests all the puzzles of this type that were added to the router.
 
+        Args:
+            known_puzzle_and_subpuzzle_names (tuple[str, str]): A tuple containing
+                the puzzle name and the expected subpuzzle
         Asserts:
             The subpuzzle name is correct.
         """
@@ -59,11 +67,18 @@ class TestShuffleAnagram:
     ) -> None:
         """
         Test the puzzle names added to the router.
+        Check that all puzzles added to the router have a subpuzzle name,
+        that the subpuzzle name is a key in the dict of initial words,
+        and that the corresponding initial word is the same as the subpuzzle name.
 
-        This test verifies that:
-        - if a puzzle is added to the router, it has a subpuzzle name
-        - its subpuzzle name is a key in the dict of initial words
-        - the corresponding initial word is the same as the subpuzzle name
+        Args:
+            known_puzzle_and_subpuzzle_names (tuple[str, str]): A tuple containing
+                the puzzle name and the expected subpuzzle
+
+        Asserts:
+            The subpuzzle name is truthy
+            The subpuzzle name is in the dict of initial words
+            The corresponding initial word is the same as the subpuzzle name
 
         """
         puzzle_name, _subpuzzle_name = known_puzzle_and_subpuzzle_names
