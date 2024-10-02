@@ -61,6 +61,7 @@ async def index(
     puzzle_name: Annotated[str, Depends(get_puzzle_name)],
     initial_word: Annotated[str, Depends(get_initial_word)],
 ):
+    """index Render the main page for the Shuffle Anagram puzzles"""
     return templates.TemplateResponse(
         request=request,
         name="index.html",
