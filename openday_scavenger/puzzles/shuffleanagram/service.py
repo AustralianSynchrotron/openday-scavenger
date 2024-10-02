@@ -43,7 +43,7 @@ async def get_initial_word(subpuzzle_name: Annotated[str, Depends(get_subpuzzle_
         str: The initial word for the puzzle
     """
 
-    return INITIAL_WORDS.get(subpuzzle_name, "PROBATIONS")
+    return INITIAL_WORDS[subpuzzle_name]
 
 
 async def _shuffle_word(word_in: str) -> str:
