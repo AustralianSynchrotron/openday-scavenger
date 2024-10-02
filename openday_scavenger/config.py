@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     SESSIONS_ENABLED: bool = True
     TEST_ENDPOINT_ENABLED: bool = False
 
+    ADMIN_AUTH_ENABLED: bool = True
     ADMIN_USER: str = "admin"
     ADMIN_PASSWORD: str = "admin"
 

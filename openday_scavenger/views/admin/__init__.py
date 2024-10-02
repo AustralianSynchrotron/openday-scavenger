@@ -12,7 +12,7 @@ from .puzzles import router as puzzle_router
 from .responses import router as response_router
 from .visitors import router as visitor_router
 
-settings = get_settings()
+config = get_settings()
 
 security = HTTPBasic()
 
@@ -34,11 +34,11 @@ def credential_check(credentials: Annotated[HTTPBasicCredentials, Depends(securi
     """
     current_username_bytes = credentials.username.encode("utf8")
     is_correct_username = secrets.compare_digest(
-        current_username_bytes, settings.ADMIN_USER.encode("utf8")
+        current_username_bytes, config.ADMIN_USER.encode("utf8")
     )
     current_password_bytes = credentials.password.encode("utf8")
     is_correct_password = secrets.compare_digest(
-        current_password_bytes, settings.ADMIN_PASSWORD.encode("utf8")
+        current_password_bytes, config.ADMIN_PASSWORD.encode("utf8")
     )
     if not (is_correct_username and is_correct_password):
         raise HTTPException(
@@ -49,7 +49,11 @@ def credential_check(credentials: Annotated[HTTPBasicCredentials, Depends(securi
     return credentials.username
 
 
-router = APIRouter(dependencies=[Depends(credential_check)])
+router = (
+    APIRouter(dependencies=[Depends(credential_check)])
+    if config.ADMIN_AUTH_ENABLED
+    else APIRouter()
+)
 
 router.include_router(admin_router, prefix="")
 router.include_router(puzzle_router, prefix="/puzzles")
