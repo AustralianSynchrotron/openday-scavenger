@@ -69,6 +69,7 @@ async def index(
         context={
             "puzzle": puzzle_name,
             "visitor": visitor.uid,
+            "location": suffix.title(),
             "elements": elements,
             "element_lookup": element_lookup,
             "get_category_style": get_category_style,
