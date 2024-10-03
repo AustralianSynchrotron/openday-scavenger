@@ -26,26 +26,26 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templat
 
 
 # define puzzle quiz and word lists
-PuzzleQuiz = {
+PUZZLE_QUIZ = {
     "synch_finder": {
-        "question": "Can you find all the words related to the Synchrotron?",
-        "words": ["synchrotron", "beamline", "magnet", "xrays", "lightsource", "accelerator"],
+        "question": "Can you find five words related to the Synchrotron?",
+        "words": ["accelerator", "beamline", "lightsource", "magnet", "xrays"],
     },
     "mx3_finder": {
-        "question": "Can you find all the words related to Macromolecular Crystallography?",
-        "words": ["high", "performance", "microfocus", "crystals", "protein"],
+        "question": "Can you find five words related to Macromolecular Crystallography (MX)?",
+        "words": ["crystals", "dispersion", "performance", "protein", "robot"],
     },
     "mct_finder": {
-        "question": "Can you find all the words related to Micro-Computed Tomography?",
-        "words": ["monochromatic", "pink", "white", "xray", "beams", "structures", "spatial", "resolution"],
+        "question": "Can you find five words related to Micro-Computed Tomography?",
+        "words": ["monochromatic", "resolution", "spatial", "structures", "tomography"],
     },
     "mex_finder": {
-        "question": "Can you find all the words related to the Medium Energy X-ray (MEX) beamlines?",
-        "words": ["soft", "hard", "xray", "tuneable", "microprobe", "routine", "spectroscopy"],
+        "question": "Can you find five words related to the Medium Energy X-ray (MEX) beamlines?",
+        "words": ["absorption", "microprobe", "routine", "spectroscopy", "tuneable"],
     },
     "xas_finder": {
-        "question": "Can you find all the words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
-        "words": ["absorption", "transmission", "fluorescence", "monochromater", "oxidation", "photons"],
+        "question": "Can you find five words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
+        "words": ["absorption", "fluorescence", "monochromater", "photons", "transmission"],
     },
 }
 
@@ -79,8 +79,8 @@ def get_puzzle_data(
 def create_puzzle(puzzle_name: str):
     
     # word list and question from puzzle dictionary
-    question = PuzzleQuiz[puzzle_name]["question"]
-    words = PuzzleQuiz[puzzle_name]["words"]
+    question = PUZZLE_QUIZ[puzzle_name]["question"]
+    words = PUZZLE_QUIZ[puzzle_name]["words"]
     ww = ", ".join([w for w in words])
     puzzle_dim = max([len(w) for w in words]) 
     
