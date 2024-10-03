@@ -98,7 +98,8 @@ def create_puzzle(puzzle_name: str) -> tuple:
 
 """ initialize puzzle data """
 PUZZLE_INIT = {k: create_puzzle(k) for k in PUZZLE_QUIZ.keys()}
-def fetch_puzzle(puzzle_name):
+def fetch_puzzle(puzzle_name: str) -> tuple:
+    """ Fetch puzzle data for puzzle name"""
     return PUZZLE_INIT[puzzle_name]
 
 
