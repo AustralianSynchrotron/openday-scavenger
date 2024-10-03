@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from typing import Annotated
+from collections import defaultdict
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
@@ -8,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
+from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
 
 from word_search_generator import WordSearch, utils
 """
@@ -74,10 +76,9 @@ def get_puzzle_data(
     return data
 
 
-def create_puzzle(path: Path):
+def create_puzzle(puzzle_name: str):
     
     # word list and question from puzzle dictionary
-    puzzle_name = path.name 
     question = PuzzleQuiz[puzzle_name]["question"]
     words = PuzzleQuiz[puzzle_name]["words"]
     ww = ", ".join([w for w in words])
@@ -91,6 +92,13 @@ def create_puzzle(path: Path):
     ds = get_puzzle_data(ws, solution=True) # solution shown
 
     return question, dd, ds
+
+
+PUZZLE_INIT = {k: create_puzzle(k) for k in PUZZLE_QUIZ.keys()}
+
+def fetch_puzzle(puzzle_name):
+    """ Initialize puzzle data """
+    return PUZZLE_INIT[puzzle_name]
 
 
 @router.get("/static/{path:path}")
@@ -114,14 +122,18 @@ async def get_static_files(
 
 
 @router.get("/")
-async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
-    question, data, data_as_solution = create_puzzle(Path(request.url.path) )
+async def index(request: Request,
+                puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+                visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]
+    ):
+
+    question, data, data_as_solution = fetch_puzzle(puzzle_name)
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": Path(request.url.path).name,
+            "puzzle": puzzle_name,
             "visitor": visitor.uid,
             "question": question,
             "data": data,
