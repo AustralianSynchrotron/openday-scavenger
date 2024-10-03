@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from io import BytesIO
 from typing import Any
 from uuid import uuid4
 
@@ -7,10 +8,14 @@ from sqlalchemy import Integer, Row, and_, cast, func
 from sqlalchemy.orm import Query, Session
 
 from openday_scavenger.api.puzzles.models import Puzzle, Response
+from openday_scavenger.api.qr_codes import generate_qr_code, generate_qr_codes_pdf
+from openday_scavenger.config import get_settings
 
 from .exceptions import VisitorExistsError, VisitorUIDInvalidError
 from .models import Visitor, VisitorPool
 from .schemas import VisitorPoolCreate
+
+config = get_settings()
 
 
 def get_all(
@@ -184,6 +189,18 @@ def create_visitor_pool(db_session: Session, pool_in: VisitorPoolCreate) -> None
     except Exception:
         db_session.rollback()
         raise
+
+
+def generate_visitor_qr_code(uid: str, as_file_buff: bool = False) -> str | BytesIO:
+    return generate_qr_code(f"{config.BASE_URL}register/{uid}", as_file_buff=as_file_buff)
+
+
+def generate_visitor_qr_codes_pdf(db_session: Session):
+    visitors = get_visitor_pool(db_session)
+
+    return generate_qr_codes_pdf(
+        [f"{config.BASE_URL}register/{visitor.uid}" for visitor in visitors]
+    )
 
 
 def _filter(
