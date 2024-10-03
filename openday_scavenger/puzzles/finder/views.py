@@ -25,7 +25,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
 
 
-# define puzzle quiz and word lists
+# define puzzle quiz question and word lists
 PUZZLE_QUIZ = {
     "synch_finder": {
         "question": "Can you find five words related to the Synchrotron?",
@@ -55,7 +55,7 @@ def get_puzzle_data(
         solution: bool = False,
         format: str = 'dict'
     ) -> dict|str:
-    """Write current puzzle to dict or JSON format.
+    """ Write puzzle data to dict or JSON format.
 
     Args:
         path (Path): Path to write the file to.
@@ -76,8 +76,10 @@ def get_puzzle_data(
     return data
 
 
-def create_puzzle(puzzle_name: str):
-    
+def create_puzzle(puzzle_name: str) -> tuple:
+    """
+    Create a new word search puzzle based on the puzzle name
+    """
     # word list and question from puzzle dictionary
     question = PUZZLE_QUIZ[puzzle_name]["question"]
     words = PUZZLE_QUIZ[puzzle_name]["words"]
@@ -94,10 +96,9 @@ def create_puzzle(puzzle_name: str):
     return question, dd, ds
 
 
+""" initialize puzzle data """
 PUZZLE_INIT = {k: create_puzzle(k) for k in PUZZLE_QUIZ.keys()}
-
 def fetch_puzzle(puzzle_name):
-    """ Initialize puzzle data """
     return PUZZLE_INIT[puzzle_name]
 
 
