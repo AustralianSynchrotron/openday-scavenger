@@ -28,23 +28,23 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templat
 # define puzzle quiz question and word lists
 PUZZLE_QUIZ = {
     "synch_finder": {
-        "question": "Can you find five words related to the Synchrotron?",
+        "question": "Can you find 5 words related to the Synchrotron?",
         "words": ["accelerator", "beamline", "lightsource", "magnet", "xrays"],
     },
     "mx3_finder": {
-        "question": "Can you find five words related to Macromolecular Crystallography (MX)?",
+        "question": "Can you find 5 words related to Macromolecular Crystallography (MX)?",
         "words": ["crystals", "dispersion", "performance", "protein", "robot"],
     },
     "mct_finder": {
-        "question": "Can you find five words related to Micro-Computed Tomography?",
+        "question": "Can you find 5 words related to Micro-Computed Tomography?",
         "words": ["monochromatic", "resolution", "spatial", "structures", "tomography"],
     },
     "mex_finder": {
-        "question": "Can you find five words related to the Medium Energy X-ray (MEX) beamlines?",
+        "question": "Can you find 5 words related to the Medium Energy X-ray (MEX) beamlines?",
         "words": ["absorption", "microprobe", "routine", "spectroscopy", "tuneable"],
     },
     "xas_finder": {
-        "question": "Can you find five words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
+        "question": "Can you find 5 words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
         "words": ["absorption", "fluorescence", "monochromater", "photons", "transmission"],
     },
 }
@@ -84,7 +84,7 @@ def create_puzzle(puzzle_name: str) -> tuple:
     question = PUZZLE_QUIZ[puzzle_name]["question"]
     words = PUZZLE_QUIZ[puzzle_name]["words"]
     ww = ", ".join([w for w in words])
-    puzzle_dim = max([len(w) for w in words]) 
+    puzzle_dim = max(*[len(w) for w in words], 10) + 1
     
     # Generate a new word search puzzle
     ws = WordSearch(words = ww, size = puzzle_dim)
