@@ -1,4 +1,4 @@
-from .static.data.questions_answers import questions_answers
+from .static.data.beamline_data import questions_answers
 
 
 def get_category_style(category: str):
