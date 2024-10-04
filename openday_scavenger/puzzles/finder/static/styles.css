@@ -23,74 +23,6 @@ h1 {
     text-align: center;
 }
 
-/* Style for the form */
-form {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Style for form elements */
-form input[type="text"],
-form input[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-}
-
-/* button {
-    background-color: #35bfc9;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 10px 2px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-button:hover {
-    background-color: #2aa3b0;
-} */
-
-/* Style for the response message */
-#response-good {
-    text-align: center;
-    font-size: 18px;
-    color: #28a745;
-    margin-top: 20px;
-}
-#response-bad {
-    text-align: center;
-    font-size: 18px;
-    color: #990312;
-    margin-top: 20px;
-}
-
-/* Style for error messages */
-.error {
-    color: #dc3545;
-    font-weight: bold;
-}
-
-/* Style for the teapot message */
-#teapot {
-    text-align: center;
-    font-size: 18px;
-    color: #ffc107;
-    margin-top: 20px;
-}
-
-
 /* Style for the scrambled word paragraph */
 #scrambled_word {
     font-size: 24px;
@@ -103,18 +35,6 @@ button:hover {
 #scrambled_word b {
     font-weight: bold;
     color: #203d79;
-}
-
-
-.grid-container {
-    display: grid;
-    width: 80%;
-    margin-left: 8%;
-    margin-right: 8%;
-    border: 1px solid black;
-    /* grid-gap: 10px; */
-    /* grid-template-columns: repeat(11,auto); */
-    
 }
 
 .form-parent {
@@ -143,9 +63,9 @@ button:hover {
     text-align: center;
   }
 
-  .item-selected {
+.item-selected {
     background-color: #d6d6d6;
-  }
+}
 
 
 .row {
