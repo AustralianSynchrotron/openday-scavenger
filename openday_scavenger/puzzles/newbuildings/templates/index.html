@@ -11,7 +11,7 @@
       rel="stylesheet">
     <script src="/static/js/htmx.min.js"></script>
     <script src="/static/js/json-enc.js"></script>
-    <script>
+    <!-- <script>
       window.onload = (event) => {
         document.body.addEventListener('htmx:beforeSwap', function(evt) {
         if (!evt)
@@ -54,7 +54,7 @@
     });
     };
     
-    </script>
+    </script> -->
     <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link href="static/styles.css" rel="stylesheet">
 </head>
@@ -79,7 +79,7 @@
   
   <hr class="solid">
   
-  <form id='form' class="form" hx-encoding='multipart/form-data' hx-post='/submission' hx-target="#response"  >
+  <form id='form' class="form" hx-encoding='multipart/form-data' hx-post='/submission' hx-swap="outerHTML">
     <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
     <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
 
@@ -94,8 +94,8 @@
     <button class="form-button" type="submit">✈ Submit</button>
   </form>
 
-  <div id="response" >
-  </div>
+  <!--  hx-target="#response"  <div id="response" >
+  </div> -->
 
 </div>
 </body>
