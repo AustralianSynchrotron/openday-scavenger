@@ -17,6 +17,8 @@
 
     <!-- Puzzle specific CSS -->
     <link href="static/styles.css" rel="stylesheet">
+    <!-- dependencies -->
+    <script src="js/DragDropTouch.js"></script>
 
 </head>
 
@@ -96,7 +98,6 @@
 
         function drop(event) {
             event.preventDefault();
-            // event.target.innerText = event.dataTransfer.getData("text");
 
             var id = event.dataTransfer.getData("id");
             var draggedElement = document.getElementById(id);
@@ -104,7 +105,6 @@
             event.target.innerText = draggedElement.innerText;
 
             // Disable the dragged element
-            // var draggedElement = document.querySelector(`a:contains(${data})`);
             if (draggedElement) {
                 draggedElement.classList.add('disabled');
                 draggedElement.setAttribute('draggable', 'false');
