@@ -1,4 +1,4 @@
-from .static.data.beamline_data import questions_answers
+from .static.data.questions_beamline import beamline_questions
 
 
 def get_category_style(category: str):
@@ -51,12 +51,12 @@ def get_category_style(category: str):
 
 
 def get_questions(suffix: str):
-    return questions_answers[suffix]["questions"]
+    return beamline_questions[suffix]["questions"]
 
 
 def get_options_less(suffix: str):
-    return questions_answers[suffix]["options_less"]
+    return beamline_questions[suffix]["options_less"]
 
 
 def get_options_more(suffix: str):
-    return questions_answers[suffix]["options_more"]
+    return beamline_questions[suffix]["options_more"]
