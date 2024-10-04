@@ -17,9 +17,10 @@
         <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
     </head>
     <body>
-        <h1>Finder Puzzle</h1>
+        <!-- <h1>Finder Puzzle</h1> -->
         <h2 id="question" >{{question}} </h2>
-        <p id="hint" data-num="{{data['words']|length}}"> 😏There are {{data['words']|length}} words hiding. Use the button below to add the each word you find into answer! 👇</p>
+        <p id="hint" data-num="{{data['words']|length}}"> 🔍Let's start the words treasure hunting! Click on the letter in the right order to build a word. 😎</p>
+        <p>😏When you are happy with the word, use the button below to add the each word you find into answer! 👇</p>
         <div class="container" style="margin-top:20px;">
             {% for i in range(data['puzzle']|length ) %}
             <div class="row">
