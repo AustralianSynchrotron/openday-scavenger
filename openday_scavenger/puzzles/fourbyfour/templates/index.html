@@ -45,11 +45,11 @@
         {% for category in status.categories %}
         {% if category.is_solved %}
 
-        <div class="grid-item" style="grid-column: span 4;">
+        <div class="category-container" style="grid-column: span 4;">
             <strong>{{ category.name }}</strong>
             <p>
                 {% for word in category.words %}
-                {{ word.word }}{% if not loop.last %}, {% endif %}
+                {{ word.word.upper() }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
             </p>
         </div>
@@ -62,7 +62,7 @@
         <div class="grid-item {% if word.is_selected %}selected{% endif %}"
             hx-put="/puzzles/{{ puzzle }}/{{ word.id }}/selection" hx-trigger="click" hx-target="body"
             hx-swap="outerHTML">
-            {{ word.word }}
+            {{ word.word.upper() }}
         </div>
         {% endfor %}
     </div>
