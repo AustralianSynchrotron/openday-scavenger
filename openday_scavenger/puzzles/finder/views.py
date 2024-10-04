@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 from typing import Annotated
-from collections import defaultdict
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
@@ -28,28 +27,28 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templat
 # define puzzle quiz question and word lists
 PUZZLE_QUIZ = {
     "treasure_as": {
-        "question": "There are 5 words related to the Synchrotron.",
-        "words": ["accelerator", "beam", "light", "magnet", "xrays"],
+        "question": "There are 4 words related to the Synchrotron.",
+        "words": ["beam", "light", "magnet", "xrays"],
     },
     "treasure_mx": {
-        "question": "There are 5 words related to Macromolecular Crystallography (MX).",
-        "words": ["crystals", "dispersion", "molecule", "protein", "robot"],
+        "question": "There are 4 words related to Macromolecular Crystallography (MX).",
+        "words": ["crystal" "molecule", "protein", "robot"],
     },
     "treasure_mct": {
-        "question": "There are 5 words related to Micro-Computed Tomography.",
-        "words": ["monochromatic", "resolution", "spatial", "structures", "tomography"],
+        "question": "There are 4 words related to Micro-Computed Tomography.",
+        "words": ["resolution", "spatial", "structures", "tomography"],
     },
     "treasure_mex": {
-        "question": "There are 5 words related to the Medium Energy X-ray (MEX) beamlines.",
-        "words": ["absorption", "microprobe", "routine", "spectroscopy", "tuneable"],
+        "question": "There are 4 words related to the Medium Energy X-ray (MEX) beamlines.",
+        "words": ["absorption", "microprobe", "routine", "spectra"],
     },
     "treasure_xas": {
-        "question": "There are 5 words related to the X-ray Absorption Spectroscopy (XAS) beamline.",
-        "words": ["absorption", "fluorescence", "monochromater", "photons", "transmission"],
+        "question": "There are 4 words related to the X-ray Absorption Spectroscopy (XAS) beamline.",
+        "words": ["fluorescence", "monochromator", "photons", "transmission"],
     },
     "treasure_xfm": {
-        "question": "There are 5 words related to the X-ray Fluorescence Microscopy (XFM) beamline.",
-        "words": ["mapping", "micron", "milliprobe", "phase", "scanning"],
+        "question": "There are 4 words related to the X-ray Fluorescence Microscopy (XFM) beamline.",
+        "words": ["mapping", "micron", "phase", "scanning"],
     },
 }
 
@@ -89,7 +88,7 @@ def create_puzzle(puzzle_name: str) -> tuple:
     question = PUZZLE_QUIZ[puzzle_name]["question"]
     words = PUZZLE_QUIZ[puzzle_name]["words"]
     ww = ", ".join([w for w in words])
-    puzzle_dim = max(*[len(w) for w in words], 10) + 1
+    puzzle_dim = max(*[len(w) for w in words], 8) + 1
     
     # Generate a new word search puzzle
     ws = WordSearch(words = ww, size = puzzle_dim)
