@@ -27,28 +27,33 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templat
 
 # define puzzle quiz question and word lists
 PUZZLE_QUIZ = {
-    "synch_finder": {
-        "question": "Can you find 5 words related to the Synchrotron?",
-        "words": ["accelerator", "beamline", "lightsource", "magnet", "xrays"],
+    "treasure_as": {
+        "question": "There are 5 words related to the Synchrotron.",
+        "words": ["accelerator", "beam", "light", "magnet", "xrays"],
     },
-    "mx3_finder": {
-        "question": "Can you find 5 words related to Macromolecular Crystallography (MX)?",
-        "words": ["crystals", "dispersion", "performance", "protein", "robot"],
+    "treasure_mx": {
+        "question": "There are 5 words related to Macromolecular Crystallography (MX).",
+        "words": ["crystals", "dispersion", "molecule", "protein", "robot"],
     },
-    "mct_finder": {
-        "question": "Can you find 5 words related to Micro-Computed Tomography?",
+    "treasure_mct": {
+        "question": "There are 5 words related to Micro-Computed Tomography.",
         "words": ["monochromatic", "resolution", "spatial", "structures", "tomography"],
     },
-    "mex_finder": {
-        "question": "Can you find 5 words related to the Medium Energy X-ray (MEX) beamlines?",
+    "treasure_mex": {
+        "question": "There are 5 words related to the Medium Energy X-ray (MEX) beamlines.",
         "words": ["absorption", "microprobe", "routine", "spectroscopy", "tuneable"],
     },
-    "xas_finder": {
-        "question": "Can you find 5 words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
+    "treasure_xas": {
+        "question": "There are 5 words related to the X-ray Absorption Spectroscopy (XAS) beamline.",
         "words": ["absorption", "fluorescence", "monochromater", "photons", "transmission"],
+    },
+    "treasure_xfm": {
+        "question": "There are 5 words related to the X-ray Fluorescence Microscopy (XFM) beamline.",
+        "words": ["mapping", "micron", "milliprobe", "phase", "scanning"],
     },
 }
 
+puzzle_routes = [f"/{k}" for k in PUZZLE_QUIZ.keys()]
 
 def get_puzzle_data(
         ws: WordSearch,
@@ -99,7 +104,7 @@ def create_puzzle(puzzle_name: str) -> tuple:
 """ initialize puzzle data """
 PUZZLE_INIT = {k: create_puzzle(k) for k in PUZZLE_QUIZ.keys()}
 def fetch_puzzle(puzzle_name: str) -> tuple:
-    """ Fetch puzzle data for puzzle name"""
+    """ Fetch puzzle data for puzzle name """
     return PUZZLE_INIT[puzzle_name]
 
 
