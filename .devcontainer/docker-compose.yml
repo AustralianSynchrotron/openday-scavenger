@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+
+    # It is important not to include the project virtual environment (.venv) in the mount,
+    # because the virtual environment is platform specific and we don't want to interfere
+    # with any existing virtual environment.
+    # We retain an existing .venv by mounting it as an anonymous volume.
+    volumes:
+      - ../..:/workspaces:cached
+      - /workspaces/openday-scavenger/.venv
+
+    # Set environment variables here, so we overwrite any existing .env file settings.
+    # This means you don't have to change your .env file when you use this devcontainer.
+    # We set the specific location for the .venv outside the working directory.
+    environment:
+      - UV_PROJECT_ENVIRONMENT=/root/.cache/uv
+      - DATABASE_SCHEME=postgresql+psycopg2
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=postgres
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:db
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+
+volumes:
+  postgres-data:

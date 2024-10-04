@@ -14,12 +14,7 @@ During the Open Day a visitor is guided through the following steps:
 ## Installation
 The web application is written in Python, the language of choice for the Scientific Computing team at the Australian Synchrotron. The following sections explain two methods to install and run the application locally.
 
-### Option 1: Use Virtual Environments
-This is the quickest and easiest method to run the scavenger hunt web application. It uses a local database and demonstrates the power of virtual environments for local Python development.
-
-#### Setup
-##### Get the source
-Currently there is no released version of the project, therefore the first step is to clone the repo:
+Before choosing one of the methods, make sure you have the source code of the application. Currently there is no released version of the project, therefore the first step is to clone the repo:
 
 ```
 git clone git@github.com:AustralianSynchrotron/openday-scavenger.git  # Using ssh key (preferred)
@@ -27,6 +22,11 @@ or
 git clone https://github.com/AustralianSynchrotron/openday-scavenger.git # Using https with username/password credentials
 ```
 If testing the application, use the `main` branch.
+
+### Option 1: Use Virtual Environments
+This is the quickest and easiest method to run the scavenger hunt web application. It uses a local database and demonstrates the power of virtual environments for local Python development.
+
+#### Setup
 
 ##### Install dependencies
 The web application makes use of [`uv`](https://github.com/astral-sh/uv) for installing dependencies and creating the virtual environment.
@@ -47,6 +47,28 @@ Install all the dependencies inside a virtual environment with:
 ```
 uv sync
 ```
+
+##### Setup a pre-commit hook
+These instructions describe using `uvx` to run [pre-commit](https://pre-commit.com/). `pre-commit` is a tool to configure pre-commit `git` hooks. `uvx` is not the only viable method to run `pre-commit` (an alternative is e.g., `pipx`)
+
+Install `pre-commit` as a `uv` tool:
+```
+uv tool install pre-commit
+```
+This installs `pre-commit` in its own, persistent, virtual environment so that it can be used for any project.
+
+`cd` to the repo and run:
+```
+uvx pre-commit install
+```
+This installs the pre-commit hook in `.git/hooks`.
+
+Finally, to test, run the hook against all the files:
+```
+uvx pre-commit run --all-files
+```
+
+Now whenever a commit is made `ruff` will format, lint, and sort imports, for any changed files.
 
 #### Run the Application
 Run the web application using its internal development server with:
@@ -69,16 +91,40 @@ DATABASE_NAME="scavenger_hunt.db"
 ```
 Restart the server and it will pick up the settings automatically.
 
-### Option 2: use devcontainers
-TBD
+### Option 2: Use devcontainers (with VSCode)
+If you would like a setup which is similar to a real production environment, use the provided [devcontainer](https://containers.dev). It uses a proper PostgreSQL database server instead of sqlite.
+
+> Before you can use devcontainers make sure you have Docker as well as the VSCode [Remote Development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack) extensions installed. Please refer to the dev container setup documentation on the VSCode page.
+
+Open the cloned repository in [VSCode](https://code.visualstudio.com). Usually it will detect that a `.devcontainer` folder is present and ask you whether you'd like to "Reopen folder to develop in a container". Press "Reopen in Container" and wait.
+
+If VSCode does not prompt you, click on the button on the very bottom left of VSCode and select "Reopen in Container" from the drop down menu at the top.
+
+Once the containers have finished starting up, browse to `http://localhost:8000` in a web browser.
+
+If you would like to see the content of the database with a database client (a GUI client we like is [DBeaver](https://dbeaver.io)), use the following settings:
+
+| Setting  | Value |
+| -------  | ----- |
+| host     | `localhost` |
+| port     | `5432` |
+| db       | `postgres` |
+| user     | `postgres` |
+| password | `postgres` |
+
 
 
 ## The Visitor Flow
 TBD
 
 ## Contribution
-TBD
+We would be delighted to receive contributions, especially in the form of puzzles. Please note that we are preparing for the Open Day 2024 and thus will only be able to accept contributions from Australian Synchrotron facility staff at this point in time.
 
+All contributions are done via Pull Requests (PR). You can either fork the repository and send a PR through or create a branch in the upstream repository and send a merge request via PR. In both cases, please create a branch starting with your initials and a few words about the main work topics. For example `am-puzzle-admin-edit-fields`.
+
+For the Pull Request please request either Andreas or Stephen as a reviewer.
+
+Along with the PR requirement, the `main` branch is also protected by a status check. The status check runs a [GitHub Action](https://github.com/AustralianSynchrotron/openday-scavenger/actions/workflows/pytest.yaml) that checks the linting and formatting with `ruff` and runs the tests with `pytest`. The use of the pre-commit hook should ensure the linter and formatter pass.
 
 ## Add a Puzzle
 The heart and soul of the scavenger hunt web application are its puzzles. This sections describes the process of adding a puzzle and integrating it into the user experience and administration flow.
@@ -165,20 +211,52 @@ from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 router = APIRouter()
 
 @router.get('/')
-async def index(request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]):
+async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
     pass
 ```
 
-After you made the request you will receive a response with the `JSON` body containing a boolean value indicating whether the asnwer was correct or not:
-```JSON
-{
-    "success": True
-}
-```
+The reason for storing the correct answer in the database is twofold:
+- we don't want to reveal the correct answer in the source code
+- we can quickly fix an incorrect answer by modifying the database entry
+
+> For the time being the application only supports a case-sensitive, direct string comparison. If you need a more complex comparison method, such as a fuzzy comparison mode or computational methods (e.g. Levenshtein distance), please let Andreas or Stephen know.
 
 
 ## Architecture
-TBD
+The architecture of the web application is informed by the Scientific Computing standard for RESTful API services. The standard the team follows is very closely modelled after structures such as the [Netflix Dispatch service](https://github.com/Netflix/dispatch) or the abstraction model described [here](https://camillovisini.com/coding/abstracting-fastapi-services).
+
+The following diagram illustrates the two layers our services are generally split into and the data protocols that are used between these layers. 
+
+![Service layer architecture](docs/RestfulServiceLayerDesign.png)
+
+Requests to a service are made using parameters defined in `pydantic` schemas. The routes responding to requests are implemented in a view module focusing solely on the validation of input and assembly of the response. In order to accomplish this, routes make calls to functions defined in the service module, which hosts the business logic and data access calls. This allows the business logic to be used across multiple routes and easy to test. The service functions take `pydantic` schemas as inputs which can, but don't need to be, the same schemas as the ones used in the view module. In order to make things easier, often the service functions use standard function arguments in addition or instead of `pydantic` models as input.
+
+A service function interacts with the database using `SQLAlchemy`. The result of a transaction with the database is a `SQLAlchemy` model which is returned to the route in the view model. The route then translates the `SQLAlchemy` model into a `pydantic` schema for the response.
+
+> We don't tend to use a CRUD layer between the service layer and the database as we found it added unnecessary complexity.
+
+The scavenger hunt application differs to a Scientific Computing standard RESTful API service in that it renders web pages and provides a way for developers to extend it with puzzles. This resulted in a slightly different folder structure compared to our standard:
+
+```
+|- openday_scavenger
+|  |- api                   #RESTful API like structure
+|  |  |- puzzles            #service functions, db models and dependencies for puzzle management
+|  |  |- visitors           #service functions, db models and dependencies for visitor handling
+|  |- puzzles               #folder for the puzzles
+|  |  |- demo               #demo puzzle folder
+|  |  |  |- static          #folder for all static assets for the demo puzzle
+|  |  |  |- views.py        #folder for all the routes of the demo puzzle
+|  |- static
+|  |  |- css                #common CSS files
+|  |  |- html               #common HTML files
+|  |  |- js                 #common JavaScript files
+|  |  |- webfonts           #common fonts
+|  |- views
+|  |  |- admin              #routes that render all admin HTML pages
+|  |  |- game               #routes that render all game related HTML pages
+```
+
+
 
 
 ## Technologies and Libraries

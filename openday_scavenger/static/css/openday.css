@@ -1,2 +1,13 @@
 /* Add custom styles here */
 
+
+.game-response-correct-icon {
+    font-size: 40px;
+    color: green;
+}
+
+
+.game-response-incorrect-icon {
+    font-size: 40px;
+    color: red;
+}

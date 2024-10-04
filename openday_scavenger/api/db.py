@@ -12,10 +12,14 @@ config = get_settings()
 
 # Create the main database engine using the auto-generated database uri
 # Since sqlite only allows access from a single thread, set the special connect arg accordingly
+connect_args = {}
+if config.DATABASE_SCHEME == "sqlite":
+    connect_args["check_same_thread"] = False
+
 engine = create_engine(
     str(config.DATABASE_URI),
     echo=True,
-    connect_args={"check_same_thread": config.DATABASE_SCHEME != "sqlite"},
+    connect_args=connect_args,
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
