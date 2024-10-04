@@ -111,9 +111,59 @@ form {
   border-radius: 5px;
 }
 
-#form button:hover {
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes circling-border {
+  0% {
+    border-color: #ff4136 transparent transparent transparent;
+  }
+  25% {
+    border-color: transparent #2ecc40 transparent transparent;
+  }
+  50% {
+    border-color: transparent transparent #0074d9 transparent;
+  }
+  75% {
+    border-color: transparent transparent transparent #ffdc00;
+  }
+  100% {
+    border-color: #ff4136 transparent transparent transparent;
+  }
+}
+
+#form button.ready {
+  position: relative;
+  animation: pulse 1.5s infinite;
+  transition: all 0.3s ease;
+}
+
+#form button.ready::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border: 3px solid transparent;
+  border-radius: 7px;
+  animation: circling-border 1.5s linear infinite;
+}
+
+#form button.ready:hover {
+  animation: none;
   background-color: #2aa3b0;
 }
+
 /************** Form End **************/
 
 /*****************************************/

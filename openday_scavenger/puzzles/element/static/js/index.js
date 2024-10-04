@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   });
 
+  const submitButton = document.getElementById("submit");
+
   // Buttons in popup
   const btnGoogle = document.getElementById("btn-google");
   btnGoogle.addEventListener("click", function () {
@@ -87,11 +89,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     const symbol = document.getElementById("element-symbol").textContent;
     document.getElementById("answer").value = symbol;
 
+    submitButton.classList.add("ready");
+    submitButton.focus();
+
     // Close the popup
     popup.style.display = "none";
   });
 
-  // Hnt functionality
+  // Hint functionality
   const btnHint = document.getElementById("btn-hint");
   const periodicTable = document.getElementById("periodic-table");
   let hintState = "hidden";
@@ -106,7 +111,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         break;
       case "show_more":
         hintState = "show_less";
-        btnHint.textContent = "Hide hints (refresh to see a different question)";
+        btnHint.textContent =
+          "Hide hints (refresh to see a different question)";
         periodicTable.classList.remove("options-more-visible");
         periodicTable.classList.add("options-less-visible");
         break;
@@ -115,6 +121,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         btnHint.textContent = "🤯 Give me some hints";
         periodicTable.classList.remove("options-less-visible");
         break;
+    }
+  });
+
+  // Add 'ready' class to submit button when answer input has a value
+  const answerInput = document.getElementById("answer");
+
+  answerInput.addEventListener("input", function () {
+    console.log("input");
+    if (this.value.trim() !== "") {
+      submitButton.classList.add("ready");
+    } else {
+      submitButton.classList.remove("ready");
     }
   });
 });
