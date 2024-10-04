@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from .cube.views import router as puzzle_cube_router
 from .demo.views import router as puzzle_demo_router
 from .fourbyfour.views import router as puzzle_fourbyfour_router
+from .labelthemap.views import router as puzzle_labelthemap_router
 from .shuffleanagram.views import router as puzzle_shuffleanagram_router
 
 router = APIRouter()
@@ -15,6 +16,7 @@ router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-crum
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-toerags")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-reboots")
 router.include_router(puzzle_fourbyfour_router, prefix="/fourbyfour")
+router.include_router(puzzle_labelthemap_router, prefix="/labelthemap")
 
 
 # Include a route to catch all invalid puzzle routes so we can throw a custom 404.

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Label the Map</title>
+
+    <!-- From common code -->
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/html5-qrcode.js"></script>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <!-- Puzzle specific CSS -->
+    <link href="static/styles.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <h1 class="text-center my-4">Label the map!</h1>
+
+    <!-- Image of the map with drop zones -->
+    <div class="container d-flex justify-content-center">
+
+    <div class="map-container">
+        <img src="static/map.svg" alt="Map" class="img-fluid">
+        <div id="dropzone1" class="dropzone" style="top: 29%; left: 70%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="dropzone2" class="dropzone" style="top: 33%; left: 55%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="dropzone3" class="dropzone" style="top: 20%; left: 58%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="dropzone4" class="dropzone" style="top: 72%; left: 66%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="dropzone5" class="dropzone" style="top: 72%; left: 66%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="dropzone6" class="dropzone" style="top: 59%; left: 83%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="dropzone7" class="dropzone" style="top: 50%; left: 92%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="dropzone8" class="dropzone" style="top: 24%; left: 87%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="dropzone9" class="dropzone" style="top: 16%; left: 79%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <!-- <div id="dropzone2" class="dropzone" style="top: 50%; left: 60%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div> -->
+        <!-- Add more drop zones as needed -->
+    </div>
+    </div>
+
+    <!-- List of words -->
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-4 text-center">
+                <div class="d-flex flex-row flex-wrap">
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">LINAC</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">Booster Ring</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">Storage Ring</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">IMBL</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">XFM</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">MX3</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">MX1&2</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">BioSAXS</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">THz/Far-IR</a>
+                </div>
+            </div>
+            <div class="col-4 text-center">
+                <div class="d-flex flex-row flex-wrap">
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">IRM</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">SXR</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">SAXS/WAXS</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">MEX1&2</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">XAS</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">PD</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">ADS</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">MCT</a>
+                    <a class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">NANO</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.innerText);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text");
+            event.target.innerText = data;
+        }
+    </script>
+</body>
+</html>

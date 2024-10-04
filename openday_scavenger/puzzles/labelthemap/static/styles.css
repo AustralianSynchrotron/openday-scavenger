@@ -1,0 +1,11 @@
+.dropzone {
+    border: 1px solid #35bfc9;
+    border-radius: 5px;
+    min-height: 20px;
+    min-width: 50px;
+    position: absolute;
+}
+.map-container {
+    position: relative;
+    display: inline-block;
+}
