@@ -2,10 +2,10 @@ import random
 from datetime import datetime
 from io import BytesIO
 
-from segno import make_qr
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.puzzles.models import Access, Puzzle, Response
+from openday_scavenger.api.qr_codes import generate_qr_code, generate_qr_codes_pdf
 from openday_scavenger.api.visitors.exceptions import VisitorUIDInvalidError
 from openday_scavenger.api.visitors.models import Visitor
 from openday_scavenger.api.visitors.schemas import VisitorPoolCreate
@@ -29,8 +29,8 @@ __all__ = (
     "update",
     "compare_answer",
     "record_access",
-    "generate_qr_code",
-    "generate_qr_codes_pdf",
+    "generate_puzzle_qr_code",
+    "generate_puzzle_qr_codes_pdf",
     "generate_test_data",
 )
 
@@ -38,13 +38,21 @@ __all__ = (
 config = get_settings()
 
 
-def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
+def get_all(
+    db_session: Session,
+    *,
+    only_active: bool = False,
+    filter_by_name_startswith: str | None = None,
+) -> list[Puzzle]:
     """
-    Return all puzzles in the database, optionally only the active ones.
+    Return all puzzles in the database, with optional filtering.
+    optionally only the active ones.
 
     Args:
         db_session (Session): The SQLAlchemy session object.
         only_active (bool): Set this to True to only return active puzzles.
+        filter_by_name_startswith (str): Only return responses
+            where the puzzle name starts with this string.
 
     Returns:
         list[Puzzle]: List of puzzles in the database.
@@ -56,7 +64,32 @@ def get_all(db_session: Session, *, only_active: bool = False) -> list[Puzzle]:
     if only_active:
         q = q.filter(Puzzle.active)
 
+    if (filter_by_name_startswith is not None) and (filter_by_name_startswith != ""):
+        q = q.filter(Puzzle.name.ilike(f"{filter_by_name_startswith}%"))
+
     return q.order_by(Puzzle.name).all()
+
+
+def get(db_session: Session, puzzle_name: str) -> Puzzle:
+    """
+    Return a single puzzle from the database.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        puzzle_name (str): The name of the puzzle that should be returned.
+
+    Returns:
+        Puzzle: The puzzle with the given name.
+    """
+    # Get the puzzle from the database with the provided name.
+    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
+
+    if puzzle is None:
+        raise PuzzleNotFoundError(
+            f"A puzzle with the name {puzzle_name} could not be found in the database"
+        )
+
+    return puzzle
 
 
 def count(db_session: Session, *, only_active: bool = False) -> int:
@@ -159,11 +192,7 @@ def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate) -> Pu
         Puzzle: The modified puzzle.
     """
     # Find the puzzle that should be updated in the database
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
-    if puzzle is None:
-        raise PuzzleNotFoundError(
-            f"A puzzle with the name {puzzle_name} could not be found in the database"
-        )
+    puzzle = get(db_session, puzzle_name)
 
     # We transform the input data which contains the fields with the new values
     # to a dictionary and in the process filter out any fields that have not been explicitly set.
@@ -197,12 +226,7 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
         puzzle_in (PuzzleCompare): The object containing the visitor's answer that should be compared.
     """
     # Get the database models for the puzzle so we can perform the answer comparison.
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_in.name).first()
-
-    if puzzle is None:
-        raise PuzzleNotFoundError(
-            f"A puzzle with the name {puzzle_in.name} could not be found in the database"
-        )
+    puzzle = get(db_session, puzzle_in.name)
 
     # We compare the provided answer with the stored answer. Currently this is a very simple
     # case sensitive string comparison. We can add more complicated comparison modes here later.
@@ -252,12 +276,7 @@ def record_access(db_session: Session, puzzle_name: str, visitor_uid: str) -> Ac
         Access: The created access object.
     """
     # Get the database models for the puzzle.
-    puzzle = db_session.query(Puzzle).filter(Puzzle.name == puzzle_name).first()
-
-    if puzzle is None:
-        raise PuzzleNotFoundError(
-            f"A puzzle with the name {puzzle_name} could not be found in the database"
-        )
+    puzzle = get(db_session, puzzle_name)
 
     # Get the database model for the visitor.
     visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
@@ -282,61 +301,14 @@ def record_access(db_session: Session, puzzle_name: str, visitor_uid: str) -> Ac
     return access
 
 
-def generate_qr_code(name: str, as_file_buff: bool = False) -> str | BytesIO:
-    _qr = make_qr(f"puzzles/{name}", error="H")
-
-    if as_file_buff:
-        buff = BytesIO()
-        _qr.save(buff, kind="png")
-        buff.seek(0)
-        qr = buff
-    else:
-        qr = _qr.svg_data_uri()
-
-    return qr
+def generate_puzzle_qr_code(name: str, as_file_buff: bool = False) -> str | BytesIO:
+    return generate_qr_code(f"puzzles/{name}", as_file_buff=as_file_buff)
 
 
-def generate_qr_codes_pdf(db_session: Session):
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib.utils import ImageReader
-    from reportlab.pdfgen import canvas
-
+def generate_puzzle_qr_codes_pdf(db_session: Session):
     puzzles = get_all(db_session, only_active=False)
 
-    # Create a canvas object
-    pdf_io = BytesIO()
-    c = canvas.Canvas(pdf_io, pagesize=A4)
-    width, height = A4
-
-    # Calculate the position to center the QR code
-    qr_size = 400  # Size of the QR code
-    x = (width - qr_size) / 2
-    y = (height - qr_size) / 2
-
-    for puzzle in puzzles:
-        # Draw the QR code image from BytesIO
-        qr_code = generate_qr_code(puzzle.name, as_file_buff=True)
-        qr_image = ImageReader(qr_code)
-        c.drawImage(qr_image, x, y, width=qr_size, height=qr_size)
-
-        # Set the font size for the URL text
-        font_size = 24
-        c.setFont("Helvetica", font_size)
-
-        # Calculate the position to center the text
-        text_width = c.stringWidth(f"/puzzle/{puzzle.name}", "Helvetica", font_size)
-        text_x = (width - text_width) / 2
-
-        # Add the URL text below the QR code
-        c.drawString(text_x, y - 30, f"/puzzle/{puzzle.name}")
-
-        # Create a new page for the next QR code
-        c.showPage()
-
-    c.save()
-    pdf_io.seek(0)
-
-    return pdf_io
+    return generate_qr_codes_pdf([puzzle.name for puzzle in puzzles])
 
 
 def generate_test_data(

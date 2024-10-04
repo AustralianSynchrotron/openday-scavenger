@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request
+from fastapi.responses import StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -13,6 +14,8 @@ from openday_scavenger.api.visitors.service import (
     check_out,
     create,
     create_visitor_pool,
+    generate_visitor_qr_code,
+    generate_visitor_qr_codes_pdf,
     get_visitor_pool,
 )
 from openday_scavenger.api.visitors.service import get_all as get_all_visitors
@@ -68,12 +71,30 @@ async def initialise_visitor_pool(
     return await _render_visitor_pool_table(request, db)
 
 
+@router.get("/{visitor_uid}/qr")
+async def render_qr_code(visitor_uid: str, request: Request):
+    qr = generate_visitor_qr_code(visitor_uid)
+
+    return templates.TemplateResponse(request=request, name="qr.html", context={"qr": qr})
+
+
 @router.get("/pool")
 async def render_visitor_pool_table(
     request: Request, db: Annotated["Session", Depends(get_db)], limit: int = 10
 ):
     """Render the table of possible visitor uids on the admin page"""
     return await _render_visitor_pool_table(request, db, limit)
+
+
+@router.get("/download-pdf")
+async def download_qr_codes(db: Annotated["Session", Depends(get_db)]):
+    pdf_io = generate_visitor_qr_codes_pdf(db)
+
+    return StreamingResponse(
+        pdf_io,
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=visitor_qr_codes.pdf"},
+    )
 
 
 async def _render_visitor_table(

@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from typing import Annotated
+from collections import defaultdict
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
@@ -8,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
+from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
 
 from word_search_generator import WordSearch, utils
 """
@@ -23,27 +25,27 @@ router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
 
 
-# define puzzle quiz and word lists
-PuzzleQuiz = {
+# define puzzle quiz question and word lists
+PUZZLE_QUIZ = {
     "synch_finder": {
-        "question": "Can you find all the words related to the Synchrotron?",
-        "words": ["synchrotron", "beamline", "magnet", "xrays", "lightsource", "accelerator"],
+        "question": "Can you find 5 words related to the Synchrotron?",
+        "words": ["accelerator", "beamline", "lightsource", "magnet", "xrays"],
     },
     "mx3_finder": {
-        "question": "Can you find all the words related to Macromolecular Crystallography?",
-        "words": ["high", "performance", "microfocus", "crystals", "protein"],
+        "question": "Can you find 5 words related to Macromolecular Crystallography (MX)?",
+        "words": ["crystals", "dispersion", "performance", "protein", "robot"],
     },
     "mct_finder": {
-        "question": "Can you find all the words related to Micro-Computed Tomography?",
-        "words": ["monochromatic", "pink", "white", "xray", "beams", "structures", "spatial", "resolution"],
+        "question": "Can you find 5 words related to Micro-Computed Tomography?",
+        "words": ["monochromatic", "resolution", "spatial", "structures", "tomography"],
     },
     "mex_finder": {
-        "question": "Can you find all the words related to the Medium Energy X-ray (MEX) beamlines?",
-        "words": ["soft", "hard", "xray", "tuneable", "microprobe", "routine", "spectroscopy"],
+        "question": "Can you find 5 words related to the Medium Energy X-ray (MEX) beamlines?",
+        "words": ["absorption", "microprobe", "routine", "spectroscopy", "tuneable"],
     },
     "xas_finder": {
-        "question": "Can you find all the words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
-        "words": ["absorption", "transmission", "fluorescence", "monochromater", "oxidation", "photons"],
+        "question": "Can you find 5 words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
+        "words": ["absorption", "fluorescence", "monochromater", "photons", "transmission"],
     },
 }
 
@@ -53,7 +55,7 @@ def get_puzzle_data(
         solution: bool = False,
         format: str = 'dict'
     ) -> dict|str:
-    """Write current puzzle to dict or JSON format.
+    """ Write puzzle data to dict or JSON format.
 
     Args:
         path (Path): Path to write the file to.
@@ -74,14 +76,15 @@ def get_puzzle_data(
     return data
 
 
-def create_puzzle(path: Path):
-    
+def create_puzzle(puzzle_name: str) -> tuple:
+    """
+    Create a new word search puzzle based on the puzzle name
+    """
     # word list and question from puzzle dictionary
-    puzzle_name = path.name 
-    question = PuzzleQuiz[puzzle_name]["question"]
-    words = PuzzleQuiz[puzzle_name]["words"]
+    question = PUZZLE_QUIZ[puzzle_name]["question"]
+    words = PUZZLE_QUIZ[puzzle_name]["words"]
     ww = ", ".join([w for w in words])
-    puzzle_dim = max([len(w) for w in words]) 
+    puzzle_dim = max(*[len(w) for w in words], 10) + 1
     
     # Generate a new word search puzzle
     ws = WordSearch(words = ww, size = puzzle_dim)
@@ -91,6 +94,13 @@ def create_puzzle(path: Path):
     ds = get_puzzle_data(ws, solution=True) # solution shown
 
     return question, dd, ds
+
+
+""" initialize puzzle data """
+PUZZLE_INIT = {k: create_puzzle(k) for k in PUZZLE_QUIZ.keys()}
+def fetch_puzzle(puzzle_name: str) -> tuple:
+    """ Fetch puzzle data for puzzle name"""
+    return PUZZLE_INIT[puzzle_name]
 
 
 @router.get("/static/{path:path}")
@@ -114,14 +124,18 @@ async def get_static_files(
 
 
 @router.get("/")
-async def index(request: Request, visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]):
-    question, data, data_as_solution = create_puzzle(Path(request.url.path) )
+async def index(request: Request,
+                puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+                visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]
+    ):
+
+    question, data, data_as_solution = fetch_puzzle(puzzle_name)
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": Path(request.url.path).name,
+            "puzzle": puzzle_name,
             "visitor": visitor.uid,
             "question": question,
             "data": data,
