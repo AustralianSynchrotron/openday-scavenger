@@ -77,7 +77,7 @@ const submitForm = async () => {
   const name = document.getElementById("name");
   const visitor = document.getElementById("visitor");
   const words = JSON.parse(sessionStorage.getItem("words"));
-  const answer = words.map(item=> item['word']);
+  const answer = words.map(item=> item['word'].toLowerCase());
   answer.sort();
   // Construct a FormData instance
   const formData = new FormData();
@@ -86,21 +86,6 @@ const submitForm = async () => {
   formData.append("name", name.defaultValue);
   formData.append("visitor", visitor.defaultValue);
   formData.append("answer", answer.join()); // join with comma
-
-  // fetch(`/submission`, {
-  //     method: "POST",
-  //     // Set the FormData instance as the request body
-  //     body: formData,
-  //   }).then( (response) => {
-  //     // The API call was successful!
-  //     // return response.body();
-  //     console.log("Received response",response);
-  //   }).then((html) => {
-  //     document.body.innerHTML = html;
-  //   }).catch(function (err) {
-  //     // There was an error
-  //     console.warn('Something went wrong.', err);
-  //   });
 
   try {
     const response = await fetch(`/submission`, {
