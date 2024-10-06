@@ -5,11 +5,21 @@
     min-width: 50px;
     position: absolute;
 }
+
 .map-container {
     position: relative;
     display: inline-block;
 }
-.disabled {
+
+/* .disabled {
     pointer-events: none;
     opacity: 0.5;
+} */
+.list-group .list-group-item {
+    border-radius: 0;
+    cursor: move;
+}
+
+.list-group .list-group-item:hover {
+    background-color: #f7f7f7;
 }

@@ -17,9 +17,7 @@
 
     <!-- Puzzle specific CSS -->
     <link href="static/styles.css" rel="stylesheet">
-    <!-- dependencies -->
-    <script src="js/DragDropTouch.js"></script>
-
+    <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
 </head>
 
 <body>
@@ -28,88 +26,72 @@
     <!-- Image of the map with drop zones -->
     <div class="container d-flex justify-content-center">
 
-    <div class="map-container">
-        <img src="static/map.svg" alt="Map" class="img-fluid">
-        <div id="dropzone1" class="dropzone" style="top: 29%; left: 70%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone2" class="dropzone" style="top: 33%; left: 55%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone3" class="dropzone" style="top: 20%; left: 58%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone4" class="dropzone" style="top: 72%; left: 66%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone5" class="dropzone" style="top: 59%; left: 83%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone6" class="dropzone" style="top: 50%; left: 92%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone7" class="dropzone" style="top: 24%; left: 87%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone8" class="dropzone" style="top: 16%; left: 79%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone9" class="dropzone" style="top: 9%; left: 73%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone10" class="dropzone" style="top: 7%; left: 65%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone11" class="dropzone" style="top: 3%; left: 56%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone12" class="dropzone" style="top: 12%; left: 38%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone13" class="dropzone" style="top: 18%; left: 31%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone14" class="dropzone" style="top: 37%; left: 28%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone15" class="dropzone" style="top: 49%; left: 34%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone16" class="dropzone" style="top: 59%; left: 35%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone17" class="dropzone" style="top: 65%; left: 39%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-        <div id="dropzone18" class="dropzone" style="top: 73%; left: 12%;" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-    </div>
-    </div>
-
-    <!-- List of words -->
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-4 text-center">
-                <div class="d-flex flex-row flex-wrap">
-                    <a id="a" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">LINAC</a>
-                    <a id="b" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">Booster Ring</a>
-                    <a id="c" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">Storage Ring</a>
-                    <a id="d" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">IMBL</a>
-                    <a id="e" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">XFM</a>
-                    <a id="f" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">MX3</a>
-                    <a id="g" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">MX1&2</a>
-                    <a id="h" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">BioSAXS</a>
-                    <a id="i" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">THz/Far-IR</a>
-                </div>
+        <div class="map-container">
+            <img src="static/map.svg" alt="Map" class="img-fluid">
+            <div id="labels">
+                <div id="dropzone1" class="dropzone" style="top: 29%; left: 70%;">LINAC</div>
+                <div id="dropzone2" class="dropzone" style="top: 33%; left: 55%;">Booster Ring</div>
+                <div id="dropzone3" class="dropzone" style="top: 20%; left: 58%;">Storage Ring</div>
+                <div id="dropzone4" class="dropzone" style="top: 72%; left: 66%;">IMBL</div>
+                <div id="dropzone5" class="dropzone" style="top: 59%; left: 83%;">XFM</div>
+                <div id="dropzone6" class="dropzone" style="top: 50%; left: 92%;">MX3</div>
+                <div id="dropzone7" class="dropzone" style="top: 24%; left: 87%;">MX1&2</div>
+                <div id="dropzone8" class="dropzone" style="top: 16%; left: 79%;">BioSAXS</div>
+                <div id="dropzone9" class="dropzone" style="top: 9%; left: 73%;">THz/Far-IR</div>
+                <div id="dropzone10" class="dropzone" style="top: 7%; left: 65%;">IRM</div>
+                <div id="dropzone11" class="dropzone" style="top: 3%; left: 56%;">SXR</div>
+                <div id="dropzone12" class="dropzone" style="top: 12%; left: 38%;">SAXS/WAXS</div>
+                <div id="dropzone13" class="dropzone" style="top: 18%; left: 31%;">MEX1&2</div>
+                <div id="dropzone14" class="dropzone" style="top: 37%; left: 28%;">XAS</div>
+                <div id="dropzone15" class="dropzone" style="top: 49%; left: 34%;">PD</div>
+                <div id="dropzone16" class="dropzone" style="top: 59%; left: 35%;">ADS</div>
+                <div id="dropzone17" class="dropzone" style="top: 65%; left: 39%;">MCT</div>
+                <div id="dropzone18" class="dropzone" style="top: 73%; left: 12%;">NANO</div>
             </div>
-            <div class="col-4 text-center">
-                <div class="d-flex flex-row flex-wrap">
-                    <a id="j" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">IRM</a>
-                    <a id="k" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">SXR</a>
-                    <a id="l" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">SAXS/WAXS</a>
-                    <a id="m" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">MEX1&2</a>
-                    <a id="n" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">XAS</a>
-                    <a id="o" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">PD</a>
-                    <a id="p" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">ADS</a>
-                    <a id="q" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">MCT</a>
-                    <a id="r" class="list-group-item list-group-item-action" draggable="true" ondragstart="drag(event)">NANO</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-xl-10 order-2 order-sm-1 mt-3">
+                <h2 class="h6"><strong>Sortable List</strong></h2>
+                <div id="sortablelist" class="list-group mb-4 mt-3" data-id="1">
+                    <div class="list-group-item d-flex align-items-center justify-content-between" data-id="2">
+                        <div>
+                            <p class="mb-0 d-inline-flex align-items-center">
+                                List Item 1</p>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex align-items-center justify-content-between" data-id="3">
+                        <div>
+                            <p class="mb-0 d-inline-flex align-items-center">
+                                List Item 2</p>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex align-items-center justify-content-between" data-id="4" style="">
+                        <div>
+                            <p class="mb-0 d-inline-flex align-items-center">
+                                List Item 3</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+
     <script>
-        function allowDrop(event) {
-            event.preventDefault();
-        }
+        new Sortable(labels, {
+            animation: 150,
+            ghostClass: 'blue-background-class'
+        });
+    </script>
 
-        function drag(event) {
-            if (event.target.classList.contains('disabled')) {
-                event.preventDefault();
-                return;
-            }
-            event.dataTransfer.setData("id", event.target.id);
-        }
-
-        function drop(event) {
-            event.preventDefault();
-
-            var id = event.dataTransfer.getData("id");
-            var draggedElement = document.getElementById(id);
-
-            event.target.innerText = draggedElement.innerText;
-
-            // Disable the dragged element
-            if (draggedElement) {
-                draggedElement.classList.add('disabled');
-                draggedElement.setAttribute('draggable', 'false');
-            }
-        }
+    <script>
+        new Sortable(sortablelist, {
+            animation: 150,
+            ghostClass: 'blue-background-class'
+        });
     </script>
 </body>
+
 </html>
