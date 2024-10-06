@@ -1,7 +1,8 @@
-function updateCellBasedOnCharList(select , char_list, ignoreIdx, inWord)
+function updateCellBasedOnCharList(select , char_list, ignoreIdx )
 {
     char_list.forEach((item)=>{
         const cell =document.getElementById(item['row']+"-"+item['col']);
+        const is_in_word=cell.getAttribute("data-is-in-word");
         if (!ignoreIdx)
         {
             // ignoreIdx is for ignoring in select or deselect
@@ -12,22 +13,64 @@ function updateCellBasedOnCharList(select , char_list, ignoreIdx, inWord)
             if (select)
             {
                 cell.classList.add("item-selected");
+                if (is_in_word==="1")
+                {
+                  cell.classList.remove("item-is-in-word");
+                }
                 cell.setAttribute("data-selected",1);
             }
             else
             {  
                 cell.classList.remove("item-selected");
                 cell.setAttribute("data-selected",0);
-                cell.setAttribute("data-is-in-word",0);
-            }
-
-            if(inWord)
-            {
-                cell.setAttribute("data-is-in-word",1);
+                if (is_in_word==="1")
+                {
+                  cell.classList.add("item-is-in-word");
+                }
             }
         }
     })
 }
+
+function updateCellBasedOnWords(char_list,inWord)
+{
+    char_list.forEach((item)=>{
+      const cell =document.getElementById(item['row']+"-"+item['col']);
+
+      if(inWord)
+      {
+          cell.setAttribute("data-is-in-word",1);
+          cell.classList.add("item-is-in-word");
+          cell.setAttribute("data-selected",0);
+      }
+      else
+      {
+          cell.setAttribute("data-is-in-word",0);
+          cell.classList.remove("item-is-in-word");
+
+      }
+
+  })
+}
+
+function displayHideHint( ){
+   const hintWords = document.getElementById("hint-words");
+   const btnHint =document.getElementById("btn-hint");
+   const hide = btnHint.getAttribute('data-hide') ;
+   if(hide==="0")
+   {
+      btnHint.setAttribute('data-hide',"1");
+      hintWords.style.visibility="hidden";
+      btnHint.innerText="🤯 Show me the words";
+   }
+   else
+   {
+      btnHint.setAttribute('data-hide',"0");
+      hintWords.style.visibility="visible";
+      btnHint.innerText="😃 Hide the words";
+   }
+}
+
 
 function addFoundWords(new_word)
 {
@@ -60,7 +103,8 @@ function addFoundWords(new_word)
             if(item['word']===word)
             {
                 const char_list = item["char_list"];
-                updateCellBasedOnCharList(false, char_list,null,false);
+                updateCellBasedOnCharList(false, char_list,null);
+                updateCellBasedOnWords(char_list,false);
             }
             return item['word']!==word;
         });
@@ -72,6 +116,9 @@ function addFoundWords(new_word)
 
 }
 
+function extract_char(total, value, index, array) {
+  return total + value["char"];
+}
 
 const submitForm = async () => {
   const name = document.getElementById("name");
@@ -118,6 +165,7 @@ const submitForm = async () => {
 document.addEventListener("DOMContentLoaded", async function () {
     var char_list = JSON.parse(sessionStorage.getItem("char_list"));
     var words = JSON.parse(sessionStorage.getItem("words"));
+    var currDirection = JSON.parse(sessionStorage.getItem("currDirection"));
     // answer number
     var num = JSON.parse(sessionStorage.getItem("num"));
 
@@ -125,14 +173,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     {
         words.forEach((item)=>{
             const word_char = item['char_list'];
-            updateCellBasedOnCharList(true, word_char,null,true);
+            //updateCellBasedOnCharList(true, word_char,null);
+            updateCellBasedOnWords(word_char,true);
             addFoundWords(item['word']);
         })
     }
 
     if(char_list)
     {
-        updateCellBasedOnCharList(true, char_list, null,false)
+        updateCellBasedOnCharList(true, char_list, null);
     }
 
     if (!num)
@@ -151,42 +200,47 @@ document.addEventListener("DOMContentLoaded", async function () {
         const row = this.getAttribute("data-row");
         const col = this.getAttribute("data-col");
         const selected = this.getAttribute("data-selected");
-        const is_in_word = this.getAttribute("data-is-in-word");
-        if(is_in_word==="1")
-        {
-            // if click on a char already in a word, do nothing
-            return;
-        }
+
         var char_list = JSON.parse(sessionStorage.getItem("char_list"));
 
         if (!char_list || char_list.length===0)
         {
             char_list=[{"char":char,"row":row,"col":col}];
+            currDirection=null;
         }
         else
         {
-            const last_item = char_list.at(-1)
-            if (selected==="1" || (Math.abs(last_item["row"]- row)>1 || Math.abs(last_item["col"]-col)>1))
+            const last_item = char_list.at(-1);
+            if (selected==="1" || 
+              (Math.abs(last_item["row"]- row)>1 || Math.abs(last_item["col"]-col)>1) || 
+              (currDirection && !(((row-last_item["row"]) ===currDirection[0])&&((col-last_item["col"]) ===currDirection[1])) )
+            )
             {
-                updateCellBasedOnCharList(false,char_list,[row,col], false);
+                updateCellBasedOnCharList(false,char_list,[row,col]);
                 char_list=[{"char":char,"row":row,"col":col}];
+                currDirection=null;
             }
             else
             {
+                
                 char_list.push({"char":char,"row":row,"col":col});
+                currDirection = [row-last_item["row"],col-last_item["col"]];
             }
         }
     
         this.classList.add("item-selected");
         this.setAttribute("data-selected",1);
+        const is_in_word=this.getAttribute("data-is-in-word");
+        if (is_in_word==="1")
+        {
+          this.classList.remove("item-is-in-word");
+        }
+        
         sessionStorage.setItem("char_list", JSON.stringify(char_list));
+        sessionStorage.setItem("currDirection", JSON.stringify(currDirection));
 
       });
     });
-
-    function extract_char(total, value, index, array) {
-      return total + value["char"];
-    }
 
     const btnAdd = document.getElementById("btn-add");
     btnAdd.addEventListener("click", function () {
@@ -197,7 +251,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
       }
       // update char_list chars data-is-in-word to 1
-      updateCellBasedOnCharList(true,char_list,null,true);
+      updateCellBasedOnCharList(true,char_list,null);
+      updateCellBasedOnWords(char_list,true);
 
       // update words
       var new_word= char_list.reduce(extract_char,"");
@@ -215,7 +270,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     });
 
-    const btnSubmit =document.getElementById("submit_answer");
+    const btnSubmit =document.getElementById("btn-submit");
     btnSubmit.addEventListener("click", submitForm); 
+
+    const btnHint =document.getElementById("btn-hint");
+    btnHint.addEventListener("click", displayHideHint ); 
+
   
   });
