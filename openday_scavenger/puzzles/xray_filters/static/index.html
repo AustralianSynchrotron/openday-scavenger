@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <script src="/static/js/htmx.min.js"></script>
+        <script src="/static/js/json-enc.js"></script>
+
+        <link href="static/xray_filters.css" rel="stylesheet">
+        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+        <script>
+            function handleCheckboxClick() {
+                let target_attenuation = 1;
+
+                // Get all checkboxes by their class
+                const checkboxes = document.querySelectorAll('.checkbox');
+
+                // Loop through each checkbox and add to target_attenuation if checked
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        target_attenuation *= parseFloat(checkbox.value);
+                    }
+                });
+
+                // Display the target_attenuation
+                document.getElementById('output').innerText = 'Target attenuation: ' + Math.round((1-target_attenuation)*100*10)/10 + '%';
+                document.getElementById('answer').value = Math.round((1-target_attenuation)*100*10)/10
+            }
+
+            // Add event listeners to all checkboxes
+            document.addEventListener('DOMContentLoaded', () => {
+                const checkboxes = document.querySelectorAll('.checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('click', handleCheckboxClick);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Xray filter puzzle</h1>
+
+        <p>Sometimes, the xrays are too strong(!). We need to attenuate them (make them weaker.) We do this by using filters to stop some of those pesky xrays.</p>
+
+        <p>At ADS2, we will be using filters to attenuate our 86.8 keV x-ray beam, so this puzzle is based on a real example.</p>
+
+        <p>In this puzzle, you need to select which filters to put in the way of the beam to stop the x-rays. We have five filters made of different materials,
+            and of difference thicknesses.  If no filters are down, we have 0% attenuation.  If all 5 filters are down, we have 94.9% attenuation.
+            Play around to get to the a target attenuation of <b>92%</b>, then hit submit.</p>
+
+
+    <h3 id="output">Target attenuation: 0%</h3>
+
+        <form id='form' method='POST' action='/submission'>
+            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+            <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+            <input hidden type="text" id="answer" name="answer">
+            <p>
+                <label>
+                    <input type="checkbox" class="checkbox" value="0.8858244085674697">
+                    Nickel 0.2 mm
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="checkbox" class="checkbox" value="0.5410750890125073">
+                    Tungsten 0.05 mm
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="checkbox" class="checkbox" value="0.2927622519498927">
+                    Tungsten 0.1 mm
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="checkbox" class="checkbox" value="0.5077974066101049">
+                    Molybdenum 0.4 mm
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input type="checkbox" class="checkbox" value="0.7125990503853515">
+                    Molybdenum 0.2 mm
+                </label>
+            </p>
+
+            <button>
+                Submit your answer
+            </button>
+        </form>
+    </body>
+</html>
