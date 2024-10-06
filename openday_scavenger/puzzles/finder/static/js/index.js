@@ -1,3 +1,4 @@
+// ************************* START of Cick based Method *******************************
 function updateCellBasedOnCharList(select , char_list, ignoreIdx )
 {
     char_list.forEach((item)=>{
@@ -109,6 +110,10 @@ function addFoundWords(new_word)
             return item['word']!==word;
         });
         console.log("filtered_words",filterd_words);
+        filterd_words.forEach((item)=>{
+            const word_char = item['char_list'];
+            updateCellBasedOnWords(word_char,true);
+        });
         sessionStorage.setItem("words",JSON.stringify(filterd_words));
         document.getElementById(`${word}-parent`).remove();
 
@@ -116,11 +121,11 @@ function addFoundWords(new_word)
 
 }
 
-function extract_char(total, value, index, array) {
+function extractChar(total, value, index, array) {
   return total + value["char"];
 }
 
-const submitForm = async () => {
+ const submitForm = async () => {
   const name = document.getElementById("name");
   const visitor = document.getElementById("visitor");
   const words = JSON.parse(sessionStorage.getItem("words"));
@@ -162,113 +167,132 @@ const submitForm = async () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", async function () {
+
+ function onClickAddWord(){
+  {
+    // add the word to the session state
     var char_list = JSON.parse(sessionStorage.getItem("char_list"));
+    if (!char_list || char_list.length===0)
+    {
+      return;
+    }
+    // update char_list chars data-is-in-word to 1
+    updateCellBasedOnCharList(true,char_list,null);
+    updateCellBasedOnWords(char_list,true);
+
+    // update words
+    var new_word= char_list.reduce(extractChar,"");
     var words = JSON.parse(sessionStorage.getItem("words"));
+    addFoundWords(new_word);
+    if (!words)
+    {
+      words = Array();
+    }
+    words.push({"word":new_word,"char_list":char_list});
+    sessionStorage.setItem("words",JSON.stringify(words));
+
+    // after adding the char_list into words, should empty the char_list
+    sessionStorage.setItem("char_list",JSON.stringify([]));
+  }
+}
+
+ function onClickCell()
+{ 
     var currDirection = JSON.parse(sessionStorage.getItem("currDirection"));
-    // answer number
-    var num = JSON.parse(sessionStorage.getItem("num"));
+    console.log("Click");
+    const char = this.getAttribute("data-text");
+    const row = this.getAttribute("data-row");
+    const col = this.getAttribute("data-col");
+    const selected = this.getAttribute("data-selected");
 
-    if(words)
+    var char_list = JSON.parse(sessionStorage.getItem("char_list"));
+
+    if (!char_list || char_list.length===0)
     {
-        words.forEach((item)=>{
-            const word_char = item['char_list'];
-            //updateCellBasedOnCharList(true, word_char,null);
-            updateCellBasedOnWords(word_char,true);
-            addFoundWords(item['word']);
-        })
+        char_list=[{"char":char,"row":row,"col":col}];
+        currDirection=null;
     }
-
-    if(char_list)
+    else
     {
-        updateCellBasedOnCharList(true, char_list, null);
-    }
-
-    if (!num)
-    {
-        const hint = document.getElementById("hint");
-        num = hint.getAttribute("data-num");
-        sessionStorage.setItem("num",JSON.stringify(num));
-    }
-
-    const chars = document.querySelectorAll(".cell");
-
-    chars.forEach((char) => {
-      char.addEventListener("click", function () {
-        console.log("Click");
-        const char = this.getAttribute("data-text");
-        const row = this.getAttribute("data-row");
-        const col = this.getAttribute("data-col");
-        const selected = this.getAttribute("data-selected");
-
-        var char_list = JSON.parse(sessionStorage.getItem("char_list"));
-
-        if (!char_list || char_list.length===0)
+        const last_item = char_list.at(-1);
+        if (selected==="1" || 
+          (Math.abs(last_item["row"]- row)>1 || Math.abs(last_item["col"]-col)>1) || 
+          (currDirection && !(((row-last_item["row"]) ===currDirection[0])&&((col-last_item["col"]) ===currDirection[1])) )
+        )
         {
+            updateCellBasedOnCharList(false,char_list,[row,col]);
             char_list=[{"char":char,"row":row,"col":col}];
             currDirection=null;
         }
         else
         {
-            const last_item = char_list.at(-1);
-            if (selected==="1" || 
-              (Math.abs(last_item["row"]- row)>1 || Math.abs(last_item["col"]-col)>1) || 
-              (currDirection && !(((row-last_item["row"]) ===currDirection[0])&&((col-last_item["col"]) ===currDirection[1])) )
-            )
-            {
-                updateCellBasedOnCharList(false,char_list,[row,col]);
-                char_list=[{"char":char,"row":row,"col":col}];
-                currDirection=null;
-            }
-            else
-            {
-                
-                char_list.push({"char":char,"row":row,"col":col});
-                currDirection = [row-last_item["row"],col-last_item["col"]];
-            }
+            
+            char_list.push({"char":char,"row":row,"col":col});
+            currDirection = [row-last_item["row"],col-last_item["col"]];
         }
-    
-        this.classList.add("item-selected");
-        this.setAttribute("data-selected",1);
-        const is_in_word=this.getAttribute("data-is-in-word");
-        if (is_in_word==="1")
-        {
-          this.classList.remove("item-is-in-word");
-        }
-        
-        sessionStorage.setItem("char_list", JSON.stringify(char_list));
-        sessionStorage.setItem("currDirection", JSON.stringify(currDirection));
+    }
 
-      });
+    this.classList.add("item-selected");
+    this.setAttribute("data-selected",1);
+    const is_in_word=this.getAttribute("data-is-in-word");
+    if (is_in_word==="1")
+    {
+      this.classList.remove("item-is-in-word");
+    }
+    
+    sessionStorage.setItem("char_list", JSON.stringify(char_list));
+    sessionStorage.setItem("currDirection", JSON.stringify(currDirection));
+}
+
+
+ function initFromSessionStorage(){
+  var char_list = JSON.parse(sessionStorage.getItem("char_list"));
+  var words = JSON.parse(sessionStorage.getItem("words"));
+  
+  // answer number
+  var num = JSON.parse(sessionStorage.getItem("num"));
+
+  if(words)
+  {
+      words.forEach((item)=>{
+          const word_char = item['char_list'];
+          //updateCellBasedOnCharList(true, word_char,null);
+          updateCellBasedOnWords(word_char,true);
+          addFoundWords(item['word']);
+      })
+  }
+
+  if(char_list)
+  {
+      updateCellBasedOnCharList(true, char_list, null);
+  }
+
+  if (!num)
+  {
+      const hint = document.getElementById("hint");
+      num = hint.getAttribute("data-num");
+      sessionStorage.setItem("num",JSON.stringify(num));
+  }
+}
+
+
+// ************************* END of Cick based Method *******************************
+
+
+// ************************ START of touch based Method *****************************
+
+// ************************ END of touch based Method   *****************************
+document.addEventListener("DOMContentLoaded", async function () {
+
+    initFromSessionStorage();
+    const chars = document.querySelectorAll(".cell");
+
+    chars.forEach((char) => {
+      char.addEventListener("click", onClickCell);
     });
 
     const btnAdd = document.getElementById("btn-add");
-    btnAdd.addEventListener("click", function () {
-      // add the word to the session state
-      var char_list = JSON.parse(sessionStorage.getItem("char_list"));
-      if (!char_list || char_list.length===0)
-      {
-        return;
-      }
-      // update char_list chars data-is-in-word to 1
-      updateCellBasedOnCharList(true,char_list,null);
-      updateCellBasedOnWords(char_list,true);
-
-      // update words
-      var new_word= char_list.reduce(extract_char,"");
-      var words = JSON.parse(sessionStorage.getItem("words"));
-      addFoundWords(new_word);
-      if (!words)
-      {
-        words = Array();
-      }
-      words.push({"word":new_word,"char_list":char_list});
-      sessionStorage.setItem("words",JSON.stringify(words));
-
-      // after adding the char_list into words, should empty the char_list
-      sessionStorage.setItem("char_list",JSON.stringify([]));
-
-    });
+    btnAdd.addEventListener("click", onClickAddWord);
 
     const btnSubmit =document.getElementById("btn-submit");
     btnSubmit.addEventListener("click", submitForm); 
