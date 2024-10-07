@@ -56,19 +56,19 @@ function updateCellBasedOnWords(char_list,inWord)
 
 function displayHideHint( ){
    const hintWords = document.getElementById("hint-words");
-   const btnHint =document.getElementById("btn-hint");
+   const btnHint = document.getElementById("btn-hint");
    const hide = btnHint.getAttribute('data-hide') ;
    if(hide==="0")
    {
       btnHint.setAttribute('data-hide',"1");
       hintWords.style.visibility="hidden";
-      btnHint.innerText="🤯 Show me the words";
+      btnHint.innerText="🤯 I need a hint!";
    }
    else
    {
       btnHint.setAttribute('data-hide',"0");
       hintWords.style.visibility="visible";
-      btnHint.innerText="😃 Hide the words";
+      btnHint.innerText="Hide hints 😃";
    }
 }
 
