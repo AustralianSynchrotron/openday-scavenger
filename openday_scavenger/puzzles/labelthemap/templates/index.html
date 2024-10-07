@@ -30,24 +30,24 @@
         <div class="map-container">
             <img src="static/map.svg" alt="Map" class="img-fluid">
             <div id="labels">
-                <div class="label" style="bottom: 94%; left: 29%;" data-id="1">Booster Ring</div>
-                <div class="label" style="bottom: 92%; right: 72%;" data-id="2">SAXS/WAXS</div>
-                <div class="label" style="bottom: 85%; left: 29%;" data-id="3">THz/Far-IR</div>
-                <div class="label" style="bottom: 1%; left: 54%;" data-id="4">NANO</div>
-                <div class="label" style="bottom: 18%; right: 10%;" data-id="5">MX3</div>
-                <div class="label" style="bottom: 9%; right: 6%;" data-id="6">ADS</div>
-                <div class="label" style="bottom: 1%; right: 3%;" data-id="7">LINAC</div>
-                <div class="label" style="bottom: 82%; right: 0%;" data-id="8">MEX1&2</div>
-                <div class="label" style="bottom: 91%; right: 0%;" data-id="9">MX1&2</div>
-                <div class="label" style="bottom: 94%; right: 24%" data-id="10">PD</div>
-                <div class="label" style="bottom: 83%; right: 72%" data-id="11">MCT</div>
-                <div class="label" style="bottom: 74.5%; right: 64%;" data-id="12">Storage Ring</div>
-                <div class="label" style="bottom: 65%; right: 69%;" data-id="13">BioSAXS</div>
-                <div class="label" style="bottom: 56%; right: 71%;" data-id="14">XFM</div>
-                <div class="label" style="bottom: 35%; right: 69%;" data-id="15">IRM</div>
-                <div class="label" style="bottom: 22%; right: 61%;" data-id="16">SXR</div>
-                <div class="label" style="bottom: 11%; right: 50%;" data-id="17">XAS</div>
-                <div class="label" style="bottom: 1%; left: 9%;" data-id="18">IMBL</div>
+                <div class="label-accelerator" style="bottom: 94%; left: 29%;" data-id="1">Booster Ring</div>
+                <div class="label-operational" style="bottom: 92%; right: 72%;" data-id="2">SAXS/WAXS</div>
+                <div class="label-operational" style="bottom: 85%; left: 29%;" data-id="3">THz/Far-IR</div>
+                <div class="label-bright" style="bottom: 1%; left: 54%;" data-id="4">NANO</div>
+                <div class="label-bright" style="bottom: 18%; right: 10%;" data-id="5">MX3</div>
+                <div class="label-bright" style="bottom: 9%; right: 6%;" data-id="6">ADS</div>
+                <div class="label-accelerator" style="bottom: 1%; right: 3%;" data-id="7">LINAC</div>
+                <div class="label-bright" style="bottom: 82%; right: 0%;" data-id="8">MEX1&2</div>
+                <div class="label-operational" style="bottom: 91%; right: 0%;" data-id="9">MX1&2</div>
+                <div class="label-operational" style="bottom: 94%; right: 24%" data-id="10">PD</div>
+                <div class="label-bright" style="bottom: 83%; right: 72%" data-id="11">MCT</div>
+                <div class="label-accelerator" style="bottom: 74.5%; right: 64%;" data-id="12">Storage Ring</div>
+                <div class="label-bright" style="bottom: 65%; right: 69%;" data-id="13">BioSAXS</div>
+                <div class="label-operational" style="bottom: 56%; right: 71%;" data-id="14">XFM</div>
+                <div class="label-operational" style="bottom: 35%; right: 69%;" data-id="15">IR</div>
+                <div class="label-operational" style="bottom: 22%; right: 61%;" data-id="16">SXR</div>
+                <div class="label-operational" style="bottom: 11%; right: 50%;" data-id="17">XAS</div>
+                <div class="label-operational" style="bottom: 1%; left: 9%;" data-id="18">IMBL</div>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
 
     <script>
         function calculateAnswer() {
-            const labels = document.querySelectorAll('#labels .label');
+            const labels = document.querySelectorAll('#labels [class^="label"]');
             let answer = '';
             labels.forEach(label => {
                 const dataId = label.getAttribute('data-id');

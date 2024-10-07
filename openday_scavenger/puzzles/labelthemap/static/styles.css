@@ -13,15 +13,34 @@
     pointer-events: none;
 }
 
-.label {
+.label-bright {
     position: absolute;
     border-radius: 3px;
     padding: 1px 4px;
     background-color: rgba(255, 255, 255, 0.7);
-    border: 1px solid #35bfc9;
+    border: 2px solid #35bfc9;
     cursor: move;
     pointer-events: all;
-    /* min-width: 50px; */
+}
+
+.label-operational {
+    position: absolute;
+    border-radius: 3px;
+    padding: 1px 4px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 2px solid #203d79;
+    cursor: move;
+    pointer-events: all;
+}
+
+.label-accelerator {
+    position: absolute;
+    border-radius: 3px;
+    padding: 1px 4px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 2px solid #0078c1;
+    cursor: move;
+    pointer-events: all;
 }
 
 
