@@ -4,6 +4,7 @@ from datetime import datetime
 from io import BytesIO
 from typing import Any
 
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.puzzles.exceptions import (
@@ -395,7 +396,7 @@ def set_puzzle_state(
             )
     else:
         state_model.updated_at = datetime.now()
-        state_model.state = json.dumps(state)
+        state_model.state = json.dumps(jsonable_encoder(state))
 
         try:
             db_session.commit()
