@@ -28,8 +28,8 @@ questions_answers = {
     Elements.N.value: [
         "This element makes up about 78% of the Earth's atmosphere and is essential for plant growth. What is it?",
         "What element is a key component of amino acids and proteins, playing a crucial role in biological systems?",
-        "This non-metal is often used in fertilizers to promote healthy plant growth. What is it?",
-        "Which element exists as a colorless, odorless gas at room temperature and is often used in the production of ammonia?",
+        "This non-metal is often used in fertilisers to promote healthy plant growth. What is it?",
+        "Which element exists as a colourless, odourless gas at room temperature and is often used in the production of ammonia?",
         "This element is found in explosives like TNT and is known for its role in the nitrogen cycle. What is it?",
         "What element is used in the production of nitric acid, a key reagent in various chemical reactions?",
         "This element is essential for the synthesis of DNA and RNA in living organisms. What is it?",
@@ -56,11 +56,11 @@ questions_answers = {
         "Which element is commonly used in fireworks to produce a bright orange flame?",
     ],
     Elements.Fe.value: [
-        "This element is essential for the production of hemoglobin in the human body and is often associated with red blood cells. What is it?",
+        "This element is essential for the production of haemoglobin in the human body and is often associated with red blood cells. What is it?",
         'The symbol for this element comes from its Latin name, "ferrum". Which element is this?',
         "This element is found in Earth's core and contributes to the planet's magnetic field. What is it?",
         "In ancient times, this element was used to make weapons and tools, and it still forms the backbone of modern infrastructure. What is it?",
-        "This element oxidizes in air, forming a red-brown layer commonly known as rust. What is it?",
+        "This element oxidises in air, forming a red-brown layer commonly known as rust. What is it?",
         "This transition metal is attracted to magnets and often used to create strong magnetic fields. What is it?",
         "This element is commonly used in the construction of buildings and bridges due to its strength and durability. What is it?",
     ],
@@ -76,7 +76,7 @@ questions_answers = {
     ],
     Elements.Cu.value: [
         "This element is known for its excellent electrical conductivity and is commonly used in wiring. What is it?",
-        "This reddish-brown metal has been used by humans for thousands of years to make coins, tools, and jewelry. What is it?",
+        "This reddish-brown metal has been used by humans for thousands of years to make coins, tools, and jewellery. What is it?",
         "Which element is an essential trace nutrient for human health, playing a role in red blood cell production and energy metabolism?",
         "This metal's ability to resist corrosion and its antimicrobial properties make it ideal for plumbing and medical equipment. What is it?",
         "Which element is a key component of bronze, an alloy traditionally used in sculptures and musical instruments?",
@@ -85,7 +85,7 @@ questions_answers = {
     ],
     Elements.Au.value: [
         "This element's chemical symbol is derived from the Latin word 'Aurum.' What is it?",
-        "Which precious metal is highly valued for its use in jewelry and electronics due to its conductivity and resistance to corrosion?",
+        "Which precious metal is highly valued for its use in jewellery and electronics due to its conductivity and resistance to corrosion?",
         "This element is known for its distinctive bright yellow hue and is often associated with wealth and luxury. What is it?",
         "Which element is often used to back currencies and historically served as the basis for the gold standard?",
         "This metal is malleable enough to be hammered into thin sheets and used for gilding. What is the element?",
