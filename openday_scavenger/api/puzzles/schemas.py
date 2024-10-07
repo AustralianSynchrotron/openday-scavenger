@@ -20,7 +20,6 @@ class PuzzleUpdate(BaseModel):
 
 
 class PuzzleCompare(BaseModel):
-    visitor: str | None
     name: str
     answer: str
 

@@ -26,7 +26,7 @@ from .exceptions import (
     PuzzleNotFoundError,
     PuzzleUpdatedError,
 )
-from .schemas import PuzzleCompare, PuzzleCreate, PuzzleUpdate
+from .schemas import PuzzleCreate, PuzzleUpdate
 
 __all__ = (
     "get_all",
@@ -224,37 +224,43 @@ def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate) -> Pu
     return puzzle
 
 
-def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
+def compare_answer(
+    db_session: Session, *, puzzle_name: str, visitor_auth: VisitorAuth, answer: str
+) -> bool:
     """
     Compare the provided answer with the stored answer and return whether it is correct.
 
     Args:
         db_session (Session): The SQLAlchemy session object.
-        puzzle_in (PuzzleCompare): The object containing the visitor's answer that should be compared.
+        puzzle_name (str): The name of the puzzle against which the answer should be checked.
+        visitor_auth (VisitorAuth): The authenticated visitor that accessed the puzzle.
+        answer (str): The answer the visitor gave for the puzzle.
+
+    Returns:
+        bool: Returns true of the answer was correct.
     """
     # Get the database models for the puzzle so we can perform the answer comparison.
-    puzzle = get(db_session, puzzle_in.name)
+    puzzle = get(db_session, puzzle_name)
 
     # We compare the provided answer with the stored answer. Currently this is a very simple
     # case sensitive string comparison. We can add more complicated comparison modes here later.
-    is_correct = puzzle_in.answer == puzzle.answer
+    is_correct = answer == puzzle.answer
 
-    # If the session management is turned off, skip the creation and storage
-    # of a response as it is connected to a visitor uid.
-    if config.SESSIONS_ENABLED:
+    # Only store the response if the visitor is active (not None and authenticated)
+    if visitor_auth.is_active:
         # Get the database model for the visitor so we can record who submitted the answer in the response table.
-        visitor = db_session.query(Visitor).filter(Visitor.uid == puzzle_in.visitor).first()
+        visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_auth.uid).first()
 
         if visitor is None:
             raise VisitorUIDInvalidError(
-                f"Could not find visitor {puzzle_in.visitor} in the database."
+                f"Could not find visitor {visitor_auth.uid} in the database."
             )
 
         # Create a new response entry and store it in the database
         response = Response(
             visitor=visitor,
             puzzle=puzzle,
-            answer=puzzle_in.answer,
+            answer=answer,
             is_correct=is_correct,
             created_at=datetime.now(),
         )

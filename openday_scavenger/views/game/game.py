@@ -97,6 +97,7 @@ async def submit_answer(
     request: Request,
     puzzle_in: Annotated[PuzzleCompare, Form()],
     db: Annotated["Session", Depends(get_db)],
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
 ):
     """
     Endpoint for submitting the puzzle answer.
@@ -115,18 +116,20 @@ async def submit_answer(
     """
     # Check if visitor has already given a correct answer for this puzzle
     responses = get_all_responses(
-        db, filter_by_puzzle_name=puzzle_in.name, filter_by_visitor_uid=puzzle_in.visitor
+        db, filter_by_puzzle_name=puzzle_in.name, filter_by_visitor_uid=visitor.uid
     )
 
     if any([response.is_correct for response in responses]):
         return templates.TemplateResponse(request=request, name="puzzle_correct.html")
 
     # Compare the answer and render the appropriate page
-    if compare_answer(db, puzzle_in):
+    if compare_answer(
+        db, puzzle_name=puzzle_in.name, visitor_auth=visitor, answer=puzzle_in.answer
+    ):
         if (
-            (config.SESSIONS_ENABLED)
-            and (puzzle_in.visitor is not None)
-            and (visitor_has_completed_all_puzzles(db, visitor_uid=puzzle_in.visitor))
+            (visitor.is_active)
+            and (visitor.uid is not None)
+            and (visitor_has_completed_all_puzzles(db, visitor_uid=visitor.uid))
         ):
             return templates.TemplateResponse(request=request, name="puzzle_completed.html")
         else:
