@@ -56,7 +56,7 @@ body {
 }
 /************** Periodic Table End **************/
 
-/***** Question *****/
+/************** Question Start **************/
 .question-container {
   display: flex;
   flex-direction: column;
@@ -75,10 +75,10 @@ body {
 #btn-hint {
   width: 220px;
 }
-/*****************************************/
+/************** Question End **************/
 
-/************** Form Start **************/
-form {
+/* ************* Form Start **************/
+/* form {
   max-width: 600px;
   margin: 50px auto;
   padding: 20px;
@@ -162,11 +162,9 @@ form {
 #form button.ready:hover {
   animation: none;
   background-color: #2aa3b0;
-}
+} */
+/************** Form End ************* */
 
-/************** Form End **************/
-
-/*****************************************/
 /************** Popup Start **************/
 .popup {
   display: none;

@@ -77,12 +77,35 @@
             <i class="fa-solid fa-magnifying-glass"></i>
           </div>
         </button>
-        <button id="btn-answer" class="big-btn btn-2">
-          <div class="btn-content">
-            <span>This is my answer</span>
-            <i class="fas fa-check" style="color: green"></i>
-          </div>
-        </button>
+        <form id="form" method="POST" action="/submission" autocomplete="off">
+          <input
+            hidden
+            type="text"
+            id="name"
+            name="name"
+            value="{{ puzzle }}"
+          />
+          <input
+            hidden
+            type="text"
+            id="visitor"
+            name="visitor"
+            value="{{ visitor }}"
+          />
+          <input
+            hidden
+            type="text"
+            id="answer"
+            name="answer"
+            pattern="[a-zA-Z]+"
+          />
+          <button id="btn-answer" class="big-btn btn-2">
+            <div class="btn-content">
+              <span>This is my answer and submit it</span>
+              <i class="fas fa-check" style="color: green"></i>
+            </div>
+          </button>
+        </form>
       </div>
     </div>
   </div>
