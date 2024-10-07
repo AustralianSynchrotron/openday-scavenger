@@ -30,21 +30,23 @@ def credential_check(credentials: Annotated[HTTPBasicCredentials, Depends(securi
             exception is raised with aM message and appropriate headers.
     """
 
-    if config.ADMIN_AUTH_ENABLED:
-        current_username_bytes = credentials.username.encode("utf8")
-        is_correct_username = secrets.compare_digest(
-            current_username_bytes, config.ADMIN_USER.encode("utf8")
+    if not config.ADMIN_AUTH_ENABLED:
+        return
+
+    current_username_bytes = credentials.username.encode("utf8")
+    is_correct_username = secrets.compare_digest(
+        current_username_bytes, config.ADMIN_USER.encode("utf8")
+    )
+    current_password_bytes = credentials.password.encode("utf8")
+    is_correct_password = secrets.compare_digest(
+        current_password_bytes, config.ADMIN_PASSWORD.encode("utf8")
+    )
+    if not (is_correct_username and is_correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
         )
-        current_password_bytes = credentials.password.encode("utf8")
-        is_correct_password = secrets.compare_digest(
-            current_password_bytes, config.ADMIN_PASSWORD.encode("utf8")
-        )
-        if not (is_correct_username and is_correct_password):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect username or password",
-                headers={"WWW-Authenticate": "Basic"},
-            )
 
 
 router = APIRouter(dependencies=[Depends(credential_check)])
