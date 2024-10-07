@@ -1,0 +1,28 @@
+@media print {
+  body {
+    visibility: hidden;
+  }
+
+  .map-container {
+    visibility: visible;
+  }
+}
+
+.map-container {
+    position: relative;
+    margin-left: 0;
+    max-width: 800px;
+    min-width: 800px;
+    width: 800px;
+}
+
+.map-svg {
+    width: 100%;
+}
+
+.map-marker {
+    position: absolute;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+}

@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<link href="/static/css/map_admin/map-admin.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="my-3 p-3 bg-body rounded shadow-sm">
+    <div class="border-bottom pb-2 d-flex align-middle">
+        <h5 class="mb-0 pe-4 lh-base">Create Puzzle Location Map</h5>
+        <button id="map-btn" class="btn btn-primary">Copy Array String to Clipboard</button>
+    </div>
+
+    <div class="my-1">
+        <p class="text-secondary"><b>Please note: The map below is only a preview used for creating the array!</b></p>
+        <p>To save and update the public map, copy the <b class="text-primary">Location Array</b>
+            string, and update
+            it as the Answer for the 'Map'
+            puzzle on the Puzzles page.</p>
+    </div>
+
+    <div id="map-editor" class="map-container">
+        <img src="/static/images/map/as_layout.svg" class="map-svg" />
+    </div>
+
+    <div>
+        <h6 id="map-array-title" class="text-primary my-1" style="visibility: hidden;">Location Array</h6>
+        <p id="map-array" class="mb-0"></p>
+    </div>
+</div>
+
+<script type="application/javascript" src="/static/js/map_admin/map-admin.js"></script>
+{% endblock %}

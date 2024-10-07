@@ -1,48 +1,60 @@
 <html>
-    <head>
-        <script src="/static/js/htmx.min.js"></script>
-        <script src="/static/js/json-enc.js"></script>
-        <script src="/static/js/bootstrap.bundle.min.js"></script>
 
-        <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
-        <link href="/static/css/fontawesome.min.css" rel="stylesheet"/>
-        <link href="/static/css/solid.min.css" rel="stylesheet"/>
-        <link href="/static/css/openday.css" rel="stylesheet"/>
+<head>
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
 
-        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    </head>
-    
-    <body>
-        <div class="container-fluid">
-            <div class="row flex-nowrap">
-                <aside class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-                    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                        <a href="/admin" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                            <span class="fs-5 d-none d-sm-inline">Admin</span>
-                        </a>
-                        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                            <li class="nav-item">
-                                <a href="/admin/visitors" class="nav-link align-middle px-0">
-                                    <i class="fa-solid fa-users"></i> <span class="ms-1 d-none d-sm-inline">Visitors</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/admin/puzzles" class="nav-link align-middle px-0">
-                                    <i class="fa-solid fa-puzzle-piece"></i> <span class="ms-1 d-none d-sm-inline">Puzzles</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="/admin/responses" class="nav-link align-middle px-0">
-                                    <i class="fa-solid fa-comment"></i> <span class="ms-1 d-none d-sm-inline">Responses</span>
-                                </a>
-                            </li>
-                        </ul>                      
-                    </div>
-                </aside>
-                <div class="col bg-light py-3">
-                    {% block content %}{% endblock %}
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/static/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="/static/css/solid.min.css" rel="stylesheet" />
+    <link href="/static/css/openday.css" rel="stylesheet" />
+
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    {% block header %}{% endblock %}
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <aside class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="/admin"
+                        class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline">Admin</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start"
+                        id="menu">
+                        <li class="nav-item">
+                            <a href="/admin/visitors" class="nav-link align-middle px-0">
+                                <i class="fa-solid fa-users"></i> <span class="ms-1 d-none d-sm-inline">Visitors</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/puzzles" class="nav-link align-middle px-0">
+                                <i class="fa-solid fa-puzzle-piece"></i> <span
+                                    class="ms-1 d-none d-sm-inline">Puzzles</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/responses" class="nav-link align-middle px-0">
+                                <i class="fa-solid fa-comment"></i> <span
+                                    class="ms-1 d-none d-sm-inline">Responses</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/admin/map" class="nav-link align-middle px-0">
+                                <i class="fa-solid fa-map"></i> <span class="ms-1 d-none d-sm-inline">Map</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+            </aside>
+            <div class="col bg-light py-3">
+                {% block content %}{% endblock %}
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>
