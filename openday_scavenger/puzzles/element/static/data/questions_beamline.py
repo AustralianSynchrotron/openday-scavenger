@@ -28,31 +28,28 @@ def generate_options(answer: list[str], count: int = 5):
 COUNT_LESS = 5
 COUNT_MORE = 10
 
-# the answer is in the database. These hard-coded answers must be matched with the database
+# the answer is in the database.
+# These hard-coded the key must be the same as the suffix of the puzzle (path)
+# and answers must be matched with the database
 # openday_scavenger/puzzles/periodic/static/sql/initiate.sql
-GENERAL_ANSWER = Elements.Au.value
-XAS_ANSWER = Elements.Fe.value
-MEX_ANSWER = Elements.Cu.value
+beamline_answers = {
+    "general": Elements.Au.value,
+    "xas": Elements.Fe.value,
+    "mex": Elements.Cu.value,
+    "ads": Elements.Ni.value,
+    "bsx": Elements.N.value,
+    "mct": Elements.Ca.value,
+    "mx": Elements.C.value,
+    "pd": Elements.Si.value,
+}
 
 
 # the key is the suffix of the puzzle (path)
 # e.g. the path /puzzles/element_xas/ will use the questions and options for the "xas" key
-beamline_questions = {
-    "general": {
-        "questions": questions_answers[GENERAL_ANSWER],
-        "options_less": generate_options([GENERAL_ANSWER], COUNT_LESS),
-        "options_more": generate_options(
-            generate_options([GENERAL_ANSWER], COUNT_LESS), COUNT_MORE
-        ),
-    },
-    "xas": {
-        "questions": questions_answers[XAS_ANSWER],
-        "options_less": generate_options([XAS_ANSWER], COUNT_LESS),
-        "options_more": generate_options(generate_options([XAS_ANSWER], COUNT_LESS), COUNT_MORE),
-    },
-    "mex": {
-        "questions": questions_answers[MEX_ANSWER],
-        "options_less": generate_options([MEX_ANSWER], COUNT_LESS),
-        "options_more": generate_options(generate_options([MEX_ANSWER], COUNT_LESS), COUNT_MORE),
-    },
-}
+beamline_questions = {}
+for suffix, answer in beamline_answers.items():
+    beamline_questions[suffix] = {
+        "questions": questions_answers[answer],
+        "options_less": generate_options([answer], COUNT_LESS),
+        "options_more": generate_options(generate_options([answer], COUNT_LESS), COUNT_MORE),
+    }
