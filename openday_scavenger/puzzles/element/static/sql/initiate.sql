@@ -12,7 +12,7 @@ VALUES('element_mex', 'Cu', 1, '/element_mex', '');
 
 INSERT INTO puzzle
 (name, answer, active, location, notes)
-VALUES('element_ads', 'Ni', 1, '/element_ads', '');
+VALUES('element_ads', 'Ge', 1, '/element_ads', '');
 
 INSERT INTO puzzle
 (name, answer, active, location, notes)

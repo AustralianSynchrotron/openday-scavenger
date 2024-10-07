@@ -11,6 +11,7 @@ class Elements(Enum):
     Fe = "Fe"
     Ni = "Ni"
     Cu = "Cu"
+    Ge = "Ge"
     Au = "Au"
 
 
@@ -82,6 +83,9 @@ questions_answers = {
         "Which element is a key component of bronze, an alloy traditionally used in sculptures and musical instruments?",
         "Known for its malleability and ductility, this metal is often used in electrical cables and electronics. What is it?",
         "This element is crucial in the process of creating brass, an alloy commonly used in musical instruments. Which element is it?",
+    ],
+    Elements.Ge.value: [
+        "What element is the sensor in the ADS-1 Energy-Dispersive Detector made of?"
     ],
     Elements.Au.value: [
         "This element's chemical symbol is derived from the Latin word 'Aurum.' What is it?",

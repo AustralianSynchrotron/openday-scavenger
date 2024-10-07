@@ -36,7 +36,7 @@ beamline_answers = {
     "general": Elements.Au.value,
     "xas": Elements.Fe.value,
     "mex": Elements.Cu.value,
-    "ads": Elements.Ni.value,
+    "ads": Elements.Ge.value,
     "bsx": Elements.N.value,
     "mct": Elements.Ca.value,
     "mx": Elements.C.value,
