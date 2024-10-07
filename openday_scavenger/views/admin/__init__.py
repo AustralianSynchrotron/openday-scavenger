@@ -17,7 +17,7 @@ config = get_settings()
 security = HTTPBasic()
 
 
-def credential_check(credentials: Annotated[HTTPBasicCredentials, Depends(security)]) -> str:
+def credential_check(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
     """
     Verify the provided credentials against the stored admin username and password.
 
@@ -28,32 +28,26 @@ def credential_check(credentials: Annotated[HTTPBasicCredentials, Depends(securi
     Raises:
         HTTPException: If the username or password is incorrect, an HTTP 401 Unauthorized
             exception is raised with aM message and appropriate headers.
-
-    Returns:
-        str: The username if the credentials are correct.
     """
-    current_username_bytes = credentials.username.encode("utf8")
-    is_correct_username = secrets.compare_digest(
-        current_username_bytes, config.ADMIN_USER.encode("utf8")
-    )
-    current_password_bytes = credentials.password.encode("utf8")
-    is_correct_password = secrets.compare_digest(
-        current_password_bytes, config.ADMIN_PASSWORD.encode("utf8")
-    )
-    if not (is_correct_username and is_correct_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Basic"},
+
+    if config.ADMIN_AUTH_ENABLED:
+        current_username_bytes = credentials.username.encode("utf8")
+        is_correct_username = secrets.compare_digest(
+            current_username_bytes, config.ADMIN_USER.encode("utf8")
         )
-    return credentials.username
+        current_password_bytes = credentials.password.encode("utf8")
+        is_correct_password = secrets.compare_digest(
+            current_password_bytes, config.ADMIN_PASSWORD.encode("utf8")
+        )
+        if not (is_correct_username and is_correct_password):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect username or password",
+                headers={"WWW-Authenticate": "Basic"},
+            )
 
 
-router = (
-    APIRouter(dependencies=[Depends(credential_check)])
-    if config.ADMIN_AUTH_ENABLED
-    else APIRouter()
-)
+router = APIRouter(dependencies=[Depends(credential_check)])
 
 router.include_router(admin_router, prefix="")
 router.include_router(puzzle_router, prefix="/puzzles")
