@@ -337,6 +337,9 @@ def get_puzzle_state(
     Returns:
         dict[str, Any]: The state as a dictionary that the puzzle can structure as it sees fit.
     """
+    # Puzzle states only work if there is a valid and authenticated visitor
+    if not visitor_auth.is_active:
+        return {}
 
     # Get the database model for the visitor.
     visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_auth.uid).first()
@@ -371,6 +374,9 @@ def set_puzzle_state(
         visitor_auth (VisitorAuth): The authenticated visitor that accessed the puzzle.
         state (dict[str, Any]): The state as a dictionary that the puzzle can structure as it sees fit.
     """
+    # Puzzle states only work if there is a valid and authenticated visitor
+    if not visitor_auth.is_active:
+        return
 
     # Get the database model for the visitor.
     visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_auth.uid).first()
