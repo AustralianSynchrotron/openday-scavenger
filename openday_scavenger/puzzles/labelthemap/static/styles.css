@@ -1,25 +1,43 @@
-.dropzone {
+/* .dropzone {
     border: 1px solid #35bfc9;
     border-radius: 5px;
     min-height: 20px;
     min-width: 50px;
     position: absolute;
-}
+    cursor: move;
+    } */
 
-.map-container {
-    position: relative;
+    .map-container {
+        position: relative;
     display: inline-block;
 }
 
-/* .disabled {
+
+.label-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    opacity: 0.5;
-} */
-.list-group .list-group-item {
-    border-radius: 0;
-    cursor: move;
 }
 
-.list-group .list-group-item:hover {
-    background-color: #f7f7f7;
+.label {
+    position: absolute;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid #35bfc9;
+    cursor: move;
+    pointer-events: all;
+}
+
+
+.btn-custom {
+    background-color: #35bfc9;
+    color: white;
+}
+.btn-custom:hover {
+    background-color: #2aa3b0;
+    color: white;
 }

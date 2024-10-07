@@ -21,77 +21,88 @@
 </head>
 
 <body>
-    <h1 class="text-center my-4">Label the map!</h1>
+    <h1 class="text-center my-4">Help us label the map!</h1>
+    <p class="text-center my-4">This map of the Synchrotron got all scrambled up, and all the labels are in the wrong
+        place!</p>
+    <p class="text-center my-4">Help us get things right by dragging the labels to the correct locations on the map.</p>
 
-    <!-- Image of the map with drop zones -->
     <div class="container d-flex justify-content-center">
 
         <div class="map-container">
             <img src="static/map.svg" alt="Map" class="img-fluid">
             <div id="labels">
-                <div id="dropzone1" class="dropzone" style="top: 29%; left: 70%;">LINAC</div>
-                <div id="dropzone2" class="dropzone" style="top: 33%; left: 55%;">Booster Ring</div>
-                <div id="dropzone3" class="dropzone" style="top: 20%; left: 58%;">Storage Ring</div>
-                <div id="dropzone4" class="dropzone" style="top: 72%; left: 66%;">IMBL</div>
-                <div id="dropzone5" class="dropzone" style="top: 59%; left: 83%;">XFM</div>
-                <div id="dropzone6" class="dropzone" style="top: 50%; left: 92%;">MX3</div>
-                <div id="dropzone7" class="dropzone" style="top: 24%; left: 87%;">MX1&2</div>
-                <div id="dropzone8" class="dropzone" style="top: 16%; left: 79%;">BioSAXS</div>
-                <div id="dropzone9" class="dropzone" style="top: 9%; left: 73%;">THz/Far-IR</div>
-                <div id="dropzone10" class="dropzone" style="top: 7%; left: 65%;">IRM</div>
-                <div id="dropzone11" class="dropzone" style="top: 3%; left: 56%;">SXR</div>
-                <div id="dropzone12" class="dropzone" style="top: 12%; left: 38%;">SAXS/WAXS</div>
-                <div id="dropzone13" class="dropzone" style="top: 18%; left: 31%;">MEX1&2</div>
-                <div id="dropzone14" class="dropzone" style="top: 37%; left: 28%;">XAS</div>
-                <div id="dropzone15" class="dropzone" style="top: 49%; left: 34%;">PD</div>
-                <div id="dropzone16" class="dropzone" style="top: 59%; left: 35%;">ADS</div>
-                <div id="dropzone17" class="dropzone" style="top: 65%; left: 39%;">MCT</div>
-                <div id="dropzone18" class="dropzone" style="top: 73%; left: 12%;">NANO</div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-9 col-xl-10 order-2 order-sm-1 mt-3">
-                <h2 class="h6"><strong>Sortable List</strong></h2>
-                <div id="sortablelist" class="list-group mb-4 mt-3" data-id="1">
-                    <div class="list-group-item d-flex align-items-center justify-content-between" data-id="2">
-                        <div>
-                            <p class="mb-0 d-inline-flex align-items-center">
-                                List Item 1</p>
-                        </div>
-                    </div>
-                    <div class="list-group-item d-flex align-items-center justify-content-between" data-id="3">
-                        <div>
-                            <p class="mb-0 d-inline-flex align-items-center">
-                                List Item 2</p>
-                        </div>
-                    </div>
-                    <div class="list-group-item d-flex align-items-center justify-content-between" data-id="4" style="">
-                        <div>
-                            <p class="mb-0 d-inline-flex align-items-center">
-                                List Item 3</p>
-                        </div>
-                    </div>
-                </div>
+                <div class="label" style="top: 29%; left: 70%;" data-id="1">Booster Ring</div>
+                <div class="label" style="top: 33%; left: 55%;" data-id="2">XFM</div>
+                <div class="label" style="top: 20%; left: 58%;" data-id="3">Storage Ring</div>
+                <div class="label" style="top: 72%; left: 66%;" data-id="4">THz/Far-IR</div>
+                <div class="label" style="top: 59%; left: 83%;" data-id="5">MCT</div>
+                <div class="label" style="top: 50%; left: 92%;" data-id="6">SAXS/WAXS</div>
+                <div class="label" style="top: 24%; left: 87%;" data-id="7">XAS</div>
+                <div class="label" style="top: 16%; left: 79%;" data-id="8">ADS</div>
+                <div class="label" style="top: 9%; left: 73%;" data-id="9">IMBL</div>
+                <div class="label" style="top: 7%; left: 65%;" data-id="10">MX3</div>
+                <div class="label" style="top: 3%; left: 56%;" data-id="11">SXR</div>
+                <div class="label" style="top: 12%; left: 38%;" data-id="12">NANO</div>
+                <div class="label" style="top: 18%; left: 31%;" data-id="13">BioSAXS</div>
+                <div class="label" style="top: 37%; left: 28%;" data-id="14">PD</div>
+                <div class="label" style="top: 49%; left: 34%;" data-id="15">MEX1&2</div>
+                <div class="label" style="top: 59%; left: 35%;" data-id="16">LINAC</div>
+                <div class="label" style="top: 65%; left: 39%;" data-id="17">MX1&2</div>
+                <div class="label" style="top: 73%; left: 12%;" data-id="18">IRM</div>
             </div>
         </div>
     </div>
 
+
+    <form id='form' method='POST' action='/submission' class="text-center">
+        <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+        <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+        <input hidden type="text" id="answer" name="answer" value="">
+        <button class="btn btn-custom" onclick="setAnswer()">
+            Submit your answer
+        </button>
+    </form>
 
     <script>
+        function calculateAnswer() {
+            const labels = document.querySelectorAll('#labels .label');
+            let answer = '';
+            labels.forEach(label => {
+                const dataId = label.getAttribute('data-id');
+                const textContent = label.textContent.trim();
+                answer += `${dataId}:${textContent};`;
+            });
+            return answer;
+        }
+
+        function setAnswer() {
+            const answerField = document.getElementById('answer');
+            answerField.value = calculateAnswer();
+        }
+
         new Sortable(labels, {
+            swap: true,
+            swapClass: "sortable-swap-highlight",
             animation: 150,
-            ghostClass: 'blue-background-class'
+            ghostClass: 'blue-background-class',
+            onEnd: function (evt) {
+                // Get the two elements involved in the swap
+                var itemA = evt.item;
+                var itemB = evt.swapItem;
+
+                // Swap their styles
+                var tempStyle = itemA.style.cssText;
+                itemA.style.cssText = itemB.style.cssText;
+                itemB.style.cssText = tempStyle;
+
+                // Swap their data-ids
+                var tempId = itemA.getAttribute('data-id');
+                itemA.setAttribute('data-id', itemB.getAttribute('data-id'));
+                itemB.setAttribute('data-id', tempId);
+            }
         });
     </script>
 
-    <script>
-        new Sortable(sortablelist, {
-            animation: 150,
-            ghostClass: 'blue-background-class'
-        });
-    </script>
 </body>
 
 </html>
