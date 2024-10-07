@@ -24,35 +24,34 @@
     <h1 class="text-center my-4">Help us label the map!</h1>
     <p class="text-center my-4">This map of the Synchrotron got all scrambled up, and all the labels are in the wrong
         place!</p>
-    <p class="text-center my-4">Help us get things right by dragging the labels to the correct locations on the map.</p>
+    <p class="text-center my-4">Help us by dragging the labels to the correct locations on the map.</p>
 
     <div class="container d-flex justify-content-center">
 
         <div class="map-container">
             <img src="static/map.svg" alt="Map" class="img-fluid">
             <div id="labels">
-                <div class="label" style="top: 29%; left: 70%;" data-id="1">Booster Ring</div>
-                <div class="label" style="top: 33%; left: 55%;" data-id="2">XFM</div>
-                <div class="label" style="top: 20%; left: 58%;" data-id="3">Storage Ring</div>
-                <div class="label" style="top: 72%; left: 66%;" data-id="4">THz/Far-IR</div>
-                <div class="label" style="top: 59%; left: 83%;" data-id="5">MCT</div>
-                <div class="label" style="top: 50%; left: 92%;" data-id="6">SAXS/WAXS</div>
-                <div class="label" style="top: 24%; left: 87%;" data-id="7">XAS</div>
-                <div class="label" style="top: 16%; left: 79%;" data-id="8">ADS</div>
-                <div class="label" style="top: 9%; left: 73%;" data-id="9">IMBL</div>
-                <div class="label" style="top: 7%; left: 65%;" data-id="10">MX3</div>
-                <div class="label" style="top: 3%; left: 56%;" data-id="11">SXR</div>
-                <div class="label" style="top: 12%; left: 38%;" data-id="12">NANO</div>
-                <div class="label" style="top: 18%; left: 31%;" data-id="13">BioSAXS</div>
-                <div class="label" style="top: 37%; left: 28%;" data-id="14">PD</div>
-                <div class="label" style="top: 49%; left: 34%;" data-id="15">MEX1&2</div>
-                <div class="label" style="top: 59%; left: 35%;" data-id="16">LINAC</div>
-                <div class="label" style="top: 65%; left: 39%;" data-id="17">MX1&2</div>
-                <div class="label" style="top: 73%; left: 12%;" data-id="18">IRM</div>
+                <div class="label" style="bottom: 94%; left: 29%;" data-id="1">Booster Ring</div>
+                <div class="label" style="bottom: 92%; right: 72%;" data-id="2">SAXS/WAXS</div>
+                <div class="label" style="bottom: 85%; left: 29%;" data-id="3">THz/Far-IR</div>
+                <div class="label" style="bottom: 1%; left: 54%;" data-id="4">NANO</div>
+                <div class="label" style="bottom: 18%; right: 10%;" data-id="5">MX3</div>
+                <div class="label" style="bottom: 9%; right: 6%;" data-id="6">ADS</div>
+                <div class="label" style="bottom: 1%; right: 3%;" data-id="7">LINAC</div>
+                <div class="label" style="bottom: 82%; right: 0%;" data-id="8">MEX1&2</div>
+                <div class="label" style="bottom: 91%; right: 0%;" data-id="9">MX1&2</div>
+                <div class="label" style="bottom: 94%; right: 24%" data-id="10">PD</div>
+                <div class="label" style="bottom: 83%; right: 72%" data-id="11">MCT</div>
+                <div class="label" style="bottom: 74.5%; right: 64%;" data-id="12">Storage Ring</div>
+                <div class="label" style="bottom: 65%; right: 69%;" data-id="13">BioSAXS</div>
+                <div class="label" style="bottom: 56%; right: 71%;" data-id="14">XFM</div>
+                <div class="label" style="bottom: 35%; right: 69%;" data-id="15">IRM</div>
+                <div class="label" style="bottom: 22%; right: 61%;" data-id="16">SXR</div>
+                <div class="label" style="bottom: 11%; right: 50%;" data-id="17">XAS</div>
+                <div class="label" style="bottom: 1%; left: 9%;" data-id="18">IMBL</div>
             </div>
         </div>
     </div>
-
 
     <form id='form' method='POST' action='/submission' class="text-center">
         <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
