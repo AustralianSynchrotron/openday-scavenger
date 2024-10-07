@@ -63,17 +63,13 @@ h1 {
     text-align: center;
   }
 
-.item-selected {
-    background-color: #d6d6d6;
-}
-
 
 .row {
     display: flex;
     justify-content: space-between;
-    width: 80%;
+    /* width: 80%;
     margin-left: 8%;
-    margin-right: 8%;
+    margin-right: 8%; */
  
 }
 
@@ -87,15 +83,20 @@ h1 {
 }
 
 
+.item-selected {
+    background-color: #d6d6d6;
+}
+
+.item-is-in-word {
+    background-color: #cdb1d8;
+}
+
 /*********************** Found Words List Start *******************/
 .found-words {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 10px;
     justify-content: center;
-    /* width: 80%;
-    margin-left: 8%;
-    margin-right: 8%; */
     margin-bottom : 10px
 }
 
@@ -117,10 +118,36 @@ h1 {
   }
   
 .word-text {
-    
     font-size: 0.8rem;
     font-weight: bold;
 }
 
 
 /*********************** Found Words List End *******************/
+
+
+/*********************** Hint Words Start  *********************/
+.hint-word-parent {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    justify-content: center;
+    margin-bottom : 10px;
+    visibility: hidden;
+    width: 80%;
+    /* padding: 10px; */
+    margin-left: 8%;
+    margin-right: 8%;
+    margin-top: 10px;
+
+}
+
+.hint-word {
+    justify-content: center;
+    position: relative;
+    background-color: #e4f1ff;
+    border-radius: 8px;
+}
+
+
+/********************** Hint Words End  ***********************/
