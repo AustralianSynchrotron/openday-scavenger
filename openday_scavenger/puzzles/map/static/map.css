@@ -1,0 +1,63 @@
+body {
+    -moz-font-feature-settings: 'kern', 'mgrk';
+    -moz-font-feature-settings: 'kern=1', 'mgrk=1';
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-feature-settings: 'kern', 'mgrk';
+    -webkit-font-smoothing: antialiased;
+    background-color: #f0f7fa;
+    background: radial-gradient(#dae7ff, #f0f7fa);
+    background-size: 300vw 300vh;
+    background-position: 10vw 20vh;
+    color: #2a2a2a;
+    font-family: 'Poppins', sans-serif;
+    font-feature-settings: 'kern', 'mgrk';
+    font-size: 16px;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background-color: royalblue;
+    color: #fff;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.title {
+    color: dodgerblue;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    margin-top: 24px;
+    text-align: center;
+}
+
+.container {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.map-wrapper {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 5px 0 deepskyblue;
+    margin-bottom: 3em;
+    margin-top: 1em;
+}
+
+.instructions p {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+}
+
+p.notice {
+    color: midnightblue;
+}
