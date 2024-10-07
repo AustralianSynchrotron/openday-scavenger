@@ -16,14 +16,6 @@ from openday_scavenger.api.puzzles.service import get
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
-"""
-# NOTE: LS needed to install these binaries on my mac
-# for word_searh_generator pillow dependency to work
-# brew install libtiff libjpeg webp little-cms2brew install libtiff libjpeg webp little-cms2
-# from this post:
-# https://stackoverflow.com/questions/44043906/the-headers-or-library-files-could-not-be-found-for-jpeg-installing-pillow-on
-"""
-
 router = APIRouter()
 
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
@@ -74,7 +66,7 @@ def get_puzzle_data(
     return data
 
 
-def create_puzzle(words: list) -> tuple:
+def generate_puzzle(words: list) -> tuple:
     """
     Create a new word search puzzle based on the puzzle name
     """
@@ -110,7 +102,7 @@ def fetch_puzzle(words: list) -> tuple:
         words = PUZZLE_DEFAULT.split(",")
         # should we populate the database with the solution?
 
-    return create_puzzle(words)
+    return generate_puzzle(words)
 
 
 def get_puzzle_from_db(puzzle_name: str, db_session: Session) -> Puzzle:
