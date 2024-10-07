@@ -270,7 +270,7 @@ def get_map_locations(db_session: Session) -> str:
 
     Args:
         db_session (Session): The SQLAlchemy session object.
-    
+
     Returns:
         String representation of map locations array entered as the answer of map 'puzzle'
     """
