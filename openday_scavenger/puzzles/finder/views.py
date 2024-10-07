@@ -72,7 +72,7 @@ def generate_puzzle(words: list) -> tuple:
     """
     # Get the puzzle data
     ww = ", ".join([w for w in words])
-    puzzle_dim = max(*[len(w) for w in words], 8) + 1
+    puzzle_dim = max(*[len(w) for w in words], 6) + 1
     
     # Generate a new word search puzzle
     ws = WordSearch(words = ww, size = puzzle_dim)
