@@ -36,9 +36,9 @@
             </td>
             <td>
                 {% if puzzle.active is true %}
-                <button type="button" class="btn btn-danger" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": false}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Disable</button>
+                <button type="button" class="btn btn-danger waves-effect" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": false}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Disable</button>
                 {% else %}
-                <button type="button" class="btn btn-success" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": true}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Enable</button>
+                <button type="button" class="btn btn-success waves-effect" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": true}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Enable</button>
                 {% endif %}
             </td>
         </tr>
