@@ -28,6 +28,7 @@ __all__ = (
     "create",
     "update",
     "compare_answer",
+    "get_map_locations",
     "record_access",
     "generate_puzzle_qr_code",
     "generate_puzzle_qr_codes_pdf",
@@ -261,6 +262,22 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
             raise
 
     return is_correct
+
+
+def get_map_locations(db_session: Session) -> str:
+    """
+    Return stored map 'puzzle' locations array string.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+    
+    Returns:
+        String representation of map locations array entered as the answer of map 'puzzle'
+    """
+    # Get and return the "map" puzzle answer which contains the pixel co-ordinates of puzzle locations to be displayed.
+    puzzle = get(db_session, "map")
+    locations = puzzle.answer.split(",")
+    return locations
 
 
 def record_access(db_session: Session, puzzle_name: str, visitor_uid: str) -> Access:
