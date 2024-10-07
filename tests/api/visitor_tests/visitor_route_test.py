@@ -4,7 +4,7 @@ from openday_scavenger.api.visitors.schemas import VisitorCreate, VisitorPoolCre
 from openday_scavenger.api.visitors.service import create_visitor_pool, get_visitor_pool
 
 
-def test_create_unknown_user(mock_client):
+def test_create_unknown_user(mock_client, admin_auth):
     """
     Test the creation of a visitor with an unknown UID.
 
@@ -21,12 +21,12 @@ def test_create_unknown_user(mock_client):
     unknown_uid = "notuid"
     VisitorCreate(uid=unknown_uid)
     response = mock_client.post(
-        "/admin/visitors/", json=VisitorCreate(uid=unknown_uid).model_dump()
+        "/admin/visitors/", json=VisitorCreate(uid=unknown_uid).model_dump(), auth=admin_auth
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
-def test_visitor_pool(mock_client):
+def test_visitor_pool(mock_client, admin_auth):
     """
     Test the create visitor pool endpoint.
 
@@ -40,11 +40,11 @@ def test_visitor_pool(mock_client):
         The response status code is 200 OK.
     """
 
-    response = mock_client.post("/admin/visitors/pool")
+    response = mock_client.post("/admin/visitors/pool", auth=admin_auth)
     assert response.status_code == status.HTTP_200_OK
 
 
-def test_create_user(empty_db, mock_client):
+def test_create_user(empty_db, mock_client, admin_auth):
     """
     Test the creation of a user from the visitor pool.
 
@@ -64,6 +64,6 @@ def test_create_user(empty_db, mock_client):
     visitor_uid = get_visitor_pool(empty_db, limit=1)[0].uid
     VisitorCreate(uid=visitor_uid)
     response = mock_client.post(
-        "/admin/visitors/", json=VisitorCreate(uid=visitor_uid).model_dump()
+        "/admin/visitors/", json=VisitorCreate(uid=visitor_uid).model_dump(), auth=admin_auth
     )
     assert response.status_code == status.HTTP_200_OK
