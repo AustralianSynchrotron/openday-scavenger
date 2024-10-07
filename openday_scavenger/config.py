@@ -43,6 +43,10 @@ class Settings(BaseSettings):
     SESSIONS_ENABLED: bool = True
     TEST_ENDPOINT_ENABLED: bool = False
 
+    ADMIN_AUTH_ENABLED: bool = True
+    ADMIN_USER: str = "admin"
+    ADMIN_PASSWORD: str = "admin"
+
     model_config = SettingsConfigDict(env_file=".env")
 
     @computed_field()  # type: ignore[misc]
