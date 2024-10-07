@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from openday_scavenger.api.visitors.schemas import VisitorAuth
+
 
 class PuzzleCreate(BaseModel):
     name: str
@@ -21,6 +23,11 @@ class PuzzleCompare(BaseModel):
     visitor: str | None
     name: str
     answer: str
+
+
+class PuzzleAccess(BaseModel):
+    visitor: VisitorAuth
+    name: str
 
 
 class ResponseTestCreate(BaseModel):
