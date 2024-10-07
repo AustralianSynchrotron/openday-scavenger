@@ -76,10 +76,13 @@ function displayHideHint( ){
 function addFoundWords(new_word)
 {
     // add the new_word into the found words list 
-    const found_words=document.getElementById("words");
+    const found_words = document.getElementById("words");
     const innerDiv = document.createElement('div');
     innerDiv.setAttribute("id",`${new_word}-parent`);
     innerDiv.classList.add("word");
+    innerDiv.classList.add("btn");
+    innerDiv.classList.add("btn-outline-secondary");
+    // innerDiv.classList.add("rounded-pill");
     const innerText = document.createElement('div');
     innerText.classList.add("word-text");
     innerText.textContent=new_word;

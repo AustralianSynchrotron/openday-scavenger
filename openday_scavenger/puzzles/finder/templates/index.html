@@ -18,10 +18,10 @@
     </head>
     <body>
         <!-- <h1>Finder Puzzle</h1> -->
-        <h2 id="question" > 🔍 Can you find the hidden treasure? </h2>
-        <h3 id="question" >{{question}} </h3>
-        <h5 id="hint" data-num="{{data['words']|length}}"> Select letters in order to build a word. 😎</h5>
-        <h5>😏 Then use the button below to add the words to your answer! 👇</h5>
+        <h1 id="question" > 🔍 Can you find the hidden treasure? </h1>
+        <h2 id="question" >{{question}} </h2>
+        <h4 id="hint" data-num="{{data['words']|length}}"> Select letters in order to build a word. 😎</h4>
+        <h5>😏 Use the button below to add words to your answer! 👇</h5>
         <div class="container" style="margin-top:20px;">
             {% for i in range(data['puzzle']|length ) %}
             <div class="row">
@@ -34,7 +34,7 @@
         </div>
         
         {% include 'hint_words.html' %}
-        <button id="btn-hint" data-hide="1">🤯 I need a hint!</button>
+        <button id="btn-hint" class="btn btn-outline-primary rounded-pill" data-hide="1">🤯 I need a hint!</button>
         <div class="form-parent">
             {% include 'found_words.html' %}
             <div class = 'form-button-container'>
