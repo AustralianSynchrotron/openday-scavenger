@@ -23,7 +23,10 @@ from pytest_mock.plugin import MockerFixture
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import Base, create_tables, engine, get_db
+from openday_scavenger.config import get_settings
 from openday_scavenger.main import app
+
+config = get_settings()
 
 
 @pytest.fixture(scope="function")
@@ -53,7 +56,7 @@ def empty_db() -> Generator[Session, None, None]:
 
 
 @pytest.fixture(scope="function")
-def mock_client(mocker: MockerFixture, empty_db: Session):
+def mock_client(mocker: MockerFixture, empty_db: Session) -> Generator[TestClient, None, None]:
     """
     Fixture to provide a test client for each test function.
 
@@ -75,3 +78,8 @@ def mock_client(mocker: MockerFixture, empty_db: Session):
     mocker.patch.dict(app.dependency_overrides, {get_db: _get_empty_db})
     with TestClient(app) as client:
         yield client
+
+
+@pytest.fixture(scope="function")
+def admin_auth() -> tuple[str, str]:
+    return (config.ADMIN_USER, config.ADMIN_PASSWORD)
