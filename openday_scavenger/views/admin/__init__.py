@@ -30,9 +30,6 @@ def credential_check(credentials: Annotated[HTTPBasicCredentials, Depends(securi
             exception is raised with aM message and appropriate headers.
     """
 
-    if not config.ADMIN_AUTH_ENABLED:
-        return
-
     current_username_bytes = credentials.username.encode("utf8")
     is_correct_username = secrets.compare_digest(
         current_username_bytes, config.ADMIN_USER.encode("utf8")
@@ -49,7 +46,11 @@ def credential_check(credentials: Annotated[HTTPBasicCredentials, Depends(securi
         )
 
 
-router = APIRouter(dependencies=[Depends(credential_check)])
+router = (
+    APIRouter(dependencies=[Depends(credential_check)])
+    if config.ADMIN_AUTH_ENABLED
+    else APIRouter()
+)
 
 router.include_router(admin_router, prefix="")
 router.include_router(puzzle_router, prefix="/puzzles")
