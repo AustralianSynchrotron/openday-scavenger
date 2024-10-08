@@ -1,6 +1,6 @@
 import json
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
 from typing import Any
 
@@ -476,11 +476,18 @@ def generate_test_data(
     visitors_pool = get_visitor_pool(db_session, limit=number_visitors)
     puzzles = get_all(db_session, only_active=True)
 
+    start_time = datetime.now().replace(hour=9, minute=30, second=0)
+    end_time = start_time + timedelta(hours=6)
+
     # Loop over all visitors from the pool, add them to the visitor table and
     # generate a number of responses for each puzzle.
     try:
         for visitor_from_pool in visitors_pool:
-            visitor = Visitor(uid=visitor_from_pool.uid, checked_in=datetime.now())
+            random_time = start_time + (end_time - start_time) * random.random()
+            checkout_time = random_time + (end_time - random_time) * random.random()
+            visitor = Visitor(
+                uid=visitor_from_pool.uid, checked_in=random_time, checked_out=checkout_time
+            )
             db_session.add(visitor)
             db_session.delete(visitor_from_pool)
 
