@@ -18,7 +18,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
-            { fps: 10, qrbox: {width: 100, height: 100} },
+            { fps: 10, qrbox: {width: 300, height: 300} },
             false
         );
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
@@ -35,7 +35,7 @@
                 <p>Please go to the registration desk and pick up your prize!</p>
             {% else %}
                 <p>Find some puzzles!</p>
-                <div class="mx-auto" id="reader" style="width: 400px;"></div>
+                <div class="mx-auto" id="reader" style="width: 800px;"></div>
                 <div>
                     {% if number_correct_responses > 0 %}
                     <div class="progress" role="progressbar">
