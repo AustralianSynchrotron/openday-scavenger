@@ -30,6 +30,7 @@ from .schemas import PuzzleCreate, PuzzleUpdate
 
 __all__ = (
     "get_all",
+    "get",
     "count",
     "get_all_responses",
     "count_responses",

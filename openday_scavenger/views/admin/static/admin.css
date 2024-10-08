@@ -21,36 +21,6 @@
     box-shadow: 0 0 0 0.2rem transparent;
 }
 
-.form-check-input {
-    border-color: #ad5994;
-    background-color: #b56a9f;
-}
-
-
-.form-check-input:checked ~ .form-check-label::before {
-    color: #fff;
-    border-color: #82a82d;
-    background-color: #91bc32;
-}
-
-.form-check-input:focus:not(:checked) ~ .form-check-label::before {
-    border-color: #a9d051;
-}
-
-.form-check-input:not(:disabled):active ~ .form-check-label::before {
-    color: #c7e18d;
-    background-color: #c7e18d;
-    border-color: #c7e18d;
-}
-
-.form-check-input[disabled] ~ .form-check-label, .form-check-input:disabled ~ .form-check-label {
-    color: #6c757d;
-}
-
-.form-check-input[disabled] ~ .form-check-label::before, .form-check-input:disabled ~ .form-check-label::before {
-    background-color: #e9ecef;
-}
-
 .form-check-label::before {
     background-color: #fff;
     border: #adb5bd solid 2px;

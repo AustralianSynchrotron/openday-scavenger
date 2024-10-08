@@ -10,8 +10,9 @@ from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
     create,
-    generate_puzzle_qr_code,
-    generate_puzzle_qr_codes_pdf,
+    generate_qr_code,
+    generate_qr_codes_pdf,
+    get,
     get_all,
     update,
 )
@@ -63,6 +64,20 @@ async def create_puzzle(
 async def render_puzzle_table(request: Request, db: Annotated["Session", Depends(get_db)]):
     """Render the table of puzzles on the admin page"""
     return await _render_puzzles_table(request, db)
+
+
+@router.get("/{puzzle_name}/edit_modal")
+async def render_puzzle_edit_modal(
+    puzzle_name: str, request: Request, db: Annotated["Session", Depends(get_db)]
+):
+    """Render the edit modal for puzzle entries on the admin page"""
+    puzzle = get(db, puzzle_name=puzzle_name)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="puzzles_edit_modal.html",
+        context={"puzzle": puzzle},
+    )
 
 
 @router.put("/{puzzle_name}")

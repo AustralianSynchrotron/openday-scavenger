@@ -9,6 +9,7 @@
             <th>QR Code</th>
             <th>Link to Puzzle</th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -36,10 +37,13 @@
             </td>
             <td>
                 {% if puzzle.active is true %}
-                <button type="button" class="btn btn-danger waves-effect" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": false}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Disable</button>
+                <button type="button" class="btn btn-danger" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": false}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Disable</button>
                 {% else %}
-                <button type="button" class="btn btn-success waves-effect" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": true}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Enable</button>
+                <button type="button" class="btn btn-success" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": true}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Enable</button>
                 {% endif %}
+            </td>
+            <td>
+                <button type="button" class="btn btn-warning" hx-get="/admin/puzzles/{{ puzzle.name }}/edit_modal" hx-target="#editPuzzleModal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#editPuzzleModal"><i class="fa-solid fa-pencil"></i> Edit</button>
             </td>
         </tr>
         {% endfor %}
