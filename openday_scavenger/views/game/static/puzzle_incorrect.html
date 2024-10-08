@@ -1,13 +1,46 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="container my-4 text-center">
+    <h1 class="type-h1 mb-3">💫 Oh no! 💫</h1>
+    <p>
+        That answer was incorrect!<br />
+    </p>
+    <p>
+        You can give it another crack,<br />
+        or do another puzzle and come back again later!
+    </p>
+    <p class="text-secondary mt-5 mb-1">Want to try again?</p>
+    <a href="/puzzles/{{ puzzle }}" class="btn btn-primary"><i class="fa-regular fa-puzzle-piece me-1"></i>Try This
+        Puzzle Again!</a>
 
-Sorry, your answer is incorrect!
+    <p class="text-secondary mt-5 mb-1">Found another puzzle?</p>
+    <a href="/" class="btn btn-primary"><i class="fa-regular fa-puzzle-piece me-1"></i>Scan Another Puzzle</a>
 
-<div class="game-response-incorrect-icon">
-    <i class="fa-regular fa-face-sad-tear"></i>
+    <p class="text-secondary mt-5">Need some help finding puzzles?<br />
+        <a href="/puzzles/map">Use our map to see where all the puzzles are!</a>
+    </p>
 </div>
+{% endblock %}
 
-<a href="/puzzles/{{ puzzle }}" class="btn btn-success"><i class="fa-regular fa-thumbs-up"></i>Try again</a>
-
+{% block scripts %}
+<script>
+    // Sad tada...
+    document.addEventListener('DOMContentLoaded', function () {
+        confetti({
+            angle: 0,
+            particleCount: 30,
+            scalar: 4,
+            spread: 20,
+            shapes: ["emoji"],
+            shapeOptions: {
+                emoji: {
+                    value: ["😭", "😣"],
+                },
+            },
+            startVelocity: 20,
+            origin: { y: 0.6, x: 0.25 },
+        });
+    }, false);
+</script>
 {% endblock %}
