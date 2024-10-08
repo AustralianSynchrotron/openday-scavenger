@@ -43,6 +43,15 @@
                                     <i class="fa-solid fa-users"></i> <span class="ms-1 d-none d-sm-inline">Visitors</span>
                                 </a>
                             </li>
+                            {% if active_page == "visitors_pool" %}
+                            <li class="nav-item active">
+                            {% else %}
+                            <li class="nav-item">
+                            {% endif %}
+                                <a href="/admin/visitors/pool" class="nav-link align-middle">
+                                    <i class="fa-solid fa-list"></i> <span class="ms-1 d-none d-sm-inline">Visitor Pool</span>
+                                </a>
+                            </li>
                             {% if active_page == "puzzles" %}
                             <li class="nav-item active">
                             {% else %}

@@ -49,7 +49,7 @@ async def get_static_files(
 
 @router.get("/")
 async def render_visitor_page(request: Request):
-    """Render the puzzle admin page"""
+    """Render the visitor admin page"""
     return templates.TemplateResponse(
         request=request, name="visitors.html", context={"active_page": "visitors"}
     )
@@ -84,6 +84,22 @@ async def render_visitor_table(
     return await _render_visitor_table(request, db, uid_filter, still_playing)
 
 
+@router.get("/pool")
+async def render_visitor_pool_page(request: Request):
+    """Render the visitor pool admin page"""
+    return templates.TemplateResponse(
+        request=request, name="visitors_pool.html", context={"active_page": "visitors_pool"}
+    )
+
+
+@router.get("/pool_table")
+async def render_visitor_pool_table(
+    request: Request, db: Annotated["Session", Depends(get_db)], limit: int = 10
+):
+    """Render the table of possible visitor uids on the admin page"""
+    return await _render_visitor_pool_table(request, db, limit)
+
+
 @router.post("/pool")
 async def initialise_visitor_pool(
     request: Request,
@@ -99,16 +115,6 @@ async def render_qr_code(visitor_uid: str, request: Request):
     qr = generate_visitor_qr_code(visitor_uid)
 
     return templates.TemplateResponse(request=request, name="qr.html", context={"qr": qr})
-
-
-@router.get("/pool")
-async def render_visitor_pool_table(
-    request: Request, db: Annotated["Session", Depends(get_db)], limit: int = 10
-):
-    """Render the table of possible visitor uids on the admin page"""
-    return await _render_visitor_pool_table(request, db, limit)
-
-
 @router.get("/download-pdf")
 async def download_qr_codes(db: Annotated["Session", Depends(get_db)]):
     pdf_io = generate_visitor_qr_codes_pdf(db)
@@ -118,8 +124,6 @@ async def download_qr_codes(db: Annotated["Session", Depends(get_db)]):
         media_type="application/pdf",
         headers={"Content-Disposition": "attachment; filename=visitor_qr_codes.pdf"},
     )
-
-
 async def _render_visitor_table(
     request: Request,
     db: Annotated["Session", Depends(get_db)],
@@ -147,6 +151,6 @@ async def _render_visitor_pool_table(
 
     return templates.TemplateResponse(
         request=request,
-        name="visitor_pool_table.html",
+        name="visitors_pool_table.html",
         context={"visitor_pool": visitor_pool, "base_url": config.BASE_URL},
     )

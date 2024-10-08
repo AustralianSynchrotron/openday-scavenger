@@ -6,108 +6,70 @@
     <small>The list of playing visitors</small>
 </h1>
 
-<div class="my-4 mx-3 p-3 bg-body shadow-sm admin-panel-container">
-    <h5 class="border-bottom pb-2 mb-0">Visitors</h5>
-    <form id='visitor-filter-form' class="mt-3" hx-encoding='multipart/form-data' hx-trigger="input from:#search-form, input from:[type='checkbox']" hx-get='/admin/visitors/table' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table"> 
-        <div class="mb-3">
-            <label for="uid_filter" class="form-label">Filter by UID:</label>
-            <input type="text" id="uid_filter" name="uid_filter" class="form-control" hx-trigger="keyup changed delay:500ms" hx-get='/admin/visitors/table' hx-swap="innerHTML" hx-target="#visitor-table">
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value=true id="still_playing" name="still_playing">
-            <label class="form-check-label" for="still_playing">
-                Show only visitors still playing
-            </label>
-        </div>
-        <button id="filter-button" class="btn btn-primary">
-            <i class="fa-solid fa-filter"></i>
-            Filter
-        </button>
-        <button class="btn btn-primary" hx-get='/admin/visitors/table' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table" hx-on::after-request="document.getElementById('uid_filter').value=''; document.getElementById('still_playing').checked=''">
-            <i class="fa-solid fa-filter-circle-xmark"></i>
-            Clear
-        </button>
-        <button class="btn btn-primary" hx-get="" hx-swap="none" data-bs-toggle="modal" data-bs-target="#modal" hx-on::before-request="setupScanner()">
-            <i class="fa-solid fa-qrcode"></i>
-            Scan
-        </button>
-    </form>
-    <div id="visitor-table" hx-get="/admin/visitors/table" hx-trigger="load" hx-swap="innerHTML"></div>
-</div>
-
-<div class="my-4 mx-3 p-3 bg-body shadow-sm admin-panel-container">
-    <h5 class="border-bottom pb-2 mb-0">Add a new Visitor</h5>
-    <div>
-        <form id='visitor-add-form' class="mt-3" hx-encoding='multipart/form-data' hx-post='/admin/visitors' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table">
-            <div class="mb-3">
-                <label for="uid" class="form-label">UID:</label>
-                <input type="text" id="uid" name="uid" class="form-control">
+<div class="container-fluid px-0">
+    <div class="row my-4">
+        <div class="col-4">
+            <div class="ms-3 p-3 bg-body shadow-sm admin-panel-container">
+                <div id="reader"></div>
             </div>
-            <button class="btn btn-primary">
-                <i class="fa-solid fa-add"></i>
-                Add
-            </button>
-        </form>
+        </div>
+        <div class="col-8">
+            <div class="me-3 p-3 bg-body shadow-sm admin-panel-container">
+            test2
+            </div>
+
+        </div>
+
     </div>
 </div>
 
 <div class="my-4 mx-3 p-3 bg-body shadow-sm admin-panel-container">
-    <h5 class="border-bottom pb-2 mb-0">Visitor Pool</h5>
-    <form id='visitor-pool-form' class="mt-3" hx-encoding='multipart/form-data' hx-post='/admin/visitors/pool' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-pool-table"> 
+    <h5 class="border-bottom pb-2 mb-0">Visitors</h5>
+    <form id='visitor-filter-form' class="mt-3" onsubmit="return false;" hx-encoding='multipart/form-data' hx-trigger="input from:#search-form, input from:[type='checkbox'], click from:#clearButton" hx-get='/admin/visitors/table' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#visitor-table"> 
         <div class="mb-3">
-            <label for="number_of_entries" class="form-label">Number of UIDs:</label>
-            <input type="number" id="number_of_entries" name="number_of_entries" class="form-control">
+            <label for="uid_filter" class="form-label">Filter by UID:</label>
+            <div class="container-fluid px-0">
+                <div class="row">
+                    <div class="col-8">
+                        <input type="text" id="uid_filter" name="uid_filter" class="form-control" hx-trigger="keyup delay:500ms" hx-get='/admin/visitors/table' hx-swap="innerHTML" hx-target="#visitor-table">
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary" id="clearButton" onclick="document.getElementById('uid_filter').value='';">
+                            <i class="fa-solid fa-filter-circle-xmark"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button id="create-button" class="btn btn-primary">
-            <i class="fa-solid fa-plus"></i>
-            Add
-        </button>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" checked id="still_playing" name="still_playing">
+            <label class="form-check-label" for="still_playing">
+                Show only visitors still playing
+            </label>
+        </div>
     </form>
-    <div id="visitor-pool-table" hx-get="/admin/visitors/pool" hx-trigger="load" hx-swap="innerHTML"></div>
-    <a class="btn btn-primary" href="/admin/visitors/download-pdf">
-        <i class="fa-regular fa-qrcode"></i> 
-        Download All QR Codes
-    </a>
+    <div id="visitor-table" hx-get="/admin/visitors/table?still_playing=true" hx-trigger="load" hx-swap="innerHTML"></div>
 </div>
 
 <script src="/static/js/html5-qrcode.js"></script>
 <script>
-    
-    var html5QrcodeScanner;
-
     function onScanSuccess(decodedText, decodedResult) {
-    let myModalEl = document.getElementById('modal')
-    let modal = bootstrap.Modal.getInstance(myModalEl)
-    modal.hide()
-    document.getElementById("uid_filter").value=decodedText;
-    document.getElementById("filter-button").click()
+      const inputElement = document.getElementById("uid_filter");
+      inputElement.value=decodedText;
+      inputElement.dispatchEvent(new Event('keyup'));
     }
 
     function onScanFailure(error) {
     }
-    function setupScanner() {
-        html5QrcodeScanner = new Html5QrcodeScanner(
+    document.addEventListener('DOMContentLoaded', function() {
+        let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
             { fps: 10, qrbox: {width: 100, height: 100} },
             false
         );
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-    }
+    }, false);
     
-    document.addEventListener("hidden.bs.modal", function(){
-        html5QrcodeScanner.clear()
-    })
-
 </script>  
-
-<div id="modal"
-    class="modal modal-blur fade"
-    style="display: none"
-    aria-hidden="false"
-    tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="mx-auto" id="reader" style="width: 400px;"></div>
-    </div>
-</div>
-
 {% endblock %}
