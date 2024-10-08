@@ -19,6 +19,7 @@ class Visitor(Base):
 
     access: Mapped[List["Access"]] = relationship(back_populates="visitor")  # noqa F821 # type: ignore
     responses: Mapped[List["Response"]] = relationship(back_populates="visitor")  # noqa F821 # type: ignore
+    states: Mapped[List["State"]] = relationship(back_populates="visitor")  # noqa F821 # type: ignore
     correct_responses: Mapped[List["Response"]] = relationship(  # noqa F821 # type: ignore
         primaryjoin="and_(Response.visitor_id==Visitor.id, Response.is_correct)", viewonly=True
     )
