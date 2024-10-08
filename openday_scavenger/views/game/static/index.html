@@ -1,52 +1,105 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="container my-4 text-center">
 
+    <h1 class="type-h1 mb-3">🔍 Open Day 🧑‍💻<br />Scavenger Hunt</h1>
+    <p>
+        Welcome to the Australian Synchrotron Open Day Scavenger Hunt!<br />
+        (Brought to you by Scientific Computing! 🖥)
+    </p>
+
+    {% if visitor.is_authenticated %}
+
+    {% if has_completed_all_puzzles %}
+
+    <p>
+        <span class="text-primary fw-bold">🎊 Congratulations!!</span><br />
+        You've completed all the puzzles!
+    </p>
+    <p>
+        Come back to the Scientific Computing booth to pick up your prize! 🎖
+    </p>
+
+    {% else %}
+
+    <p class="mt-5">
+        <span class="text-primary">Find some puzzles!</span><br />
+        Look for QR codes (marked for the Scavenger Hunt) around the Synchrotron!
+    </p>
+    <p>
+        Once you find a Scavenger Hunt QR code,<br />
+        scan it with your own phone camera or use our handy in-built scanner below!
+    </p>
+
+    <p class="text-primary fw-bold mt-5">Scan QR code to go to the puzzle!</p>
+    <div class="mx-auto" id="reader" style="width: 400px;"></div>
+
+    <div class="mt-3">
+        {% if number_correct_responses > 0 %}
+        <p class="text-primary">
+            Current # of correct answers:
+        </p>
+        <div class="progress" role="progressbar">
+            <div class="progress-bar" style="width: {{ (number_correct_responses / number_active_puzzles) * 100.0 }}%">
+                {{
+                number_correct_responses }} / {{ number_active_puzzles }}</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <p class="mt-5">
+        <span class="text-primary">⚠️ Stay safe!!</span><br />
+        Please stay aware of your surroundings while playing,<br />
+        QR codes will only be within accessible areas!
+    </p>
+
+    <p class="text-secondary mt-5">Need some help finding puzzles?<br />
+        <a href="/puzzles/map">Use our map to see where all the puzzles are!</a>
+    </p>
+
+    {% endif %}
+
+    {% else %}
+
+    <p>To join in, come to the Scientific Computing booth to register! ✏️</p>
+    <p class="mt-5">
+        <span class="text-secondary fw-bold">Don't worry!!</span><br />
+        No personal details are needed to register,<br />we will provide you with a randomised ID!
+    </p>
+    <p>
+        Just remember to come back to the Scientific Computing booth<br />
+        before you leave to see how many puzzles you managed to find and to pick up your prize! 🎁
+    </p>
+    <p>(You can finish at any time!)</p>
+
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
 {% if visitor %}
 <script>
     function onScanSuccess(decodedText, decodedResult) {
-    // handle the scanned code as you like, for example:
-    console.log(`Code matched = ${decodedText}`, decodedResult);
-    window.location.assign(decodedText);
-    window.open(newUrl, "_top");
+        // handle the scanned code as you like, for example:
+        console.log(`Code matched = ${decodedText}`, decodedResult);
+        window.location.assign(decodedText);
+        window.open(newUrl, "_top");
     }
 
     function onScanFailure(error) {
-    // handle scan failure, usually better to ignore and keep scanning.
-    // for example:
+        // handle scan failure, usually better to ignore and keep scanning.
+        // for example:
     }
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
-            { fps: 10, qrbox: {width: 100, height: 100} },
+            { fps: 10, qrbox: { width: 100, height: 100 } },
             false
         );
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
     }, false);
-    
-</script>   
-{% endif %}
 
-<div>
-    <div>
-        {% if visitor.is_authenticated %}
-            {% if has_completed_all_puzzles %}
-                <p>Congratulations! You have completed all puzzles.</p>
-                <p>Please go to the registration desk and pick up your prize!</p>
-            {% else %}
-                <p>Find some puzzles!</p>
-                <div class="mx-auto" id="reader" style="width: 400px;"></div>
-                <div>
-                    {% if number_correct_responses > 0 %}
-                    <div class="progress" role="progressbar">
-                        <div class="progress-bar" style="width: {{ (number_correct_responses / number_active_puzzles) * 100.0 }}%">{{ number_correct_responses }} / {{ number_active_puzzles }}</div>
-                    </div>
-                    {% endif %}
-                </div>
-            {% endif %}
-        {% else %}
-            <p>Please register for the scavenger hunt at the registration desk</p>
-        {% endif %}
-    </div>
-</div>
+</script>
+{% endif %}
 {% endblock %}
