@@ -17,6 +17,7 @@ router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-toer
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-reboots")
 router.include_router(puzzle_fourbyfour_router, prefix="/fourbyfour")
 router.include_router(puzzle_labelthemap_router, prefix="/labelthemap")
+router.include_router(puzzle_labelthemap_router, prefix="/labelthemap-easy")
 
 
 # Include a route to catch all invalid puzzle routes so we can throw a custom 404.
