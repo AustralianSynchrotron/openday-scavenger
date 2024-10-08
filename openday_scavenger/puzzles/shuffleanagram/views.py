@@ -6,8 +6,6 @@ from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 
 from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
-from openday_scavenger.api.visitors.dependencies import get_auth_visitor
-from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 from .service import get_initial_word
 from .service import get_shuffled_word as get_scrambled_word
@@ -57,7 +55,6 @@ async def get_shuffled_word(
 @router.get("/")
 async def index(
     request: Request,
-    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     puzzle_name: Annotated[str, Depends(get_puzzle_name)],
     initial_word: Annotated[str, Depends(get_initial_word)],
 ):
@@ -67,7 +64,6 @@ async def index(
         name="index.html",
         context={
             "puzzle": puzzle_name,
-            "visitor": visitor.uid,
             "scrambled_word": initial_word,
         },
     )
