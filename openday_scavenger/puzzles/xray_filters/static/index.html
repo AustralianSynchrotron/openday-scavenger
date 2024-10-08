@@ -81,59 +81,62 @@
         </script>
     </head>
     <body>
-        <h1>X-ray Filter Puzzle</h1>
-
-        <p>Sometimes, the xrays are too strong(!). We need to attenuate them (make them weaker.) We do this by using filters to stop some of those pesky xrays.</p>
-
-        <p>At ADS2, we will be using filters to attenuate our 86.8 keV x-ray beam, so this puzzle is based on a real example.</p>
-
-        <p>In this puzzle, you need to select which filters to put in the way of the beam to stop the x-rays. We have five filters made of different materials,
-            and of difference thicknesses.  If no filters are down, we have 0% attenuation.  If all 5 filters are down, we have 94.9% attenuation.
-            Play around to get to the a target attenuation of <b>92%</b>, then hit submit.</p>
-
-        <div class="image-container">
-            <img src="static/table_and_beam.svg" alt="Table and beam" class="table-and-beam">
-            <img src="static/filters/mo_filter_04mm.svg" alt="Filter4" class="filter-image filter4">
-            <img src="static/beam_post_filter.svg" alt="Beam4 post filter" class="beam4">
-            <img src="static/filters/w_filter_01mm.svg" alt="Filter3" class="filter-image filter3">
-            <img src="static/beam_post_filter.svg" alt="Beam3 post filter" class="beam3">
-            <img src="static/filters/w_filter_005mm.svg" alt="Filter2" class="filter-image filter2">
-            <img src="static/beam_post_filter.svg" alt="Beam2 post filter" class="beam2">
-            <img src="static/filters/ni_filter_02mm.svg" alt="Filter1" class="filter-image filter1">
-            <img src="static/beam_post_filter.svg" alt="Beam1 post filter" class="beam1">
-
-
+        <div class="title-banner">
+            <h1>X-ray Filter Puzzle</h1>
         </div>
+        <div class="main-content">
+            <p>Sometimes, the x-rays are too strong(!). We need to attenuate them (make them weaker.) We do this by using filters to stop some of those pesky x-rays.</p>
 
-    <h3 id="output">Target attenuation: 0%</h3>
+            <p>At ADS2, we will be using filters to attenuate our 86.8 keV x-ray beam, so this puzzle is based on a real example.</p>
 
-    <div class="checkbox-container">
-        <form id='form'>
-            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-            <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <input hidden type="text" id="answer" name="answer">
+            <p>In this puzzle, you need to select which filters to put in the way of the beam to stop the x-rays. We have four filters made of different materials,
+                and of difference thicknesses. If no filters are down, we have 0% attenuation.  If all 4 filters are down, we have 92.9% attenuation.
+                Play around to get to a target attenuation of <b>92%</b>, then hit submit.</p>
 
-            <label>
-                <input type="checkbox" id="filter1-checkbox" class="checkbox" value="0.8858244085674697">
-                Nickel 0.2 mm
-            </label>
-            <label>
-                <input type="checkbox" id="filter2-checkbox" class="checkbox" value="0.5410750890125073">
-                Tungsten 0.05 mm
-            </label>
-            <label>
-                <input type="checkbox" id="filter3-checkbox" class="checkbox" value="0.2927622519498927">
-                Tungsten 0.1 mm
-            </label>
-            <label>
-                <input type="checkbox" id="filter4-checkbox" class="checkbox" value="0.5077974066101049">
-                Molybdenum 0.4 mm
-            </label>
-        </form>
+            <div class="image-container">
+                <img src="static/table_and_beam.svg" alt="Table and beam" class="table-and-beam">
+                <img src="static/xray-arrow.svg" alt="X-ray arrow" class="arrow-left">
+                <img src="static/filters/mo_filter_04mm.svg" alt="Filter4" class="filter-image filter4">
+                <img src="static/beam_post_filter.svg" alt="Beam4 post filter" class="beam4">
+                <img src="static/filters/w_filter_01mm.svg" alt="Filter3" class="filter-image filter3">
+                <img src="static/beam_post_filter.svg" alt="Beam3 post filter" class="beam3">
+                <img src="static/filters/w_filter_005mm.svg" alt="Filter2" class="filter-image filter2">
+                <img src="static/beam_post_filter.svg" alt="Beam2 post filter" class="beam2">
+                <img src="static/filters/ni_filter_02mm.svg" alt="Filter1" class="filter-image filter1">
+                <img src="static/beam_post_filter.svg" alt="Beam1 post filter" class="beam1">
+
+
+            </div>
+
+        <h3 id="output">Target attenuation: 0%</h3>
+
+        <div class="checkbox-container">
+            <form id='form' method='POST' action='/submission'>
+                <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+                <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+                <input hidden type="text" id="answer" name="answer">
+
+                <label>
+                    <input type="checkbox" id="filter1-checkbox" class="checkbox" value="0.8858244085674697">
+                    Nickel 0.2 mm
+                </label>
+                <label>
+                    <input type="checkbox" id="filter2-checkbox" class="checkbox" value="0.5410750890125073">
+                    Tungsten 0.05 mm
+                </label>
+                <label>
+                    <input type="checkbox" id="filter3-checkbox" class="checkbox" value="0.2927622519498927">
+                    Tungsten 0.1 mm
+                </label>
+                <label>
+                    <input type="checkbox" id="filter4-checkbox" class="checkbox" value="0.5077974066101049">
+                    Molybdenum 0.4 mm
+                </label>
+        </div>
+                <button>
+                    Submit your answer
+                </button>
+            </form>
     </div>
-            <button>
-                Submit your answer
-            </button>
-        </form>
     </body>
 </html>
