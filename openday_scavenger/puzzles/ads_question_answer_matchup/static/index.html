@@ -1,6 +1,8 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
 
     <!-- js venders -->
@@ -22,34 +24,37 @@
     <form id='form' method='POST' action='/submission'>
         <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
         <input hidden type="text" id="answer" name="answer">
-        <div class="container">
-            <p>Rearrange the answers on the right so that they match with the questions on the left.</p>
+        <div class="container-lg">
+            <p class="guide-message">
+                Rearrange the answers on the right so that they match with the questions on the left.
+            </p>
             <div class="row">
-                <div id="example4Left" class="list-group col">
-                    <div class="h-100 list-group-item">
-                        What's the heaviest sample that the ADS-1 table will support? (in kilograms) </div>
-                    <div class="list-group-item">
-                        How thick is the block of tungsten in the ADS-1 shutter? (in centimetres)</div>
-                    <div class="list-group-item">
-                        What is the shortest X-ray wavelength that ADS-1 can select? (in nanometres) </div>
-                    <div class="list-group-item">
+                <div id="example4Left" class="list-group col-6">
+                    <div class="list-group-item list-row">
+                        What's the heaviest sample that the ADS-1 table will support? (in kilograms)
+                    </div>
+                    <div class="list-group-item list-row">
+                        How thick is the block of tungsten in the ADS-1 shutter? (in centimetres)
+                    </div>
+                    <div class="list-group-item list-row">
+                        What is the shortest X-ray wavelength that ADS-1 can select? (in nanometres)
+                    </div>
+                    <div class="list-group-item list-row">
                         What is the highest beam energy that ADS-1 can operate at? (in keV)
                     </div>
                 </div>
 
-                <div id="example4Right" class="list-group col">
-                    <div class="list-group-item tinted" id="data2">20.5</div>
-                    <div class="list-group-item tinted" id="data3">0.008</div>
-                    <div class="list-group-item tinted" id="data4">150</div>
-                    <div class="list-group-item tinted" id="data1">300</div>
+                <div id="example4Right" class="list-group col-6 last-col">
+                    <div class="list-group-item tinted list-row" id="data2">20.5</div>
+                    <div class="list-group-item tinted list-row" id="data3">0.008</div>
+                    <div class="list-group-item tinted list-row" id="data4">150</div>
+                    <div class="list-group-item tinted list-row" id="data1">300</div>
                 </div>
-                <div style="padding: 0" class="col-12">
-                </div>
-                <br>
-                <button>
-                    Submit your answer
-                </button>
             </div>
+
+            <button type="submit" class="btn btn-lg btn-primary w-100">
+                Submit your answer
+            </button>
         </div>
     </form>
 
