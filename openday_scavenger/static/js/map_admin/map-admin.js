@@ -21,15 +21,18 @@ function newMarker(e) {
     var rect = e.target.getBoundingClientRect();
     var m = document.createElement("img");
     m.addEventListener("click", removeMarker);
+    m_top = Math.ceil(e.clientY - rect.top - 22);
+    m_left = Math.ceil(e.clientX - rect.left - 14);
+
     m.id = `map-marker-${markerLocations.length}`;
     m.classList.add("map-marker");
     m.src = "/static/images/map/map_marker.svg";
-    m.style.top = `${Math.ceil(e.clientY - rect.top - 22)}px`;
-    m.style.left = `${Math.ceil(e.clientX - rect.left)}px`;
+    m.style.top = `${m_top}px`;
+    m.style.left = `${m_left}px`;
     map.appendChild(m);
 
     // Add marker to array list
-    markerLocations.push(`top: ${Math.ceil(e.clientY - rect.top - 22)}px; left: ${Math.ceil(e.clientX - rect.left)}px;`);
+    markerLocations.push(`top: ${m_top}px; left: ${m_left}px;`);
 
     // Display array list
     if (markerLocations.length > 0) array_title.style.visibility = "visible";
