@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <script src="/static/js/htmx.min.js"></script>
+        <script src="/static/js/json-enc.js"></script>
+        
+        <link href="static/demo.css" rel="stylesheet">
+        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    </head>
+    <body>
+        <h1>X-ray Fluorescence Microscopy (XFM) Images Puzzle</h1>
+        
+        What animal was scanned at the XFM beamline to produce this map of atomic elements?
+        
+        <form id='form' method='POST' action='/submission'>
+            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+            <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+            <label for="animal1">Animal 1:</label><br>
+            <img src="static/105366-Ants-ZnCaK.jpg" alt="Animal1" width="500" height="500"><br>
+            <!-- <input type="text" id="answer" name="answer"> -->
+            <select id="insect-id" name="insectCode" hx-get="change.html" hx-trigger="change" hx-target='#rental-id' hx-indicator=".htmx-indicator" hx-include="[name='durationCode']">
+                <option value="0">Ant</option>
+                <option value="1">Millipede</option>
+                <option value="2">Mosquito</option>
+                <option value="3">Lobster larva</option>
+            </select><br>
+            <button>
+                Submit your answer
+            </button>
+        </form>
+    </body>
+</html>
