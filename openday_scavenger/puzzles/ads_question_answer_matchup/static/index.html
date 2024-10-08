@@ -1,48 +1,66 @@
 <html>
-    <head>
-        <link rel="stylesheet" href="static/css/bootstrap.min.css">
-        <script src="static/js/bootstrap.min.js"></script>
-        <script src="/static/js/htmx.min.js"></script>
-        <script src="/static/js/json-enc.js"></script>
-        <script src="static/js/sortable.min.js"></script>
-        <link href="static/ads_question_answer_matchup.css" rel="stylesheet">
-        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    </head>
-    <body>
-        <h1>ADS Question Answer Matchup Puzzle</h1>
 
-        <form id='form' method='POST' action='/submission'>
-            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-            <input hidden type="text" id="answer" name="answer">
-            <div class="container">
-                <p>Rearrange the answers on the right so that they match with the questions on the left.</p>
-                <div class="row">
-                    <div id="example4Left" class="list-group col">
-                        <div class="h-100 list-group-item">What's the heaviest sample that the ADS-1 table will support? (in kilograms) </div>
-                        <div class="list-group-item">How thick is the block of tungsten in the ADS-1 shutter? (in centimetres)</div>
-                        <div class="list-group-item">What is the shortest X-ray wavelength that ADS-1 can select? (in nanometres) </div>
-                        <div class="list-group-item">What is the highest beam energy that ADS-1 can operate at? (in keV)</div>
-                    </div>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-                    <div id="example4Right" class="list-group col">
-                        <div class="list-group-item tinted" id="data2">20.5</div>
-                        <div class="list-group-item tinted" id="data3">0.008</div>
-                        <div class="list-group-item tinted" id="data4">150</div>
-                        <div class="list-group-item tinted" id="data1">300</div>
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    <!-- js venders -->
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/sortable.min.js"></script>
+
+    <!-- css venders -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- custom styles -->
+    <link href="static/ads_question_answer_matchup.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1>ADS Question Answer Matchup Puzzle</h1>
+
+    <form id='form' method='POST' action='/submission'>
+        <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+        <input hidden type="text" id="answer" name="answer">
+        <div class="container-lg">
+            <p class="guide-message">
+                Rearrange the answers on the right so that they match with the questions on the left.
+            </p>
+            <div class="row">
+                <div id="example4Left" class="list-group col-6">
+                    <div class="list-group-item list-row">
+                        What's the heaviest sample that the ADS-1 table will support? (in kilograms)
                     </div>
-                    <div style="padding: 0" class="col-12">
+                    <div class="list-group-item list-row">
+                        How thick is the block of tungsten in the ADS-1 shutter? (in centimetres)
+                    </div>
+                    <div class="list-group-item list-row">
+                        What is the shortest X-ray wavelength that ADS-1 can select? (in nanometres)
+                    </div>
+                    <div class="list-group-item list-row">
+                        What is the highest beam energy that ADS-1 can operate at? (in keV)
+                    </div>
+                </div>
+
+                <div id="example4Right" class="list-group col-6 last-col">
+                    <div class="list-group-item tinted list-row" id="data2">20.5</div>
+                    <div class="list-group-item tinted list-row" id="data3">0.008</div>
+                    <div class="list-group-item tinted list-row" id="data4">150</div>
+                    <div class="list-group-item tinted list-row" id="data1">300</div>
+                </div>
             </div>
-            <br>
-            <button>
+
+            <button type="submit" class="btn btn-lg btn-primary w-100">
                 Submit your answer
             </button>
-        </form>
+        </div>
+    </form>
 
-
-
-
-
-        <script>new Sortable(example4Left, {
+    <script>
+        /*
+        new Sortable(example4Left, {
             group: {
                 name: 'shared',
                 pull: 'clone',
@@ -51,6 +69,7 @@
             animation: 150,
             sort: false // To disable sorting: set sort to false
         });
+        */
 
         new Sortable(example4Right, {
             group: 'shared',
@@ -59,33 +78,34 @@
 
 
         function updateOrder() {
-                    var order = [];
-                    document.querySelectorAll('#example4Right div').forEach(function(item) {
-                        order.push(item.getAttribute('id'));  // Get the id of each list item
-                    });
-                    document.getElementById('answer').value = order.join(',');  // Save as comma-separated values
-                }
+            var order = [];
+            document.querySelectorAll('#example4Right div').forEach(function (item) {
+                order.push(item.getAttribute('id'));  // Get the id of each list item
+            });
+            document.getElementById('answer').value = order.join(',');  // Save as comma-separated values
+        }
 
-                // Ensure the order is updated before submitting the form
-                document.getElementById('form').addEventListener('submit', function() {
-                    updateOrder();  // Update the order one last time before submitting
-                });
+        // Ensure the order is updated before submitting the form
+        document.getElementById('form').addEventListener('submit', function () {
+            updateOrder();  // Update the order one last time before submitting
+        });
 
-                // If you want the default order to be "3, 2, 1, 4", set it initially
-                document.addEventListener('DOMContentLoaded', function() {
-                    var list = document.getElementById('example4Right');
-                    var defaultOrder = ['data3', 'data2', 'data1', 'data4'];
+        // If you want the default order to be "3, 2, 1, 4", set it initially
+        document.addEventListener('DOMContentLoaded', function () {
+            var list = document.getElementById('example4Right');
+            var defaultOrder = ['data3', 'data2', 'data1', 'data4'];
 
-                    // Rearrange the list to the default order
-                    defaultOrder.forEach(function(id) {
-                        var item = list.querySelector('div[id="' + id + '"]');
-                        list.appendChild(item);  // Reorder the list items
-                    });
+            // Rearrange the list to the default order
+            defaultOrder.forEach(function (id) {
+                var item = list.querySelector('div[id="' + id + '"]');
+                list.appendChild(item);  // Reorder the list items
+            });
 
-                    // Update the hidden input with the initial order
-                    updateOrder();
-                });
-        </script>
+            // Update the hidden input with the initial order
+            updateOrder();
+        });
+    </script>
 
-    </body>
+</body>
+
 </html>
