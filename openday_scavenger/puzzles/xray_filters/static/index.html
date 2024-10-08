@@ -81,7 +81,7 @@
         </script>
     </head>
     <body>
-        <h1>Xray filter puzzle</h1>
+        <h1>X-ray Filter Puzzle</h1>
 
         <p>Sometimes, the xrays are too strong(!). We need to attenuate them (make them weaker.) We do this by using filters to stop some of those pesky xrays.</p>
 
@@ -107,35 +107,30 @@
 
     <h3 id="output">Target attenuation: 0%</h3>
 
-        <form id='form' method='POST' action='/submission'>
+    <div class="checkbox-container">
+        <form id='form'>
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
             <input hidden type="text" id="answer" name="answer">
-            <p>
-                <label>
-                    <input type="checkbox" id="filter1-checkbox" class="checkbox" value="0.8858244085674697">
-                    Nickel 0.2 mm
-                </label>
-            </p>
-            <p>
-                <label>
-                    <input type="checkbox" id="filter2-checkbox" class="checkbox" value="0.5410750890125073">
-                    Tungsten 0.05 mm
-                </label>
-            </p>
-            <p>
-                <label>
-                    <input type="checkbox" id="filter3-checkbox" class="checkbox" value="0.2927622519498927">
-                    Tungsten 0.1 mm
-                </label>
-            </p>
-            <p>
-                <label>
-                    <input type="checkbox" id="filter4-checkbox" class="checkbox" value="0.5077974066101049">
-                    Molybdenum 0.4 mm
-                </label>
-            </p>
 
+            <label>
+                <input type="checkbox" id="filter1-checkbox" class="checkbox" value="0.8858244085674697">
+                Nickel 0.2 mm
+            </label>
+            <label>
+                <input type="checkbox" id="filter2-checkbox" class="checkbox" value="0.5410750890125073">
+                Tungsten 0.05 mm
+            </label>
+            <label>
+                <input type="checkbox" id="filter3-checkbox" class="checkbox" value="0.2927622519498927">
+                Tungsten 0.1 mm
+            </label>
+            <label>
+                <input type="checkbox" id="filter4-checkbox" class="checkbox" value="0.5077974066101049">
+                Molybdenum 0.4 mm
+            </label>
+        </form>
+    </div>
             <button>
                 Submit your answer
             </button>
