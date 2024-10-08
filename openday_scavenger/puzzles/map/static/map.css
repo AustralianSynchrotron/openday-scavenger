@@ -9,7 +9,7 @@ body {
     background-size: 300vw 300vh;
     background-position: 10vw 20vh;
     color: #2a2a2a;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', 'Tahoma', sans-serif;
     font-feature-settings: 'kern', 'mgrk';
     font-size: 16px;
     font-style: normal;
@@ -24,15 +24,15 @@ body {
 body {
     display: flex;
     flex-direction: column;
-    margin: 0;
+    margin: 3rem 0;
 }
 
 .title {
     color: dodgerblue;
     font-size: 24px;
-    font-weight: 700;
+    font-weight: bold;
     margin-bottom: 16px;
-    margin-top: 24px;
+    margin-top: 0;
     text-align: center;
 }
 
@@ -48,16 +48,19 @@ body {
     background: white;
     border-radius: 8px;
     box-shadow: 0 0 5px 0 deepskyblue;
-    margin-bottom: 3em;
     margin-top: 1em;
 }
 
 .instructions p {
-    font-size: 16px;
-    font-weight: 500;
     text-align: center;
 }
 
-p.notice {
-    color: midnightblue;
+p.return {
+    margin-top: 3rem;
+    text-align: center;
 }
+
+a.link {
+    color: dodgerblue;
+}
+
