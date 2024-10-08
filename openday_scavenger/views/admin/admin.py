@@ -64,35 +64,34 @@ async def render_index_page(
 
     # TODO: don't use a for loop and add more useful structured data into the df
     # index = pd.date_range('10/7/2024', periods=24, freq='h')
-    visitor_df = pd.DataFrame({"uid": yval, "checked_in": xval})
+    checked_in_df = pd.DataFrame({"uid": yval, "checked_in": xval})
     checked_out_df = pd.DataFrame({"uid": yval, "checked_out": zval})
-    if visitor_df.empty:
+    if checked_in_df.empty:
         plotly_jinja_data = "No user data available 😔"
     else:
-        resample_period = "30min"
-        grouped = visitor_df.resample(resample_period, on="checked_in").count()
-        gr_checkout = checked_out_df.resample(resample_period, on="checked_out").count()
+        # TODO: this only works because check_in/out times have the same range
+        # need to allow for different time periods
+        resample_period = "15min"
+        checked_in = checked_in_df.resample(resample_period, on="checked_in").count()
+        checked_out = checked_out_df.resample(resample_period, on="checked_out").count()
 
-        grouped["checkin_cumsum"] = grouped["uid"].cumsum()
-        gr_checkout["checkout_cumsum"] = gr_checkout["uid"].cumsum()
+        checked_in["checkin_cumsum"] = checked_in["uid"].cumsum()
+        checked_out["checkout_cumsum"] = checked_out["uid"].cumsum()
 
-        df = pd.concat([grouped, gr_checkout])
+        df = pd.DataFrame(
+            {
+                "checked_in": checked_in["checkin_cumsum"],
+                "checked_out": checked_out["checkout_cumsum"],
+            }
+        )
 
         # create  a line plot with both check-in and check-out data
         fig = px.line(
             df,
-            x=df.index,
-            y="checkin_cumsum",
-            title="Number of visitors",
-            labels={"index": "check-in time", "checkin_cumsum": "N. visitors (cumulative)"},
-            # labels={grouped.index.name: "check-in time", "": "N. visitors (cumulative)"},
+            # title="Number of visitors",
+            labels={"index": "Time (hour)", "value": "N. visitors (cumulative)"},
         )
-        fig.add_scatter(
-            x=df.index,
-            y=df["checkout_cumsum"],
-            mode="lines",
-            name="Checked-out visitors",
-        )
+
         plotly_jinja_data = fig.to_html(full_html=False)
 
     return templates.TemplateResponse(
