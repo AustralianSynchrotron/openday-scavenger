@@ -94,21 +94,24 @@ async def render_visitor_status(
     request: Request,
     db: Annotated["Session", Depends(get_db)],
     uid_filter: str | None = None,
+    still_playing: bool | None = None,
 ):
+    visitor = None
+    correct_answers = 0
+    success = False
+    filter_active = uid_filter is not None and not uid_filter.strip() == ""
+
     number_puzzles = count_puzzles(db, only_active=True)
 
-    visitors = get_all_visitors(db, uid_filter=uid_filter)
-    if len(visitors) > 0:
-        visitor, correct_answers, _ = visitors[0]
-        if correct_answers is not None:
-            success = (correct_answers / number_puzzles) >= config.SUCCESS_THRESHOLD
-        else:
-            correct_answers = 0
-            success = False
-    else:
-        visitor = None
-        correct_answers = 0
-        success = False
+    if filter_active:
+        visitors = get_all_visitors(db, uid_filter=uid_filter, still_playing=still_playing)
+        if len(visitors) > 0:
+            visitor, correct_answers, _ = visitors[0]
+            if correct_answers is not None:
+                success = (correct_answers / number_puzzles) >= config.SUCCESS_THRESHOLD
+            else:
+                correct_answers = 0
+                success = False
 
     """Render the visitor status panel on the admin page"""
     return templates.TemplateResponse(

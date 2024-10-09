@@ -1,3 +1,4 @@
+<div class="me-3 p-3">
 {% if visitor %}
     {% if success %}
     <div class="m-2 p-3 admin-bg-green">
@@ -8,9 +9,12 @@
             <p class="mt-5">Correct Puzzles: {{ correct_answers }}/{{ number_puzzles }}</p>
             <p class="mt-2">Success Rate: {{ (correct_answers/number_puzzles)*100 | int }}%</p>
     </div>
+    {% if visitor.checked_out is none %}
     <div class="m-2 bg-body">
-        <button type="button" class="btn btn-danger" hx-post="/admin/visitors/{{ visitor.uid }}/checkout" hx-include="#still_playing" hx-swap="innerHTML" hx-target="#visitor-table"><i class="fa-solid fa-check"></i> Checkout Visitor (ends their adventure)</button>
+        <button type="button" class="btn btn-danger" hx-post="/admin/visitors/{{ visitor.uid }}/checkout" hx-include="#still_playing" hx-swap="innerHTML" hx-target="#visitor-table" onclick="clearFilter();"><i class="fa-solid fa-check"></i> Checkout Visitor (ends their adventure)</button>
     </div>
+    {% endif %}
 {% else %}
-    Unknown Adventure Key (Visitor UID)
+    Please scan an Adventure Key or type the visitor UID into the search field.
 {% endif %}
+</div>
