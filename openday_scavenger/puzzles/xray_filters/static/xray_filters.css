@@ -188,7 +188,7 @@ button {
     transform-origin: left;
     visibility: hidden;
     opacity: 0;
-    filter: brightness(0.8) saturate(0.7);
+    -webkit-filter: brightness(0.8) saturate(0.7);
 }
 
 .beam1 {
@@ -206,14 +206,15 @@ button {
 
 
 img.dim-2 {
-    filter: brightness(0.7) saturate(0.6);
+    -webkit-filter: brightness(0.7) saturate(0.6);
 }
 
 img.dim-3 {
-    filter: brightness(0.6) saturate(0.6);
+    -webkit-filter: brightness(0.6) saturate(0.6);
 }
 
 img.dim-4 {
-    filter: brightness(0.5) saturate(0.6);
+    -webkit-filter: brightness(0.5) saturate(0.6);
+    -web
 }
 
