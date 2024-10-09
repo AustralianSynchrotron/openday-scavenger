@@ -3,8 +3,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
-from fastapi.responses import FileResponse
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -154,6 +153,8 @@ async def render_qr_code(visitor_uid: str, request: Request):
     qr = generate_visitor_qr_code(visitor_uid)
 
     return templates.TemplateResponse(request=request, name="qr.html", context={"qr": qr})
+
+
 @router.get("/download-pdf")
 async def download_qr_codes(db: Annotated["Session", Depends(get_db)]):
     pdf_io = generate_visitor_qr_codes_pdf(db)
@@ -163,6 +164,8 @@ async def download_qr_codes(db: Annotated["Session", Depends(get_db)]):
         media_type="application/pdf",
         headers={"Content-Disposition": "attachment; filename=visitor_qr_codes.pdf"},
     )
+
+
 async def _render_visitor_table(
     request: Request,
     db: Annotated["Session", Depends(get_db)],

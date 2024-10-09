@@ -10,8 +10,8 @@ from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
     create,
-    generate_qr_code,
-    generate_qr_codes_pdf,
+    generate_puzzle_qr_code,
+    generate_puzzle_qr_codes_pdf,
     get,
     get_all,
     update,

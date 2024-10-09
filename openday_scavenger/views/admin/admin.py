@@ -2,8 +2,8 @@ from pathlib import Path
 from typing import Annotated
 
 import pandas as pd
-from fastapi import APIRouter, Depends, HTTPException, Request, status
 import plotly.express as px
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
