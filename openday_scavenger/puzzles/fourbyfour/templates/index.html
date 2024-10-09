@@ -23,20 +23,6 @@
 <body class="container">
     <h1 class="text-center my-4">Create four groups of four!</h1>
 
-
-    {% if message %}
-    <div class="alert alert-warning text-center" role="alert">
-        {{ message }}
-    </div>
-    {% endif %}
-
-    {% if game_over %}
-    <div class="alert alert-danger text-center" role="alert">
-        Would you like to <a href="#" class="alert-link" hx-delete="/puzzles/{{ puzzle }}/" hx-target="body"
-            hx-swap="outerHTML">start again</a>?
-    </div>
-    {% endif %}
-
     <!-- Make a div for the solved, categories, if any.
      Loop over status.categories, and if status.categories[i].solved is true, display the category
      as a rectangle that is as wide as 4 of the normal word boxes -->
@@ -86,6 +72,20 @@
             !=status.selectable_at_once %}disabled{% endif %}>Submit</button>
 
     </div>
+
+
+    {% if message %}
+    <div class="alert alert-warning text-center" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+
+    {% if game_over %}
+    <div class="alert alert-danger text-center" role="alert">
+        Would you like to <a href="#" class="alert-link" hx-delete="/puzzles/{{ puzzle }}/" hx-target="body"
+            hx-swap="outerHTML">start again</a>?
+    </div>
+    {% endif %}
 
     {% if register_success %}
     <form id="auto-submit-form" class="text-center" method="POST" action="/submission">
