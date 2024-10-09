@@ -127,9 +127,9 @@ app.include_router(
     puzzle_router,
     prefix="/puzzles",
     dependencies=[
-        Depends(record_puzzle_access),
         Depends(block_correctly_answered_puzzle),
         Depends(block_disabled_puzzles),
         Depends(auth_required),
+        Depends(record_puzzle_access),
     ],
 )

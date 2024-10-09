@@ -20,6 +20,7 @@ class Puzzle(Base):
 
     access: Mapped[List["Access"]] = relationship(back_populates="puzzle")
     responses: Mapped[List["Response"]] = relationship(back_populates="puzzle")
+    states: Mapped[List["State"]] = relationship(back_populates="puzzle")
 
     def __repr__(self) -> str:
         return f"Puzzle(id={self.id!r}, name={self.name!r}, answer={self.answer!r})"
@@ -61,3 +62,19 @@ class Access(Base):
 
     def __repr__(self) -> str:
         return f"Access(id={self.id!r}, puzzle={self.puzzle.name!r}, visitor={self.visitor.uid!r})"
+
+
+class State(Base):
+    """Database table for recording state information for a visitor completing a puzzle"""
+
+    __tablename__ = "state"
+    visitor_id: Mapped[int] = mapped_column(ForeignKey("visitor.id"), primary_key=True)
+    puzzle_id: Mapped[int] = mapped_column(ForeignKey("puzzle.id"), primary_key=True)
+    state: Mapped[str] = mapped_column(Text, nullable=True, default="{}")
+    updated_at: Mapped[datetime] = mapped_column()
+
+    puzzle: Mapped["Puzzle"] = relationship(back_populates="states")  # noqa F821 # type: ignore
+    visitor: Mapped["Visitor"] = relationship(back_populates="states")  # noqa F821 # type: ignore
+
+    def __repr__(self) -> str:
+        return f"State(puzzle={self.puzzle.name!r}, visitor={self.visitor.uid!r})"
