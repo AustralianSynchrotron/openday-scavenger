@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 
-from .demo.views import router as puzzle_demo_router
 from .ant.views import router as ant_puzzle
+from .demo.views import router as puzzle_demo_router
+
 router = APIRouter()
 
 # Include puzzle routes. Name entered into database should match the prefix.
