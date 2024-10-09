@@ -84,7 +84,9 @@
         function updateOrder() {
             const order = [];
             document.querySelectorAll('#example4Right div').forEach(function (item) {
-                order.push(item.getAttribute('id'));  // Get the id of each list item
+                if (item.getAttribute('id')) {
+                    order.push(item.getAttribute('id'));  // Get the id of each list item, if it exists
+                }
             });
             document.getElementById('answer').value = order.join(',');  // Save as comma-separated values
         }
