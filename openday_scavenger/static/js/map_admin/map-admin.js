@@ -51,11 +51,13 @@ function newMarker(e) {
 function removeMarker(e) {
     var marker = e.target;
 
+    // Update display array list
     markerLocations = markerLocations.filter(m => !(`${m.top}px` == marker.style.top && `${m.left}px` == marker.style.left));
     marker.remove();
 
-    // Update display array list
+    // Don't display array if there's no location selected
     if (markerLocations.length < 1) array_title.style.visibility = "hidden";
+
     updateArrayDisplay();
 }
 
