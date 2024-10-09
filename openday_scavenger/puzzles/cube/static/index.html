@@ -41,19 +41,21 @@
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            animation: rotate 10s linear infinite;
+            animation: rotate 20s linear infinite;
         }
         .cube__face {
             position: absolute;
             width: 200px;
             height: 200px;
             border: 2px solid #000;
-            opacity: 0.8;
+            opacity: 0.95;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 16px;
             background-color: rgba(255, 255, 255, 0.8);
+            box-sizing: border-box;
+            padding: 10px; /* Added padding here */
         }
         .cube__face--front  { transform: rotateY(0deg) translateZ(100px); }
         .cube__face--right  { transform: rotateY(90deg) translateZ(100px); }
@@ -92,11 +94,11 @@
         <form action="/submission" method="POST" enctype="multipart/form-data">
             <div class="cube-container">
                 <div class="cube">
-                    <div class="cube__face cube__face--front">equal sides</div>
-                    <div class="cube__face cube__face--back">twelve edges</div>
-                    <div class="cube__face cube__face--right">six faces</div>
-                    <div class="cube__face cube__face--left">right angles</div>
-                    <div class="cube__face cube__face--top">l*w*h</div>
+                    <div class="cube__face cube__face--front">Beamlines sometimes use cubic beam splitters to manipulate light</div>
+                    <div class="cube__face cube__face--back">Cubic crystal structures are often studied using synchrotron X-ray diffraction</div>
+                    <div class="cube__face cube__face--right">Light scattering techniques at synchrotrons can probe nanostructures in materials</div>
+                    <div class="cube__face cube__face--left">Scattering data results in diffraction patterns; transillumination produces direct images</div>
+                    <div class="cube__face cube__face--top">Synchrotrons can reveal cubic symmetry in nanoparticles and molecules</div>
                     <div class="cube__face cube__face--bottom">I ❤️ cubes</div>
                 </div>
             </div>
