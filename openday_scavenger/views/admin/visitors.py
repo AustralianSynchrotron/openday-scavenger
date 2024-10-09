@@ -94,6 +94,7 @@ async def render_visitor_status(
     request: Request,
     db: Annotated["Session", Depends(get_db)],
     uid_filter: str | None = None,
+    still_playing: bool | None = None,
 ):
     visitor = None
     correct_answers = 0
@@ -103,7 +104,7 @@ async def render_visitor_status(
     number_puzzles = count_puzzles(db, only_active=True)
 
     if filter_active:
-        visitors = get_all_visitors(db, uid_filter=uid_filter)
+        visitors = get_all_visitors(db, uid_filter=uid_filter, still_playing=still_playing)
         if len(visitors) > 0:
             visitor, correct_answers, _ = visitors[0]
             if correct_answers is not None:
