@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
+from openday_scavenger.api.map.service import get_map_locations
 from openday_scavenger.api.puzzles.schemas import PuzzleCompare
 from openday_scavenger.api.puzzles.service import compare_answer, get_all_responses
 from openday_scavenger.api.puzzles.service import count as count_puzzles
@@ -138,3 +139,19 @@ async def submit_answer(
         return templates.TemplateResponse(
             request=request, name="puzzle_incorrect.html", context={"puzzle": puzzle_in.name}
         )
+
+
+@router.get("/map")
+async def index(
+    request: Request,
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    db: Annotated["Session", Depends(get_db)],
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="map.html",
+        context={
+            "visitor": visitor.uid,
+            "locations": get_map_locations(db),
+        },
+    )
