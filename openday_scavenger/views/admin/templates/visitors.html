@@ -72,7 +72,9 @@
     }
 
     function onScanFailure(error) {
+        console.error("QR Code Scanning Failure: ", error);
     }
+
     document.addEventListener('DOMContentLoaded', function() {
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
