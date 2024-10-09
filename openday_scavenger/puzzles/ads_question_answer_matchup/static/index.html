@@ -49,12 +49,16 @@
                     <div class="list-group-item tinted list-row" id="data3">0.008</div>
                     <div class="list-group-item tinted list-row" id="data4">150</div>
                     <div class="list-group-item tinted list-row" id="data1">300</div>
+                    <div class="finger-container">
+                        <img src="static/img/tap.png" class="finger" />
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <button type="submit" class="btn btn-lg btn-primary w-100">
-                Submit your answer
-            </button>
+        <button type="submit" class="btn btn-lg btn-primary w-100">
+            Submit your answer
+        </button>
         </div>
     </form>
 
@@ -78,7 +82,7 @@
 
 
         function updateOrder() {
-            var order = [];
+            const order = [];
             document.querySelectorAll('#example4Right div').forEach(function (item) {
                 order.push(item.getAttribute('id'));  // Get the id of each list item
             });
@@ -92,17 +96,27 @@
 
         // If you want the default order to be "3, 2, 1, 4", set it initially
         document.addEventListener('DOMContentLoaded', function () {
-            var list = document.getElementById('example4Right');
-            var defaultOrder = ['data3', 'data2', 'data1', 'data4'];
+            const list = document.getElementById('example4Right');
+            const defaultOrder = ['data3', 'data2', 'data1', 'data4'];
 
             // Rearrange the list to the default order
             defaultOrder.forEach(function (id) {
-                var item = list.querySelector('div[id="' + id + '"]');
+                const item = list.querySelector('div[id="' + id + '"]');
                 list.appendChild(item);  // Reorder the list items
             });
 
             // Update the hidden input with the initial order
             updateOrder();
+
+            // add event listener to stop the finger animation when the user starts dragging
+            const finger = document.querySelector('.finger-container');
+            list.addEventListener('mouseenter', function () {
+                finger.style.display = 'none';
+            });
+            list.addEventListener('touchstart', function () {
+                finger.style.display = 'none';
+            });
+
         });
     </script>
 
