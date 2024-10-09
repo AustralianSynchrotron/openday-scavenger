@@ -78,13 +78,19 @@ button {
     font-weight: bold;
 }
 
-@media (max-width: 768px) {
+/************** Set up for mobile screens ***************/
+@media only screen and (max-width: 800px) {
     body {
         font-size: 14px;
     }
-
-    h1 {
-        font-size: 1.5rem;
+    .title-banner {
+        padding: 15px 0;
+    }
+    .title-banner h1{
+        font-size: calc(1.2rem + .9vw);
+        line-height: 0.8;
+        padding: 0;
+        margin: 0;
     }
 
     button {
@@ -210,15 +216,3 @@ button {
     filter: brightness(0.5) saturate(0.6);
 }
 
-/************** Set up for mobile screens ***************/
-@media only screen and (max-width: 800px) {
-    .title-banner {
-        padding: 10px 0;
-    }
-    .title-banner h1{
-        font-size: calc(1.2rem + .9vw);
-        line-height: 0.8;
-        padding: 0;
-        margin: 0;
-    }
-}
