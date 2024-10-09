@@ -34,7 +34,7 @@ async def get_static_files(
 @router.get("/", response_class=HTMLResponse)
 async def new_buildings(request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]): 
     return templates.TemplateResponse(
-        request=request, name="index.html",  context={"puzzle": "newbuildings", "visitor": visitor.uid}
+        request=request, name="index.html",  context={"puzzle": "newbuildings"}
     )
 
         
