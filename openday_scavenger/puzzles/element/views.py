@@ -68,7 +68,6 @@ async def index(
         name="index.html",
         context={
             "puzzle": puzzle_name,
-            "visitor": visitor.uid,
             "location": suffix.upper(),
             "elements": elements,
             "element_lookup": element_lookup,
