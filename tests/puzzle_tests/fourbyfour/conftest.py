@@ -14,9 +14,21 @@ from openday_scavenger.api.visitors.service import create as create_visitor
 from openday_scavenger.api.visitors.service import create_visitor_pool, get_visitor_pool
 from openday_scavenger.api.visitors.service import get_all as get_all_visitors
 from openday_scavenger.main import app
-from openday_scavenger.puzzles.fourbyfour.service import SOLUTION, PuzzleStatus
+from openday_scavenger.puzzles.fourbyfour.service import PuzzleStatus
 
 PUZZLE_NAME = "fourbyfour"
+# not the actual solution, but I need it for tests
+SOLUTION = (
+    "car_models:beetle,bronco,mustang,panda;"
+    "farm_animals:chicken,cow,horse,pig;"
+    "fruit:apple,banana,grape,orange;"
+    "i.t._companies:alphabet,meta,microsoft,nvidia"
+)
+
+
+@pytest.fixture(scope="module")
+def fake_solution() -> str:
+    return SOLUTION
 
 
 @pytest.fixture(scope="module")
@@ -104,4 +116,4 @@ def mock_init_client(initialised_db: Session) -> Generator[TestClient, None, Non
 
 @pytest.fixture(scope="function")
 def new_puzzle() -> PuzzleStatus:
-    return PuzzleStatus.new()
+    return PuzzleStatus.new(SOLUTION)

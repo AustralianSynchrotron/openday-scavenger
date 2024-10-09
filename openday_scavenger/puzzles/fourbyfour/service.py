@@ -3,11 +3,12 @@ from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
-from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
+from openday_scavenger.api.puzzles.service import get as get_puzzle
 from openday_scavenger.api.puzzles.service import get_puzzle_state, set_puzzle_state
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
@@ -16,14 +17,19 @@ from .exceptions import GameOverException, PuzzleSolvedException
 
 # solution must have categories in alphabetical order
 # and words in alphabetical order within each category
-SOLUTION = "car_models:beetle,bronco,mustang,panda;farm_animals:chicken,cow,horse,pig;fruit:apple,banana,grape,orange;i.t._companies:alphabet,meta,microsoft,nvidia"  # not the real solution, we'll get that from the db. Also the words will change.
+
+PUZZLE_NAME = "fourbyfour"
 
 
-@lru_cache
-def get_solution_from_db() -> str:
-    # ask the database for the solution. Cached so it should only happen infrequently
-    # database call here
-    return SOLUTION
+@lru_cache()
+def get_solution_from_db(db: Session, puzzle_name: str) -> str:
+    # ask the database for the solution.
+    # Cached so it should only happen infrequently.
+    # If we change the solution in the database, this info *will* be stale.
+    # TODO: What happens if solution changes halfway through a game?
+    # User will definitely be told their selection is wrong...
+    p = get_puzzle(db_session=db, puzzle_name=puzzle_name)
+    return p.answer
 
 
 def parse_solution(solution: str) -> dict[str, set[str]]:
@@ -34,10 +40,6 @@ def parse_solution(solution: str) -> dict[str, set[str]]:
         category_id, word_ids = category.split(":")
         categories[category_id] = set(word_ids.split(","))
     return categories
-
-
-def get_parsed_solution() -> dict[str, set[str]]:
-    return parse_solution(get_solution_from_db())
 
 
 class Word(BaseModel):
@@ -70,12 +72,13 @@ class PuzzleStatus(BaseModel):
     words: Annotated[list[Word], Field(max_length=16)]
     mistakes_available: int = 4
     selectable_at_once: int = 4
+    solution: dict
 
     @classmethod
-    def new(cls) -> "PuzzleStatus":
+    def new(cls, serialised_solution: str) -> "PuzzleStatus":
         # get and parse solution
         # solution is a dict of category ID to a set of word IDs
-        _sol = get_parsed_solution()
+        _sol = parse_solution(serialised_solution)
         categories = [Category(id=category_id) for category_id in _sol.keys()]
 
         # create the words
@@ -83,11 +86,11 @@ class PuzzleStatus(BaseModel):
 
         # shuffle the words
         random.shuffle(words)
-        return cls(categories=categories, words=words)
+        return cls(categories=categories, words=words, solution=_sol)
 
-    @property
-    def solution(self) -> dict[str, set[str]]:
-        return get_parsed_solution()
+    # @property
+    # def solution(self) -> dict[str, set[str]]:
+    #     return self._sol
 
     @property
     def n_selected_words(self) -> int:
@@ -215,9 +218,13 @@ class PuzzleStatus(BaseModel):
 # Implement a simple singleton pattern to store the status of the None visitor
 class PuzzleStatusSingleton:
     def __init__(self):
-        self.status = PuzzleStatus.new()
+        # otherwise we try to get a solution from the database
+        # before having the chance to put the solution in the database
+        self.status = None
 
     def get(self):
+        if self.status is None:
+            raise ValueError("No status set")
         return self.status
 
     def set(self, status: PuzzleStatus):
@@ -239,11 +246,18 @@ async def set_status_none(status: PuzzleStatus) -> PuzzleStatus:
 async def get_status(
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     db: Annotated["Session", Depends(get_db)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    puzzle_name: str = PUZZLE_NAME,
 ) -> PuzzleStatus:
     # get the status from the database
     if visitor.uid is None:
-        return await get_status_none()
+        try:
+            return await get_status_none()
+        except ValueError as _e:
+            # if we don't have a status for the None visitor, create one
+            # and return it
+            _s = get_solution_from_db(db, puzzle_name)
+            status = PuzzleStatus.new(_s)
+            return await set_status_none(status)
 
     state_from_db = get_puzzle_state(
         db,
@@ -256,8 +270,9 @@ async def get_status(
     # If it's the first interaction, and we got a falsy, create a new status
     # and register it
     if not state_from_db:
-        status = PuzzleStatus.new()
-        state_to_db = status.model_dump()
+        _s = get_solution_from_db(db, puzzle_name)
+        status = PuzzleStatus.new(_s)
+        state_to_db = jsonable_encoder(status.model_dump())
         set_puzzle_state(
             db,
             puzzle_name=puzzle_name,
@@ -280,7 +295,7 @@ async def set_status(
     status: PuzzleStatus,
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     db: Annotated["Session", Depends(get_db)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    puzzle_name: str = PUZZLE_NAME,
 ) -> PuzzleStatus:
     # handle the case where the visitor is None because sessions are disabled
     # and common code does not handle it
@@ -293,7 +308,7 @@ async def set_status(
         db,
         puzzle_name=puzzle_name,
         visitor_auth=visitor,
-        state=status.model_dump(),
+        state=jsonable_encoder(status.model_dump()),
     )
     return await get_status(visitor=visitor, db=db, puzzle_name=puzzle_name)
 
@@ -301,10 +316,11 @@ async def set_status(
 async def reset_status(
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     db: Annotated["Session", Depends(get_db)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    puzzle_name: str = PUZZLE_NAME,
 ) -> PuzzleStatus:
     # write an empty status to the database
-    status = PuzzleStatus.new()
+    _s = get_solution_from_db(db, puzzle_name)
+    status = PuzzleStatus.new(_s)
 
     if visitor.uid is None:
         # sessions are disabled, can't store state in the database,

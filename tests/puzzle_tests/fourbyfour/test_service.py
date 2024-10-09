@@ -12,10 +12,9 @@ from openday_scavenger.puzzles.fourbyfour.exceptions import (
 )
 from openday_scavenger.puzzles.fourbyfour.service import (
     PuzzleStatus,
-    get_parsed_solution,
-    get_solution_from_db,
     get_status,
     get_status_none,
+    parse_solution,
     reset_status,
     set_status,
 )
@@ -30,13 +29,12 @@ class TestFourByFour:
     def test_constructor(
         self,
         mocker: MockerFixture,
+        fake_solution: str,
     ) -> None:
         spies = [
-            mocker.spy(service, "get_parsed_solution"),
             mocker.spy(service, "parse_solution"),
-            mocker.spy(service, "get_solution_from_db"),
         ]
-        _ = PuzzleStatus.new()
+        _ = PuzzleStatus.new(fake_solution)
 
         for spy in spies:
             spy.assert_called_once()
@@ -132,8 +130,9 @@ class TestFourByFour:
     def test_submit_selection(
         self,
         new_puzzle: PuzzleStatus,
+        fake_solution: str,
     ) -> None:
-        parsed_solution = get_parsed_solution()
+        parsed_solution = parse_solution(fake_solution)
         for word_id in parsed_solution[new_puzzle.categories[0].id]:
             new_puzzle.toggle_word_selection(word_id)
         new_puzzle.submit_selection()
@@ -149,8 +148,9 @@ class TestFourByFour:
     def test_submit_selection_wrong(
         self,
         new_puzzle: PuzzleStatus,
+        fake_solution: str,
     ) -> None:
-        parsed_solution = get_parsed_solution()
+        parsed_solution = parse_solution(fake_solution)
         for category in new_puzzle.categories:
             word_id = next(iter(parsed_solution[category.id]))
             new_puzzle.toggle_word_selection(word_id)
@@ -160,8 +160,9 @@ class TestFourByFour:
     def test_submit_selection_game_over(
         self,
         new_puzzle: PuzzleStatus,
+        fake_solution: str,
     ) -> None:
-        parsed_solution = get_parsed_solution()
+        parsed_solution = parse_solution(fake_solution)
         for category in new_puzzle.categories:
             word_id = next(iter(parsed_solution[category.id]))
             new_puzzle.toggle_word_selection(word_id)
@@ -174,8 +175,9 @@ class TestFourByFour:
     def test__repr__(
         self,
         new_puzzle: PuzzleStatus,
+        fake_solution: str,
     ) -> None:
-        parsed_solution = get_parsed_solution()
+        parsed_solution = parse_solution(fake_solution)
         out = repr(new_puzzle)
         assert "PuzzleStatus" in out
         assert "Categories" in out
@@ -201,8 +203,9 @@ class TestFourByFour:
     def test__repr__solved(
         self,
         new_puzzle: PuzzleStatus,
+        fake_solution: str,
     ) -> None:
-        parsed_solution = get_parsed_solution()
+        parsed_solution = parse_solution(fake_solution)
         for category in parsed_solution:
             for word_id in parsed_solution[category]:
                 new_puzzle.toggle_word_selection(word_id)
@@ -216,8 +219,9 @@ class TestFourByFour:
     def test_export_solution(
         self,
         new_puzzle: PuzzleStatus,
+        fake_solution: str,
     ) -> None:
-        parsed_solution = get_parsed_solution()
+        parsed_solution = parse_solution(fake_solution)
         for category in parsed_solution:
             for word_id in parsed_solution[category]:
                 new_puzzle.toggle_word_selection(word_id)
@@ -227,12 +231,13 @@ class TestFourByFour:
                 # expected, at the end!
                 assert all(category.is_solved for category in new_puzzle.categories)
 
-        assert new_puzzle.export_solution() == get_solution_from_db()
+        assert new_puzzle.export_solution() == fake_solution
 
     @pytest.mark.asyncio
     async def test_get_status_noauth(
         self,
         mocker: MockerFixture,
+        initialised_db: "Session",
     ) -> None:
         """
         Test getting a status for an unknown visitor.
@@ -241,12 +246,11 @@ class TestFourByFour:
         _spy_db = mocker.spy(service, "get_puzzle_state")
         _spy_singleton = mocker.spy(service.status_of_visitor_none, "get")
         visitor = Mock(uid=None)
-        db = Mock()
 
         ss = await get_status(
             visitor,
-            db=db,
-            puzzle_name="foo",
+            db=initialised_db,
+            puzzle_name=PUZZLE_NAME,
         )
 
         assert isinstance(ss, PuzzleStatus)
@@ -256,27 +260,50 @@ class TestFourByFour:
         assert id(ss) == id(await get_status_none())
 
     @pytest.mark.asyncio
-    async def test_reset_status_noauth(self, mocker: MockerFixture) -> None:
+    async def test_reset_status_noauth(
+        self,
+        mocker: MockerFixture,
+        initialised_db: "Session",
+    ) -> None:
         _spy_singleton = mocker.spy(service.status_of_visitor_none, "get")
         visitor = Mock(uid=None)
-        db = Mock()
-        ss = await get_status(visitor, db=db, puzzle_name="foo")
-        new_ss = await reset_status(visitor, db=db, puzzle_name="foo")
+        ss = await get_status(
+            visitor,
+            db=initialised_db,
+            puzzle_name=PUZZLE_NAME,
+        )
+        new_ss = await reset_status(
+            visitor,
+            db=initialised_db,
+            puzzle_name=PUZZLE_NAME,
+        )
         assert new_ss is not ss
         _spy_singleton.assert_called()
 
     @pytest.mark.asyncio
-    async def test_set_status_noauth(self, mocker: MockerFixture) -> None:
+    async def test_set_status_noauth(
+        self,
+        mocker: MockerFixture,
+        initialised_db: "Session",
+    ) -> None:
         _spies_singleton = [
             mocker.spy(service.status_of_visitor_none, "get"),
             mocker.spy(service.status_of_visitor_none, "set"),
         ]
         visitor = Mock(uid=None)
-        db = Mock()
-        ss = await get_status(visitor, db=db, puzzle_name="foo")
+        ss = await get_status(
+            visitor,
+            db=initialised_db,
+            puzzle_name=PUZZLE_NAME,
+        )
         # modify the status
         ss.toggle_word_selection(ss.words[0].id)
-        still_ss = await set_status(ss, visitor, db=db, puzzle_name="foo")
+        still_ss = await set_status(
+            ss,
+            visitor,
+            db=initialised_db,
+            puzzle_name=PUZZLE_NAME,
+        )
         assert id(still_ss) == id(ss)
         for spy in _spies_singleton:
             spy.assert_called()
