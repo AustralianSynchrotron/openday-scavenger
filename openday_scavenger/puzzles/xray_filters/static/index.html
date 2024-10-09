@@ -43,7 +43,7 @@
                 // Apply progressive dimming in **reverse order**
                 activeBeams.reverse().forEach((beam, index) => {
                     // Clear previous dimming classes
-                    beam.classList.remove('dim-1', 'dim-2', 'dim-3', 'dim-4');
+                    beam.classList.remove('dim-2', 'dim-3', 'dim-4');
 
                     // Apply appropriate dimming class (reverse order)
                     beam.classList.add(`dim-${index + 1}`);
