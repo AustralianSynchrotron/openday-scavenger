@@ -214,3 +214,16 @@ button {
 .dim-4 {
     filter: brightness(0.5) saturate(0.6);
 }
+
+/************** Set up for mobile screens ***************/
+@media only screen and (max-width: 800px) {
+    .title-banner {
+        padding: 10px 0;
+    }
+    .title-banner h1{
+        font-size: calc(1.2rem + .9vw);
+        line-height: 0.8;
+        padding: 0;
+        margin: 0;
+    }
+}
