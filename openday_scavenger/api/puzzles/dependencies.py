@@ -115,6 +115,4 @@ async def record_puzzle_access(
         visitor (VisitorAuth): The authenticated visitor.
         puzzle_name (str): The name of the puzzle
     """
-    # If we don't have a visitor uid we can't record the access
-    if visitor.uid is not None:
-        record_access(db_session=db, puzzle_name=puzzle_name, visitor_uid=visitor.uid)
+    record_access(db_session=db, puzzle_name=puzzle_name, visitor_auth=visitor)
