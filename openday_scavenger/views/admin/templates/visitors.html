@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="col-8">
-            <div class="bg-body shadow-sm admin-panel-container" hx-trigger="input from:#uid_filter delay:500ms" hx-include="#uid_filter" hx-get='/admin/visitors/status'>
+            <div class="bg-body shadow-sm admin-panel-container" hx-trigger="input from:#uid_filter delay:500ms, click from:#clearButton" hx-include="#uid_filter" hx-get='/admin/visitors/status'>
                 <div class="me-3 p-3">
                     Please scan an Adventure Key or type the visitor UID into the search field.
                 </div>
