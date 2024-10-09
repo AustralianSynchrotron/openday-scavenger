@@ -1,11 +1,14 @@
 import random
-from collections import defaultdict
 from functools import lru_cache
 from typing import Annotated
 
 from fastapi import Depends
 from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
 
+from openday_scavenger.api.db import get_db
+from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
+from openday_scavenger.api.puzzles.service import get_puzzle_state, set_puzzle_state
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
@@ -24,7 +27,8 @@ def get_solution_from_db() -> str:
 
 
 def parse_solution(solution: str) -> dict[str, set[str]]:
-    """Parse the solution string into a dictionary of category ID to a set of word ids"""
+    """Parse the solution string
+    into a dictionary of category ID to a set of word ids"""
     categories = {}
     for category in solution.split(";"):
         category_id, word_ids = category.split(":")
@@ -141,7 +145,7 @@ class PuzzleStatus(BaseModel):
         if the selected words are all in the same category"""
         # double check we were allowed to submit (if UI validation fails)
         if not self.can_submit:
-            raise ValueError("Not enough words selected. But UI should prevent this")
+            raise ValueError("Not enough words selected. " "But UI should prevent this")
 
         selected_words = self.get_selected_words()
         selected_words_ids = set(word.id for word in selected_words)
@@ -202,30 +206,115 @@ class PuzzleStatus(BaseModel):
         return ";".join(solution)
 
 
-status_registry: dict[str | None, "PuzzleStatus"] = defaultdict(PuzzleStatus.new)
+# The puzzle stores state in the database.
+# The mechanism to store state in the database is provided by common code
+# in the api.puzzles.service module.
+# It does not work if sessions are disabled.
+# If sessions are disabed, the user has uid None.
+# In this case, the puzzle will not be able to store state in the database.
+# Implement a simple singleton pattern to store the status of the None visitor
+class PuzzleStatusSingleton:
+    def __init__(self):
+        self.status = PuzzleStatus.new()
+
+    def get(self):
+        return self.status
+
+    def set(self, status: PuzzleStatus):
+        self.status = status
 
 
-def get_status_registry() -> dict[str | None, "PuzzleStatus"]:
-    return status_registry
+status_of_visitor_none = PuzzleStatusSingleton()
+
+
+async def get_status_none() -> PuzzleStatus:
+    return status_of_visitor_none.get()
+
+
+async def set_status_none(status: PuzzleStatus) -> PuzzleStatus:
+    status_of_visitor_none.set(status)
+    return status_of_visitor_none.get()
 
 
 async def get_status(
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
-    status_registry: Annotated[dict[str | None, PuzzleStatus], Depends(get_status_registry)],
+    db: Annotated["Session", Depends(get_db)],
+    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
 ) -> PuzzleStatus:
-    return status_registry[visitor.uid]
+    # get the status from the database
+    if visitor.uid is None:
+        return await get_status_none()
+
+    state_from_db = get_puzzle_state(
+        db,
+        puzzle_name=puzzle_name,
+        visitor_auth=visitor,
+    )
+    # get_puzzle_state will raise if the visitor is unknown or the puzzle is unknown.
+    # but will return falsy if the visitor has not yet interacted with the puzzle.
+
+    # If it's the first interaction, and we got a falsy, create a new status
+    # and register it
+    if not state_from_db:
+        status = PuzzleStatus.new()
+        state_to_db = status.model_dump()
+        set_puzzle_state(
+            db,
+            puzzle_name=puzzle_name,
+            visitor_auth=visitor,
+            state=state_to_db,
+        )
+        state_from_db = get_puzzle_state(
+            db,
+            puzzle_name=puzzle_name,
+            visitor_auth=visitor,
+        )
+
+    # restore status (pydantic model) from the database state (dict)
+    status = PuzzleStatus.model_validate(state_from_db)
+
+    return status
+
+
+async def set_status(
+    status: PuzzleStatus,
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    db: Annotated["Session", Depends(get_db)],
+    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+) -> PuzzleStatus:
+    # handle the case where the visitor is None because sessions are disabled
+    # and common code does not handle it
+    if visitor.uid is None:
+        # since we're working on a reference of the status,
+        # we should just be able to return the input
+        return await set_status_none(status)
+
+    set_puzzle_state(
+        db,
+        puzzle_name=puzzle_name,
+        visitor_auth=visitor,
+        state=status.model_dump(),
+    )
+    return await get_status(visitor=visitor, db=db, puzzle_name=puzzle_name)
 
 
 async def reset_status(
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
-    status_registry: Annotated[dict[str | None, PuzzleStatus], Depends(get_status_registry)],
+    db: Annotated["Session", Depends(get_db)],
+    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
 ) -> PuzzleStatus:
-    status_registry[visitor.uid] = PuzzleStatus.new()
-    return status_registry[visitor.uid]
+    # write an empty status to the database
+    status = PuzzleStatus.new()
 
+    if visitor.uid is None:
+        # sessions are disabled, can't store state in the database,
+        # so store it in the singleton
+        return await set_status_none(status)
 
-async def delete_status(
-    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
-    status_registry: Annotated[dict[str | None, PuzzleStatus], Depends(get_status_registry)],
-) -> None:
-    status_registry.pop(visitor.uid, None)
+    set_puzzle_state(
+        db,
+        puzzle_name=puzzle_name,
+        visitor_auth=visitor,
+        state=status.model_dump(),
+    )
+    return await get_status(visitor=visitor, db=db, puzzle_name=puzzle_name)
