@@ -71,17 +71,13 @@
         updateFilter(segments[segments.length - 1]);
     }
 
-    function onScanFailure(error) {
-        console.error("QR Code Scanning Failure: ", error);
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-        let html5QrcodeScanner = new Html5QrcodeScanner(
+        const html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
             { fps: 10, qrbox: {width: 100, height: 100} },
             false
         );
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        html5QrcodeScanner.render(onScanSuccess);
     }, false);
     
 </script>  
