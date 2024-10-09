@@ -3,12 +3,12 @@
     visibility: hidden;
   }
 
-  .map-container {
+  .map-admin {
     visibility: visible;
   }
 }
 
-.map-container {
+.map-admin {
     position: relative;
     margin-left: 0;
     max-width: 800px;
@@ -21,8 +21,10 @@
 }
 
 .map-marker {
-    position: absolute;
+    cursor: pointer;
     display: inline-block;
     height: 24px;
+    opacity: 0.8;
+    position: absolute;
     width: 24px;
 }

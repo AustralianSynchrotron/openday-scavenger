@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
-from openday_scavenger.api.puzzles.service import get_map_locations
+from openday_scavenger.api.map.service import get_map_locations
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 

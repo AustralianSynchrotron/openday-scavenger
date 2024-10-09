@@ -12,6 +12,11 @@ map.addEventListener("click", newMarker);
 const array_title = document.getElementById("map-array-title");
 const array_display = document.getElementById("map-array");
 
+// Update array display string
+function updateArrayDisplay() {
+    array_display.textContent = JSON.stringify(markerLocations);
+}
+
 // Add co-ord to markers array & display
 function newMarker(e) {
     // Return if user clicked on existing marker
@@ -32,27 +37,30 @@ function newMarker(e) {
     map.appendChild(m);
 
     // Add marker to array list
-    markerLocations.push(`top: ${m_top}px; left: ${m_left}px;`);
+    markerLocations.push({
+        top: m_top,
+        left: m_left,
+    })
 
     // Display array list
     if (markerLocations.length > 0) array_title.style.visibility = "visible";
-    array_display.textContent = markerLocations;
+    updateArrayDisplay();
 }
 
 // Remove co-ord when existing marker is clicked
 function removeMarker(e) {
     var m = e.target;
     m.remove();
-    markerLocations = markerLocations.filter(e => e !== `top: ${m.style.top}; left: ${m.style.left};`);
+    markerLocations = markerLocations.filter(e => !(e.top == m.top && e.left == m.left));
 
     // Update display array list
     if (markerLocations.length < 1) array_title.style.visibility = "hidden";
-    array_display.textContent = markerLocations;
+    updateArrayDisplay();
 }
 
 // Copy marker array to clipboard
 function copyMarkerArray(e) {
-    navigator.clipboard.writeText(`${markerLocations.toString()}`);
+    navigator.clipboard.writeText(`${JSON.stringify(markerLocations)}`);
     e.target.innerText = "Copied to clipboard!";
     e.target.classList.add("btn-info");
 
