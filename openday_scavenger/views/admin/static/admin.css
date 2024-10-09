@@ -62,6 +62,14 @@
     background-color: #faf8fb;
 }
 
+.admin-bg-red {
+    background-color: #fa6464;
+}
+
+.admin-bg-green {
+    background-color: #5fe6b0;
+}
+
 .admin-nav-sidebar {
     width: 16.875rem;
     background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
@@ -165,4 +173,8 @@
     font-size: 1.0rem;
     font-weight: 400;
     color: #fff;
+}
+
+.admin-visitor-status-panel {
+    font-size: 2.125rem;
 }
