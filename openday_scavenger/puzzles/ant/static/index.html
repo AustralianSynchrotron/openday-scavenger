@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script src="/static/js/htmx.min.js"></script>
+        <script src="/static/js/json-enc.js"></script>
+        
+        <link href="static/styles.css" rel="stylesheet">
+        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    </head>
+    <body>
+        <!-- <h1>Demo Puzzle</h1> -->
+        <div class="container">
+            <h1 class="title">Count the Legs of the ant! 🐜</h1>
+         
+            <div class="instructions">
+             <p>Below is the video of a reconstructed CT data of an ant scanned in MCT beamline.</p>
+             <p>How many <b>legs</b> does this ant have? 👀 Enter your answer at the bottom of this page! 👇</p>
+            </div>
+
+           <hr class="solid">
+           
+           <video width="100%"  controls loop>
+                <source src="static/ant_movieph.mp4" type="video/mp4">
+                Your browser does not support HTML video.
+            </video>
+           
+           <hr class="solid">
+           
+           <form id='form' class="form" method='POST' action='/submission'>
+                <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+                <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+                <label class="form-label">
+                    Answer:
+                    <input class="form-input" type="number" required pattern="[1-9]\d{0,5}" title="Positive integer only"
+                        placeholder="Enter your answer here..." name="answer" aria-describedby="input-help_text">
+                </label>
+ 
+                <!-- <input type="text" id="answer" name="answer"> -->
+                <button class="form-button" type="submit">✈ Submit</button>
+            </form>
+         </div>
+         
+        
+    </body>
+</html>
