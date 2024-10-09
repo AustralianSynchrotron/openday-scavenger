@@ -23,6 +23,36 @@ h1 {
     text-align: center;
 }
 
+
+/*** update primary button color ***/
+.btn-primary {
+    color: #203d79;
+    background-color: #366a8a;
+    border-color: #203d79
+}
+
+.btn-outline-primary {
+    color: #203d79;
+    background-color: transparent;
+    background-image: none;
+    border-color: #203d79
+}
+
+.btn-secondary {
+    color: #545b61;
+    background-color: #7d868f;
+    border-color: #545b61
+}
+
+.btn-outline-secondary {
+    color: #545b61;
+    background-color: transparent;
+    background-image: none;
+    border-color: #545b61
+}
+/********/
+
+
 /* Style for the scrambled word paragraph */
 #scrambled_word {
     font-size: 24px;
@@ -39,7 +69,7 @@ h1 {
 
 .form-parent {
     max-width: 600px;
-    margin: 50px auto;
+    margin: 25px auto;
     padding: 20px;
     background-color: #ffffff;
     border: 1px solid #dee2e6;
@@ -63,13 +93,14 @@ h1 {
     text-align: center;
   }
 
-
 .row {
     display: flex;
     justify-content: space-between;
     /* width: 80%;
     margin-left: 8%;
     margin-right: 8%; */
+    padding-right: 0px !important;
+    padding-left: 0px !important;
  
 }
 
@@ -78,22 +109,24 @@ h1 {
     flex-basis: 0;
     flex-grow: 1;
     flex-shrink: 1;
-    padding: .75rem;
-    border: 1px solid black;
+    border: 0.8px solid grey;
+    padding: .5rem;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
 }
-
 
 .item-selected {
     background-color: #d6d6d6;
 }
 
 .item-is-in-word {
-    background-color: #cdb1d8; /* ansto light blue #0077c163; */
+    background-color: #0077c163 ; /* ansto light blue #0077c163; cyan #35bfc9 */
 }
 
 /*********************** Found Words List Start *******************/
 .found-words {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
     margin-bottom : 10px
@@ -105,49 +138,107 @@ h1 {
     /* padding: 10px; */
     justify-content: center;
     position: relative;
-    background-color: #f5eff5;
+    background-color: #e6f1f963;
     border-radius: 8px;
     column-gap: 10px;
 }
 
- 
 .word-delete {
     position: absolute;
     top:0;
     right:4;
   }
-  
+
 .word-text {
     font-size: 0.8rem;
     font-weight: bold;
 }
-
-
 /*********************** Found Words List End *******************/
 
 
 /*********************** Hint Words Start  *********************/
 .hint-word-parent {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
     align-items: center;
-    margin-bottom : 10px;
     visibility: hidden;
-    width: 80%;
+    width: 95%;
     /* padding: 10px; */
     margin-left: 8%;
     margin-right: 8%;
     margin-top: 10px;
+    margin-bottom : 10px;
 
 }
 
 .hint-word {
     justify-content: center;
     position: relative;
-    background-color: #e4f1ff;
+    /* background-color: #e3eeee; */
     border-radius: 8px;
+    padding: 4px 6px;
 }
+/********************** Hint Words End ***********************/
 
-
-/********************** Hint Words End  ***********************/
+/************** Set up for mobile screens start ***************/
+@media only screen and (max-width: 800px) {
+    body {
+      font-size: calc(0.5rem + .9vw);
+    }
+    .cell {
+        display: block;
+        /* flex-basis: 0;
+        flex-grow: 1;
+        flex-shrink: 1; */
+        padding: 0rem;
+        border: 0.8px none grey;
+    }
+    .btn {
+      font-size: calc(0.5rem + .9vw);
+      padding: 2px;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+    .form-parent {
+        padding: 2px;
+        margin: 5px auto;
+        width: 75%;
+        /* max-width: 75%; */
+    }
+    .found-words {
+        gap: 2px;
+        margin-bottom : 5px
+    }
+    .hint-word-parent {
+        gap: 2px;
+        width: 95%;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 1px;
+        margin-right: 1px;
+        font-size: calc(0.5rem + .9vw)
+    }
+    .word-text {
+        font-size: calc(0.5rem + .9vw);
+    }
+    h1 {
+        font-size: calc(1rem + .9vw);
+        padding: 5px;
+        line-height: 1;
+    }
+    h2 {
+        font-size: calc(0.85rem + .9vw);
+    }
+    h3 {
+        font-size: calc(0.75rem + .9vw);
+    }
+    h4 {
+        font-size: calc(0.7rem + .9vw);
+    }
+    h5 {
+        font-size: calc(0.6rem + .9vw);
+    }
+}
+/************** Set up for mobile screens end ***************/
