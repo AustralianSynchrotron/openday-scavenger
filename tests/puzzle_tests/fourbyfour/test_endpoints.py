@@ -5,7 +5,7 @@ from pytest_mock.plugin import MockerFixture
 from openday_scavenger.puzzles.fourbyfour.exceptions import GameOverException, PuzzleSolvedException
 from openday_scavenger.puzzles.fourbyfour.service import (
     PuzzleStatus,
-    get_parsed_solution,
+    parse_solution,
 )
 
 PREFIX = "/puzzles"
@@ -57,9 +57,10 @@ class TestFourByFour:
         self,
         mock_init_client: TestClient,
         mocker: MockerFixture,
+        fake_solution: str,
     ) -> None:
         _spy = mocker.spy(PuzzleStatus, "toggle_word_selection")
-        solution = get_parsed_solution()
+        solution = parse_solution(fake_solution)
         a_word = next(iter(solution[next(iter(solution.keys()))]))
 
         response = mock_init_client.put(f"{PREFIX}/{PUZZLE_NAME}/{a_word}/selection")

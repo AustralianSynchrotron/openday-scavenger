@@ -7,12 +7,11 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
-from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 from .exceptions import GameOverException, PuzzleSolvedException
-from .service import PuzzleStatus, get_status, reset_status, set_status
+from .service import PUZZLE_NAME, PuzzleStatus, get_status, reset_status, set_status
 
 router = APIRouter()
 
@@ -47,7 +46,6 @@ async def get_shuffled_words(
     request: Request,
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
     db: Annotated["Session", Depends(get_db)],
 ):
     """get_shuffled_words shuffle the words in the puzzle"""
@@ -56,15 +54,13 @@ async def get_shuffled_words(
         status,
         visitor=visitor,
         db=db,
-        puzzle_name=puzzle_name,
     )
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": puzzle_name,
-            "visitor": visitor.uid,
+            "puzzle": PUZZLE_NAME,
             "status": status,
         },
     )
@@ -75,7 +71,6 @@ async def deselect_all_words(
     request: Request,
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
     db: Annotated["Session", Depends(get_db)],
 ):
     """deselect_all_words Deselect all the words"""
@@ -84,15 +79,13 @@ async def deselect_all_words(
         status,
         visitor=visitor,
         db=db,
-        puzzle_name=puzzle_name,
     )
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": puzzle_name,
-            "visitor": visitor.uid,
+            "puzzle": PUZZLE_NAME,
             "status": status,
         },
     )
@@ -104,7 +97,6 @@ async def toggle_word_selection(
     request: Request,
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
     db: Annotated["Session", Depends(get_db)],
 ):
     """toggle_word_selection Toggle the selection of a word"""
@@ -118,15 +110,13 @@ async def toggle_word_selection(
         status,
         visitor=visitor,
         db=db,
-        puzzle_name=puzzle_name,
     )
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": puzzle_name,
-            "visitor": visitor.uid,
+            "puzzle": PUZZLE_NAME,
             "status": status,
             "message": msg,
         },
@@ -138,7 +128,6 @@ async def submit_selection(
     request: Request,
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
     db: Annotated["Session", Depends(get_db)],
 ):
     """submit_selection Submit the selection of words"""
@@ -160,7 +149,6 @@ async def submit_selection(
         status,
         visitor=visitor,
         db=db,
-        puzzle_name=puzzle_name,
     )
 
     # Remove the status of the visitor after the puzzle is solved
@@ -169,15 +157,13 @@ async def submit_selection(
         await reset_status(
             visitor=visitor,
             db=db,
-            puzzle_name=puzzle_name,
         )
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": puzzle_name,
-            "visitor": visitor.uid,
+            "puzzle": PUZZLE_NAME,
             "status": status,
             "message": msg,
             "game_over": game_over,
@@ -189,16 +175,13 @@ async def submit_selection(
 @router.delete("/")
 async def reset(
     request: Request,
-    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
     clean_status: Annotated[PuzzleStatus, Depends(reset_status)],
 ):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": puzzle_name,
-            "visitor": visitor.uid,
+            "puzzle": PUZZLE_NAME,
             "status": clean_status,
         },
     )
@@ -207,16 +190,13 @@ async def reset(
 @router.get("/")
 async def index(
     request: Request,
-    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
-    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
 ):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
         context={
-            "puzzle": puzzle_name,
-            "visitor": visitor.uid,
+            "puzzle": PUZZLE_NAME,
             "status": status,
         },
     )
