@@ -128,11 +128,26 @@ document.addEventListener("DOMContentLoaded", async function () {
   const answerInput = document.getElementById("answer");
 
   answerInput.addEventListener("input", function () {
-    console.log("input");
     if (this.value.trim() !== "") {
       submitButton.classList.add("ready");
     } else {
       submitButton.classList.remove("ready");
     }
+  });
+
+  // Mobile guide
+  // if the screen is less than the breakpoint, show the mobile guide
+  const BREAKPOINT = 644; // breakpoint for periodic table
+  const mobileGuide = document.querySelector(".mobile-guide");
+  if (window.innerWidth <= BREAKPOINT) {
+    mobileGuide.style.visibility = "visible";
+  }
+
+  // when click or touch anywhere, hide mobile guide
+  window.addEventListener("click", function () {
+    mobileGuide.style.visibility = "hidden";
+  });
+  window.addEventListener("touchstart", function () {
+    mobileGuide.style.visibility = "hidden";
   });
 });
