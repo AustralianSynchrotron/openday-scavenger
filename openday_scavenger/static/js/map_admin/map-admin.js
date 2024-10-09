@@ -49,9 +49,10 @@ function newMarker(e) {
 
 // Remove co-ord when existing marker is clicked
 function removeMarker(e) {
-    var m = e.target;
-    m.remove();
-    markerLocations = markerLocations.filter(e => !(e.top == m.top && e.left == m.left));
+    var marker = e.target;
+
+    markerLocations = markerLocations.filter(m => !(`${m.top}px` == marker.style.top && `${m.left}px` == marker.style.left));
+    marker.remove();
 
     // Update display array list
     if (markerLocations.length < 1) array_title.style.visibility = "hidden";
