@@ -23,6 +23,36 @@ h1 {
     text-align: center;
 }
 
+
+/*** update primary button color ***/
+.btn-primary {
+    color: #203d79;
+    background-color: #366a8a;
+    border-color: #203d79
+}
+
+.btn-outline-primary {
+    color: #203d79;
+    background-color: transparent;
+    background-image: none;
+    border-color: #203d79
+}
+
+.btn-secondary {
+    color: #545b61;
+    background-color: #7d868f;
+    border-color: #545b61
+}
+
+.btn-outline-secondary {
+    color: #545b61;
+    background-color: transparent;
+    background-image: none;
+    border-color: #545b61
+}
+/********/
+
+
 /* Style for the scrambled word paragraph */
 #scrambled_word {
     font-size: 24px;
@@ -90,7 +120,7 @@ h1 {
 }
 
 .item-is-in-word {
-    background-color: #cdb1d8; /* ansto light blue #0077c163; */
+    background-color: #0077c163 ; /* ansto light blue #0077c163; cyan #35bfc9 */
 }
 
 /*********************** Found Words List Start *******************/
@@ -108,7 +138,7 @@ h1 {
     /* padding: 10px; */
     justify-content: center;
     position: relative;
-    background-color: #f5eff5;
+    background-color: #e6f1f963;
     border-radius: 8px;
     column-gap: 10px;
 }
@@ -146,7 +176,7 @@ h1 {
 .hint-word {
     justify-content: center;
     position: relative;
-    background-color: #e4f1ff;
+    /* background-color: #e3eeee; */
     border-radius: 8px;
     padding: 4px 6px;
 }
@@ -174,7 +204,8 @@ h1 {
     .form-parent {
         padding: 2px;
         margin: 5px auto;
-        max-width: 90%;
+        width: 75%;
+        /* max-width: 75%; */
     }
     .found-words {
         gap: 2px;
