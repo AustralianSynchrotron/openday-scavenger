@@ -9,7 +9,12 @@ from openday_scavenger.api.puzzles.service import get_all_responses, record_acce
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
-from .exceptions import DisabledPuzzleError, PuzzleCompletedError, UnknownPuzzleError
+from .exceptions import (
+    DisabledPuzzleError,
+    PuzzleCompletedError,
+    PuzzleNotFoundError,
+    UnknownPuzzleError,
+)
 from .models import Puzzle
 
 __all__ = (
@@ -114,5 +119,18 @@ async def record_puzzle_access(
         db (Session): The SQLAlchemy database session.
         visitor (VisitorAuth): The authenticated visitor.
         puzzle_name (str): The name of the puzzle
+
+    Raises:
+        UnknownPuzzleError: If the puzzle is not found.
     """
-    record_access(db_session=db, puzzle_name=puzzle_name, visitor_auth=visitor)
+    try:
+        record_access(db_session=db, puzzle_name=puzzle_name, visitor_auth=visitor)
+    except PuzzleNotFoundError as e:
+        # if the service function raises a PuzzleNotFoundError (which inherits from RuntimeError),
+        # raise an UnknownPuzzleError (which inherits from HTTPException) instead
+        # so that the user receives a 404 response
+        raise UnknownPuzzleError(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No puzzle with the name {puzzle_name} is registered in the database",
+        ) from e
+    # but if the service function raises any other exception, let it propagate
