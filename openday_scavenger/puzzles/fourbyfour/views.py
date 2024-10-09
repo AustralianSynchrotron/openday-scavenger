@@ -4,17 +4,21 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 
+from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 from .exceptions import GameOverException, PuzzleSolvedException
-from .service import PuzzleStatus, delete_status, get_status, get_status_registry, reset_status
+from .service import PuzzleStatus, get_status, reset_status, set_status
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
+templates = Jinja2Templates(
+    directory=Path(__file__).resolve().parent / "templates",
+)
 
 
 @router.get("/static/{path:path}")
@@ -33,7 +37,8 @@ async def get_static_files(
         return FileResponse(file_path)
     else:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Requested file does not exist"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Requested file does not exist",
         )
 
 
@@ -43,9 +48,17 @@ async def get_shuffled_words(
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
     puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    db: Annotated["Session", Depends(get_db)],
 ):
     """get_shuffled_words shuffle the words in the puzzle"""
     status.shuffle_words()
+    status = await set_status(
+        status,
+        visitor=visitor,
+        db=db,
+        puzzle_name=puzzle_name,
+    )
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -63,9 +76,17 @@ async def deselect_all_words(
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
     puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    db: Annotated["Session", Depends(get_db)],
 ):
     """deselect_all_words Deselect all the words"""
     status.deselect_all_words()
+    status = await set_status(
+        status,
+        visitor=visitor,
+        db=db,
+        puzzle_name=puzzle_name,
+    )
+
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -84,6 +105,7 @@ async def toggle_word_selection(
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
     puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    db: Annotated["Session", Depends(get_db)],
 ):
     """toggle_word_selection Toggle the selection of a word"""
     try:
@@ -91,6 +113,13 @@ async def toggle_word_selection(
         msg = None
     except Exception as e:
         msg = str(e)
+
+    status = await set_status(
+        status,
+        visitor=visitor,
+        db=db,
+        puzzle_name=puzzle_name,
+    )
 
     return templates.TemplateResponse(
         request=request,
@@ -110,6 +139,7 @@ async def submit_selection(
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
     status: Annotated[PuzzleStatus, Depends(get_status)],
     puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    db: Annotated["Session", Depends(get_db)],
 ):
     """submit_selection Submit the selection of words"""
     msg = None
@@ -123,11 +153,24 @@ async def submit_selection(
     except PuzzleSolvedException as e:
         msg = str(e)
         register_success = True
-        # Remove the status of the visitor after the puzzle is solved
-        # so that it does not accumulate in memory
-        await delete_status(visitor, get_status_registry())
     except Exception as e:
         msg = str(e)
+
+    status = await set_status(
+        status,
+        visitor=visitor,
+        db=db,
+        puzzle_name=puzzle_name,
+    )
+
+    # Remove the status of the visitor after the puzzle is solved
+    # This is only done if the sessions are disabled
+    if (visitor.uid is None) and register_success:
+        await reset_status(
+            visitor=visitor,
+            db=db,
+            puzzle_name=puzzle_name,
+        )
 
     return templates.TemplateResponse(
         request=request,

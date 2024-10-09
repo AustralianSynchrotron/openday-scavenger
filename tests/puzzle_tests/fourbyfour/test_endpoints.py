@@ -1,5 +1,6 @@
 from fastapi import status
 from fastapi.testclient import TestClient
+from pytest_mock.plugin import MockerFixture
 
 from openday_scavenger.puzzles.fourbyfour.exceptions import GameOverException, PuzzleSolvedException
 from openday_scavenger.puzzles.fourbyfour.service import (
@@ -16,7 +17,10 @@ class TestFourByFour:
         response = mock_init_client.get(f"{PREFIX}/{PUZZLE_NAME}")
         assert response.status_code == status.HTTP_200_OK
 
-    def test_index_returns_same_instance(self, mock_init_client: TestClient) -> None:
+    def test_index_returns_same_instance(
+        self,
+        mock_init_client: TestClient,
+    ) -> None:
         response = mock_init_client.get(f"{PREFIX}/{PUZZLE_NAME}")
         assert response.status_code == status.HTTP_200_OK
         ss = response.context["status"]  # type: ignore
@@ -27,21 +31,33 @@ class TestFourByFour:
 
         assert id(ss) == id(new_ss)
 
-    def test_get_shuffled_words(self, mock_init_client: TestClient, mocker) -> None:
+    def test_get_shuffled_words(
+        self,
+        mock_init_client: TestClient,
+        mocker: MockerFixture,
+    ) -> None:
         _spy = mocker.spy(PuzzleStatus, "shuffle_words")
 
         response = mock_init_client.get(f"{PREFIX}/{PUZZLE_NAME}/shuffled")
         assert response.status_code == status.HTTP_200_OK
         _spy.assert_called_once()
 
-    def test_deselect_all_words(self, mock_init_client: TestClient, mocker) -> None:
+    def test_deselect_all_words(
+        self,
+        mock_init_client: TestClient,
+        mocker: MockerFixture,
+    ) -> None:
         _spy = mocker.spy(PuzzleStatus, "deselect_all_words")
 
         response = mock_init_client.delete(f"{PREFIX}/{PUZZLE_NAME}/selection")
         assert response.status_code == status.HTTP_200_OK
         _spy.assert_called_once()
 
-    def test_toggle_word_selection(self, mock_init_client: TestClient, mocker) -> None:
+    def test_toggle_word_selection(
+        self,
+        mock_init_client: TestClient,
+        mocker: MockerFixture,
+    ) -> None:
         _spy = mocker.spy(PuzzleStatus, "toggle_word_selection")
         solution = get_parsed_solution()
         a_word = next(iter(solution[next(iter(solution.keys()))]))
@@ -53,7 +69,9 @@ class TestFourByFour:
         _spy.assert_called_once()
 
     def test_toggle_word_selection_handle_exception(
-        self, mock_init_client: TestClient, mocker
+        self,
+        mock_init_client: TestClient,
+        mocker: MockerFixture,
     ) -> None:
         _spy = mocker.spy(PuzzleStatus, "toggle_word_selection")
         # solution = get_parsed_solution()
@@ -66,7 +84,10 @@ class TestFourByFour:
         # assert ss.get_word(a_word).is_selected
         _spy.assert_called_once()
 
-    def test_reset(self, mock_init_client: TestClient, mocker) -> None:
+    def test_reset(
+        self,
+        mock_init_client: TestClient,
+    ) -> None:
         # first get the status, then reset it and check id is different
         response = mock_init_client.get(f"{PREFIX}/{PUZZLE_NAME}")
         assert response.status_code == status.HTTP_200_OK
@@ -80,7 +101,11 @@ class TestFourByFour:
 
         assert id(ss) != id(new_ss)
 
-    def test_submit_selection_game_over(self, mock_init_client: TestClient, mocker) -> None:
+    def test_submit_selection_game_over(
+        self,
+        mock_init_client: TestClient,
+        mocker: MockerFixture,
+    ) -> None:
         mocker.patch(
             "openday_scavenger.puzzles.fourbyfour.service.PuzzleStatus.submit_selection",
             side_effect=GameOverException,
@@ -90,7 +115,11 @@ class TestFourByFour:
         assert response.context["game_over"] is True  # type: ignore
         assert response.context["message"] is not None  # type: ignore
 
-    def test_submit_selection_puzzle_solved(self, mock_init_client: TestClient, mocker) -> None:
+    def test_submit_selection_puzzle_solved(
+        self,
+        mock_init_client: TestClient,
+        mocker: MockerFixture,
+    ) -> None:
         mocker.patch(
             "openday_scavenger.puzzles.fourbyfour.service.PuzzleStatus.submit_selection",
             side_effect=PuzzleSolvedException,
@@ -100,7 +129,11 @@ class TestFourByFour:
         assert response.context["register_success"] is True  # type: ignore
         assert response.context["message"] is not None  # type: ignore
 
-    def test_submit_selection_exception(self, mock_init_client: TestClient, mocker) -> None:
+    def test_submit_selection_exception(
+        self,
+        mock_init_client: TestClient,
+        mocker: MockerFixture,
+    ) -> None:
         mocker.patch(
             "openday_scavenger.puzzles.fourbyfour.service.PuzzleStatus.submit_selection",
             side_effect=Exception,
