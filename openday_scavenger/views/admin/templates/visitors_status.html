@@ -10,7 +10,7 @@
             <p class="mt-2">Success Rate: {{ (correct_answers/number_puzzles)*100 | int }}%</p>
     </div>
     <div class="m-2 bg-body">
-        <button type="button" class="btn btn-danger" hx-post="/admin/visitors/{{ visitor.uid }}/checkout" hx-include="#still_playing" hx-swap="innerHTML" hx-target="#visitor-table"><i class="fa-solid fa-check"></i> Checkout Visitor (ends their adventure)</button>
+        <button type="button" class="btn btn-danger" hx-post="/admin/visitors/{{ visitor.uid }}/checkout" hx-include="#still_playing" hx-swap="innerHTML" hx-target="#visitor-table" onclick="clearFilter();"><i class="fa-solid fa-check"></i> Checkout Visitor (ends their adventure)</button>
     </div>
 {% else %}
     Please scan an Adventure Key or type the visitor UID into the search field.
