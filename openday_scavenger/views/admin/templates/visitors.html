@@ -35,7 +35,7 @@
                         <input type="text" id="uid_filter" name="uid_filter" class="form-control">
                     </div>
                     <div class="col-2">
-                        <button class="btn btn-primary" id="clearButton" onclick="document.getElementById('uid_filter').value='';">
+                        <button class="btn btn-primary" id="clearButton" onclick="clearFilter();">
                             <i class="fa-solid fa-filter-circle-xmark"></i>
                             Clear
                         </button>
@@ -55,12 +55,20 @@
 
 <script src="/static/js/html5-qrcode.js"></script>
 <script>
+    function updateFilter(newValue) {
+        const inputElement = document.getElementById("uid_filter");
+        inputElement.value = newValue;
+        inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    function clearFilter() {
+        updateFilter("");
+    }
+
     function onScanSuccess(decodedText, decodedResult) {
-      const inputElement = document.getElementById("uid_filter");
-      const url = new URL(decodedText);
-      const segments = url.pathname.split('/')
-      inputElement.value=segments[segments.length - 1];
-      inputElement.dispatchEvent(new Event('keyup'));
+        const url = new URL(decodedText);
+        const segments = url.pathname.split('/');
+        updateFilter(segments[segments.length - 1]);
     }
 
     function onScanFailure(error) {
