@@ -153,7 +153,7 @@ class PuzzleStatus(BaseModel):
         selected_words = self.get_selected_words()
         selected_words_ids = set(word.id for word in selected_words)
         for category_id, word_ids in self.solution.items():
-            if word_ids == selected_words_ids:
+            if set(word_ids) == set(selected_words_ids):
                 # the set of selected words matches a solution!
                 # let's mark the category as solved and move the words into it
                 category = self.get_category(category_id)
