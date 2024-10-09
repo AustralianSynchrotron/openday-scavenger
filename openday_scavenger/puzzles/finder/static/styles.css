@@ -5,6 +5,7 @@
 /* cyan: 35bfc9 */
 /* lighter blue: 0078c1 */
 /* darker blue: 203d79 */
+/* grey: 58595B */
 
 /* General body styling */
 body {
@@ -39,16 +40,16 @@ h1 {
 }
 
 .btn-secondary {
-    color: #545b61;
+    color: #58595B;
     background-color: #7d868f;
-    border-color: #545b61
+    border-color: #58595B
 }
 
 .btn-outline-secondary {
-    color: #545b61;
+    color: #58595B;
     background-color: transparent;
     background-image: none;
-    border-color: #545b61
+    border-color: #58595B
 }
 /********/
 
@@ -164,7 +165,7 @@ h1 {
     justify-content: center;
     align-items: center;
     visibility: hidden;
-    width: 95%;
+    /* width: 95%; */
     /* padding: 10px; */
     margin-left: 8%;
     margin-right: 8%;
@@ -213,7 +214,6 @@ h1 {
     }
     .hint-word-parent {
         gap: 2px;
-        width: 95%;
         margin-top: 5px;
         margin-bottom: 5px;
         margin-left: 1px;
