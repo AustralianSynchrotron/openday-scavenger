@@ -87,7 +87,7 @@ async def register_visitor(
         domain=config.BASE_URL.host,
         secure=config.BASE_URL.scheme == "https",
         httponly=True,
-        samesite="strict",
+        samesite="none",
     )
     return response
 
