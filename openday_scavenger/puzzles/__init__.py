@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from .demo.views import router as puzzle_demo_router
 from .cube.views import router as puzzle_cube_router
+from .demo.views import router as puzzle_demo_router
 
 router = APIRouter()
 

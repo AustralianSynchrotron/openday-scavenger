@@ -31,6 +31,8 @@
             width: 200px;
             height: 200px;
             margin: 2rem auto;
+            margin-bottom: 100px;
+            margin-top: 50px;
             position: relative;
             perspective: 1000px;
         }
@@ -87,16 +89,15 @@
 </head>
 <body>
     <div class="container">
-        <h5>I &lt;3 cubes</h5>
         <form action="/submission" method="POST" enctype="multipart/form-data">
             <div class="cube-container">
                 <div class="cube">
-                    <div class="cube__face cube__face--front">Front</div>
-                    <div class="cube__face cube__face--back">Back</div>
-                    <div class="cube__face cube__face--right">Right</div>
-                    <div class="cube__face cube__face--left">Left</div>
-                    <div class="cube__face cube__face--top">Top</div>
-                    <div class="cube__face cube__face--bottom">Bottom</div>
+                    <div class="cube__face cube__face--front">equal sides</div>
+                    <div class="cube__face cube__face--back">twelve edges</div>
+                    <div class="cube__face cube__face--right">six faces</div>
+                    <div class="cube__face cube__face--left">right angles</div>
+                    <div class="cube__face cube__face--top">l*w*h</div>
+                    <div class="cube__face cube__face--bottom">I ❤️ cubes</div>
                 </div>
             </div>
             <input type="hidden" name="visitor" id="visitor" value="{{ visitor_uid }}">
