@@ -5,27 +5,39 @@
 {% endblock %}
 
 {% block content %}
-<div class="my-3 p-3 bg-body rounded shadow-sm">
-    <div class="border-bottom pb-2 d-flex align-middle">
-        <h5 class="mb-0 pe-4 lh-base">Create Puzzle Location Map</h5>
-        <button id="map-btn" class="btn btn-primary">Copy Array String to Clipboard</button>
-    </div>
+<h1 class="mx-3 admin-page-title">
+    <i class="fa-solid fa-map"></i> Puzzle Location Map<br />
+    <small>Use this tool to generate the Location of your puzzle so it can be placed into the <a href="/map">public
+            map</a> for visitors!</small>
+</h1>
 
-    <div class="my-1">
-        <p class="text-secondary"><b>Please note: The map below is only a preview used for creating the array!</b></p>
-        <p>To save and update the public map, copy the <b class="text-primary">Location Array</b>
-            string, and update
-            it as the Answer for the 'Map'
-            puzzle on the Puzzles page.</p>
+
+<div class="my-4 mx-3 p-3 bg-body shadow-sm admin-panel-container">
+    <h5 class="border-bottom pb-2 mb-0">Generate Puzzle Location String</h5>
+
+    <div class="my-3 d-flex">
+        <div class="me-6">
+            <p>
+                Click your puzzle location(s) on the map below.
+            </p>
+            <p>
+                Copy the <b class="text-primary">Location Array</b>
+                string, and add it as the <b>Location</b> for your puzzle on the <a href="/admin/puzzles">Puzzles</a>
+                page.
+            </p>
+        </div>
+
+        <div class="ms-auto">
+            <button id="map-btn" class="btn btn-primary">Copy Array String to Clipboard</button>
+        </div>
+        <div class="ms-3" style="width: 320px;">
+            <h6 id="map-array-title" class="text-primary my-1">Location Array</h6>
+            <p id="map-array" class="mb-0">No location selected</p>
+        </div>
     </div>
 
     <div id="map-editor" class="map-admin">
         <img src="/static/images/map/as_layout.svg" class="map-svg" />
-    </div>
-
-    <div>
-        <h6 id="map-array-title" class="text-primary my-1" style="visibility: hidden;">Location Array</h6>
-        <p id="map-array" class="mb-0"></p>
     </div>
 </div>
 

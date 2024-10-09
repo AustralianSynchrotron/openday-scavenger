@@ -15,6 +15,9 @@ const array_display = document.getElementById("map-array");
 // Update array display string
 function updateArrayDisplay() {
     array_display.textContent = JSON.stringify(markerLocations);
+
+    // Don't display array if there's no location selected
+    if (markerLocations.length < 1) array_display.textContent = "No location selected";
 }
 
 // Add co-ord to markers array & display
@@ -42,8 +45,6 @@ function newMarker(e) {
         left: m_left,
     })
 
-    // Display array list
-    if (markerLocations.length > 0) array_title.style.visibility = "visible";
     updateArrayDisplay();
 }
 
@@ -55,9 +56,6 @@ function removeMarker(e) {
     markerLocations = markerLocations.filter(m => !(`${m.top}px` == marker.style.top && `${m.left}px` == marker.style.left));
     marker.remove();
 
-    // Don't display array if there's no location selected
-    if (markerLocations.length < 1) array_title.style.visibility = "hidden";
-
     updateArrayDisplay();
 }
 
@@ -68,7 +66,7 @@ function copyMarkerArray(e) {
     e.target.classList.add("btn-info");
 
     myTimeout = setTimeout(function(){
-        e.target.innerText = "Copy List to Clipboard";
+        e.target.innerText = "Copy Array String to Clipboard";
         e.target.classList.remove("btn-info");
     }, 2000);
 }
