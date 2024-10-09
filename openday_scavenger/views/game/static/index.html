@@ -3,11 +3,17 @@
 {% block content %}
 <div class="container my-4 text-center">
 
-    <h1 class="type-h1 mb-3">🔍 Open Day 🧑‍💻<br />Scavenger Hunt</h1>
+    <h1 class="type-h1 mb-3">🗝 Unlock the Secrets of the 🗝<br />🕵️‍♂️ Australian Synchrotron 🕵️‍♂️</h1>
     <p>
         Welcome to the Australian Synchrotron Open Day Scavenger Hunt!<br />
-        (Brought to you by Scientific Computing! 🖥)
+        (Brought to you by Scientific Computing! 🧑‍💻)
     </p>
+
+    <p class="mt-5 text-primary fw-bold">
+        🎊 Congratulations!!
+    </p>
+    <p>Come back to the Scientific Computing booth and show us your journey key to collect
+        your prize! 🎖</p>
 
     {% if visitor.is_authenticated %}
 
@@ -21,18 +27,22 @@
         Come back to the Scientific Computing booth to pick up your prize! 🎖
     </p>
 
+    <p class="mt-5">
+        <span class="text-primary">Remember to show us your journey key to collec</span>
+    </p>
+
     {% else %}
 
     <p class="mt-5">
-        <span class="text-primary">Find some puzzles!</span><br />
-        Look for QR codes (marked for the Scavenger Hunt) around the Synchrotron!
+        <span class="text-primary">🔍 Find Puzzle Locks! 🔍</span><br />
+        Look for puzzle locks (QR codes marked for the Scavenger Hunt) around the Synchrotron!
     </p>
     <p>
-        Once you find a Scavenger Hunt QR code,<br />
+        Once you find a puzzle lock,<br />
         scan it with your own phone camera or use our handy in-built scanner below!
     </p>
 
-    <p class="text-primary fw-bold mt-5">Scan QR code to go to the puzzle!</p>
+    <p class="text-primary fw-bold mt-5">Scan puzzle lock to unlock the puzzle!</p>
     <div class="mx-auto" id="reader" style="width: 400px;"></div>
 
     <div class="mt-3">
@@ -51,21 +61,21 @@
     <p class="mt-5">
         <span class="text-primary">⚠️ Stay safe!!</span><br />
         Please stay aware of your surroundings while playing,<br />
-        QR codes will only be within accessible areas!
+        Puzzle locks will only be within accessible areas!
     </p>
 
-    <p class="text-secondary mt-5">Need some help finding puzzles?<br />
-        <a href="/puzzles/map">Use our map to see where all the puzzles are!</a>
+    <p class="text-secondary mt-5">Need some help finding puzzle locks?<br />
+        <a href="/puzzles/map">Use our map to see where all the puzzle locks are!</a>
     </p>
 
     {% endif %}
 
     {% else %}
 
-    <p>To join in, come to the Scientific Computing booth to register! ✏️</p>
+    <p>To join, come to the Scientific Computing booth to get your journey key! 🗝</p>
     <p class="mt-5">
         <span class="text-secondary fw-bold">Don't worry!!</span><br />
-        No personal details are needed to register,<br />we will provide you with a randomised ID!
+        No personal details are needed to register,<br />we will provide you with a randomised ID! ✏️
     </p>
     <p>
         Just remember to come back to the Scientific Computing booth<br />

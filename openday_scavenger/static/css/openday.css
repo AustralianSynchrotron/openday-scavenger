@@ -44,7 +44,7 @@ html {
 
 .type-h1 {
     color: #0076c0;
-    font-size: 2rem;
+    font-size: calc(2rem * 0.9vw);
     font-weight: bold;
     line-height: 2.5rem;
 }
