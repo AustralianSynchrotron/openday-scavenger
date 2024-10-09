@@ -204,15 +204,16 @@ button {
     width: 50.3%;
 }
 
-.dim-2 {
+
+img.dim-2 {
     filter: brightness(0.7) saturate(0.6);
 }
 
-.dim-3 {
+img.dim-3 {
     filter: brightness(0.6) saturate(0.6);
 }
 
-.dim-4 {
+img.dim-4 {
     filter: brightness(0.5) saturate(0.6);
 }
 
