@@ -39,7 +39,7 @@ h1 {
 
 .form-parent {
     max-width: 600px;
-    margin: 50px auto;
+    margin: 20px auto 50px auto;
     padding: 20px;
     background-color: #ffffff;
     border: 1px solid #dee2e6;
@@ -61,6 +61,10 @@ h1 {
     /* padding: 20px; */
     font-size: 30px;
     text-align: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
 
@@ -70,7 +74,10 @@ h1 {
     /* width: 80%;
     margin-left: 8%;
     margin-right: 8%; */
- 
+}
+.row * {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
 }
 
 .cell {
@@ -78,7 +85,8 @@ h1 {
     flex-basis: 0;
     flex-grow: 1;
     flex-shrink: 1;
-    padding: .75rem;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
     border: 1px solid black;
 }
 
@@ -94,6 +102,7 @@ h1 {
 /*********************** Found Words List Start *******************/
 .found-words {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
     margin-bottom : 10px
@@ -121,23 +130,18 @@ h1 {
     font-size: 0.8rem;
     font-weight: bold;
 }
-
-
 /*********************** Found Words List End *******************/
-
 
 /*********************** Hint Words Start  *********************/
 .hint-word-parent {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
     align-items: center;
     margin-bottom : 10px;
     visibility: hidden;
-    width: 80%;
-    /* padding: 10px; */
-    margin-left: 8%;
-    margin-right: 8%;
+    width: 100vw;
     margin-top: 10px;
 
 }
@@ -147,6 +151,7 @@ h1 {
     position: relative;
     background-color: #e4f1ff;
     border-radius: 8px;
+    padding: 4px 6px;
 }
 
 
