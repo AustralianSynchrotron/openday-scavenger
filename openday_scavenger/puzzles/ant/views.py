@@ -43,12 +43,6 @@ async def index(
     db: Annotated["Session", Depends(get_db)],
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
 ):
-    # We demonstrate the use of state by incrementing a counter each time a user
-    # access this puzzle endpoint.
-    # Use this to store any intermediate state of the visitor while completing a puzzle.
-    state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
-    state["state_access_count"] = state.get("state_access_count", 0) + 1
-    set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
 
     # Render the puzzle game page
     return templates.TemplateResponse(

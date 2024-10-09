@@ -119,6 +119,21 @@ body {
   padding: 12px 24px;
 }
 
+form-option {
+  margin-top:16px;
+  
+}
+
+form-option-label {
+  font-size:32px;
+}
+input[type="radio"] {
+  -ms-transform: scale(1.5); /* IE 9 */
+  -webkit-transform: scale(1.5); /* Chrome, Safari, Opera */
+  transform: scale(1.5);
+}
+
+
 .button:hover {
   background-color: deepskyblue;
 }

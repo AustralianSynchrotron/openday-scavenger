@@ -4,16 +4,19 @@
         <script src="/static/js/json-enc.js"></script>
         
         <link href="static/styles.css" rel="stylesheet">
+        <script src="static/js/index.js"></script>
         <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
     </head>
     <body>
         <!-- <h1>Demo Puzzle</h1> -->
         <div class="container">
-            <h1 class="title">Count the Legs of the ant! 🐜</h1>
+            <h1 class="title">Look inside the ant! 🐜</h1>
          
             <div class="instructions">
-             <p>Below is the video of a reconstructed CT data of an ant scanned in MCT beamline.</p>
-             <p>How many <b>legs</b> does this ant have? 👀 Enter your answer at the bottom of this page! 👇</p>
+             <p>Below is the reconstructed CT data of an ant. The Micro-Computed Tomography (MCT) beamline uses monochromatic, pink, and white X-ray beams to provide detailed</p> 
+             <p>three-dimensional (3D) structures at high spatial resolution (down to 200 nm) for a wide variety of </p>
+             <p>technologically-important samples, materials and biological systems.</p> 
+             <p>What's the <b>resolution</b> can MCT? 👀 Select your answer at the bottom of this page! 👇</p>
             </div>
 
            <hr class="solid">
@@ -28,12 +31,26 @@
            <form id='form' class="form" method='POST' action='/submission'>
                 <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
                 <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-                <label class="form-label">
-                    Answer:
-                    <input class="form-input" type="number" required pattern="[1-9]\d{0,5}" title="Positive integer only"
-                        placeholder="Enter your answer here..." name="answer" aria-describedby="input-help_text">
-                </label>
+                <input hidden id="answer" class="form-input">
+                <div class="container">
+                    
+                    <input type="radio" id="option-a" class="form-option" name="resolution" value="0.2">
+                    <label class="form-option-label" for="option-a">0.2 micron</label>
  
+                    
+                    <input type="radio" id="option-b" class="form-option" name="resolution"  value="2">
+                    <label class="form-option-label" for="option-b">2 micron</label>
+                    
+                    
+                    <input type="radio" id="option-c" class="form-option" name="resolution" value="20">
+                    <label class="form-option-label" for="option-c">20 micron</label>
+                    
+                    
+                    <input type="radio" id="option-d" class="form-option" name="resolution" value="200">
+                    <label class="form-option-label" for="option-d">200 micron</label>
+                    
+                </div>
+                
                 <!-- <input type="text" id="answer" name="answer"> -->
                 <button class="form-button" type="submit">✈ Submit</button>
             </form>
