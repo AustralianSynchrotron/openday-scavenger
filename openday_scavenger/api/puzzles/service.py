@@ -1,6 +1,6 @@
 import json
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
 from typing import Any
 
@@ -30,8 +30,10 @@ from .schemas import PuzzleCreate, PuzzleUpdate
 
 __all__ = (
     "get_all",
+    "get",
     "count",
     "get_all_responses",
+    "count_responses",
     "create",
     "update",
     "compare_answer",
@@ -151,6 +153,27 @@ def get_all_responses(
         q = q.join(Response.visitor).filter(Visitor.uid.ilike(f"{filter_by_visitor_uid}%"))
 
     return q.all()
+
+
+def count_responses(db_session: Session, *, only_correct: bool = False) -> int:
+    """
+    Convenience method to count the number of responses.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        only_correct (bool): Set this to True to only count correct responses.
+
+    Returns:
+        int: The number of responses.
+    """
+    # Construct the database query dynamically, taking into account
+    # whether only correct responses should be counted.
+    q = db_session.query(Response)
+
+    if only_correct:
+        q = q.filter(Response.is_correct)
+
+    return q.count()
 
 
 def create(db_session: Session, puzzle_in: PuzzleCreate) -> Puzzle:
@@ -454,11 +477,18 @@ def generate_test_data(
     visitors_pool = get_visitor_pool(db_session, limit=number_visitors)
     puzzles = get_all(db_session, only_active=True)
 
+    start_time = datetime.now().replace(hour=9, minute=30, second=0)
+    end_time = start_time + timedelta(hours=6)
+
     # Loop over all visitors from the pool, add them to the visitor table and
     # generate a number of responses for each puzzle.
     try:
         for visitor_from_pool in visitors_pool:
-            visitor = Visitor(uid=visitor_from_pool.uid, checked_in=datetime.now())
+            random_time = start_time + (end_time - start_time) * random.random()
+            checkout_time = random_time + (end_time - random_time) * random.random()
+            visitor = Visitor(
+                uid=visitor_from_pool.uid, checked_in=random_time, checked_out=checkout_time
+            )
             db_session.add(visitor)
             db_session.delete(visitor_from_pool)
 

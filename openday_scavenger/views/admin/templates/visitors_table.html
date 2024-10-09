@@ -31,7 +31,7 @@
                 {% endif %}
             </td>
             <td>{% if visitor.checked_out is none %}
-                <button type="button" class="btn btn-danger" hx-post="/admin/visitors/{{ visitor.uid }}/checkout" hx-swap="innerHTML" hx-target="#visitor-table">Checkout</button>
+                <button type="button" class="btn btn-danger" hx-post="/admin/visitors/{{ visitor.uid }}/checkout" hx-include="#still_playing" hx-swap="innerHTML" hx-target="#visitor-table">Checkout</button>
                 {% endif %}
             </td>
 
