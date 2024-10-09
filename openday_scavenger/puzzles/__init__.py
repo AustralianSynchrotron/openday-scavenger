@@ -3,7 +3,6 @@ from fastapi import APIRouter
 from .demo.views import router as puzzle_demo_router
 from .newbuildings.views import router as new_buildings_router
 
-
 router = APIRouter()
 
 # Include puzzle routes. Name entered into database should match the prefix.

@@ -1,12 +1,12 @@
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-from fastapi import APIRouter, Depends, HTTPException,  status
 from pathlib import Path
-from fastapi.responses import FileResponse
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
+
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
-from typing import Annotated
 
 router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
