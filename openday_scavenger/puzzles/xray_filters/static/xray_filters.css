@@ -117,19 +117,18 @@ button {
 
 .table-and-beam {
     display: block;
-    max-width: 80%;
+    max-width: 76%;
     max-height: 100%;
     height: auto;
-
+    padding: 19% 0px 5% 0;
 }
 
 .arrow-left {
     position: absolute;
-    width: 12%;
+    width: 10%;
     height: auto;
-    top: 53.2%;
-    left: 86.5%;
-    transform: rotate(-2deg);
+    top: 55.2%;
+    left: 88.5%;
 }
 
 
@@ -177,9 +176,9 @@ button {
 
 .beam1, .beam2, .beam3, .beam4 {
     position: absolute;
-    height: 8%;
-    top: 56.2%;
-    left: 14.6%;
+    height: 4.3%;
+    top: 54.9%;
+    left: 12%;
     transform-origin: left;
     visibility: hidden;
     opacity: 0;
@@ -187,20 +186,16 @@ button {
 }
 
 .beam1 {
-    width: 23.8%;
-    transform: rotate(2.1deg);
+    width: 26.1%;
 }
 .beam2 {
-    width: 32.6%;
-    transform: rotate(0.9deg);
+    width: 34.6%;
 }
 .beam3 {
-    width: 40.5%;
-    transform: rotate(0.1deg);
+    width: 42.7%;
 }
 .beam4 {
-    width: 48.1%;
-    transform: rotate(-0.1deg);
+    width: 50.3%;
 }
 
 .dim-2 {
