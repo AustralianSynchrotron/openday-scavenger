@@ -103,6 +103,7 @@ async def render_visitor_status(
         if correct_answers is not None:
             success = (correct_answers / number_puzzles) >= config.SUCCESS_THRESHOLD
         else:
+            correct_answers = 0
             success = False
     else:
         visitor = None
