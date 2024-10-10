@@ -1,4 +1,23 @@
 // ************************* START of Cick based Method *******************************
+
+function getCachedSession(key)
+{
+  const formPuzzleName = document.getElementById("name");
+  const puzzleName = formPuzzleName.defaultValue;
+  const newKey=`${puzzleName}_${key}`;
+  return JSON.parse(sessionStorage.getItem(newKey));
+}
+
+function saveSession(key, value)
+{
+  const formPuzzleName = document.getElementById("name");
+  const puzzleName = formPuzzleName.defaultValue;
+
+  const newKey=`${puzzleName}_${key}`;
+  return  sessionStorage.setItem(newKey,JSON.stringify(value)) ;
+}
+
+
 function updateCellBasedOnCharList(select , char_list, ignoreIdx )
 {
     char_list.forEach((item)=>{
@@ -98,9 +117,9 @@ function addFoundWords(new_word)
     innerBtn.addEventListener("click", function () {
         // remove this word and remove the highlight for the related chars
         const word = this.getAttribute("data-word");
-        var words = JSON.parse(sessionStorage.getItem("words"));
+        var words = getCachedSession("words") ;//JSON.parse(sessionStorage.getItem("words"));
         console.log("delete this word",word);
-        const filterd_words = words.filter((item)=>{
+        const filtered_words = words.filter((item)=>{
             if(item['word']===word)
             {
                 const char_list = item["char_list"];
@@ -109,12 +128,12 @@ function addFoundWords(new_word)
             }
             return item['word']!==word;
         });
-        console.log("filtered_words",filterd_words);
-        filterd_words.forEach((item)=>{
+        console.log("filtered_words",filtered_words);
+        filtered_words.forEach((item)=>{
             const word_char = item['char_list'];
             updateCellBasedOnWords(word_char,true);
         });
-        sessionStorage.setItem("words",JSON.stringify(filterd_words));
+        saveSession("words",filtered_words);//sessionStorage.setItem("words",JSON.stringify(filterd_words));
         document.getElementById(`${word}-parent`).remove();
 
       });
@@ -128,7 +147,7 @@ function extractChar(total, value, index, array) {
  const submitForm = async () => {
   const name = document.getElementById("name");
   const visitor = document.getElementById("visitor");
-  const words = JSON.parse(sessionStorage.getItem("words"));
+  const words = getCachedSession("words") ;// JSON.parse(sessionStorage.getItem("words"));
   const answer = words.map(item=> item['word']);
   answer.sort();
   // Construct a FormData instance
@@ -171,7 +190,7 @@ function extractChar(total, value, index, array) {
  function onClickAddWord(){
   {
     // add the word to the session state
-    var char_list = JSON.parse(sessionStorage.getItem("char_list"));
+    var char_list = getCachedSession("char_list") ;//JSON.parse(sessionStorage.getItem("char_list"));
     if (!char_list || char_list.length===0)
     {
       return;
@@ -182,30 +201,30 @@ function extractChar(total, value, index, array) {
 
     // update words
     var new_word= char_list.reduce(extractChar,"");
-    var words = JSON.parse(sessionStorage.getItem("words"));
+    var words = getCachedSession("words") ;//JSON.parse(sessionStorage.getItem("words"));
     addFoundWords(new_word);
     if (!words)
     {
       words = Array();
     }
     words.push({"word":new_word,"char_list":char_list});
-    sessionStorage.setItem("words",JSON.stringify(words));
+    saveSession("words",words);//sessionStorage.setItem("words",JSON.stringify(words));
 
     // after adding the char_list into words, should empty the char_list
-    sessionStorage.setItem("char_list",JSON.stringify([]));
+    saveSession("char_list",[]);//sessionStorage.setItem("char_list",JSON.stringify([]));
   }
 }
 
  function onClickCell()
 { 
-    var currDirection = JSON.parse(sessionStorage.getItem("currDirection"));
+    var currDirection =getCachedSession("currDirection") ;// JSON.parse(sessionStorage.getItem("currDirection"));
     console.log("Click");
     const char = this.getAttribute("data-text");
     const row = this.getAttribute("data-row");
     const col = this.getAttribute("data-col");
     const selected = this.getAttribute("data-selected");
 
-    var char_list = JSON.parse(sessionStorage.getItem("char_list"));
+    var char_list = getCachedSession("char_list") ; JSON.parse(sessionStorage.getItem("char_list"));
 
     if (!char_list || char_list.length===0)
     {
@@ -240,17 +259,16 @@ function extractChar(total, value, index, array) {
       this.classList.remove("item-is-in-word");
     }
     
-    sessionStorage.setItem("char_list", JSON.stringify(char_list));
-    sessionStorage.setItem("currDirection", JSON.stringify(currDirection));
+    saveSession("char_list",char_list);//sessionStorage.setItem("char_list", JSON.stringify(char_list));
+    saveSession("currDirection",currDirection);//sessionStorage.setItem("currDirection", JSON.stringify(currDirection));
 }
 
 
  function initFromSessionStorage(){
-  var char_list = JSON.parse(sessionStorage.getItem("char_list"));
-  var words = JSON.parse(sessionStorage.getItem("words"));
+  var char_list = getCachedSession("char_list") ;//JSON.parse(sessionStorage.getItem("char_list"));
+  var words = getCachedSession("words") ;// JSON.parse(sessionStorage.getItem("words"));
   
-  // answer number
-  var num = JSON.parse(sessionStorage.getItem("num"));
+  
 
   if(words)
   {
@@ -267,12 +285,6 @@ function extractChar(total, value, index, array) {
       updateCellBasedOnCharList(true, char_list, null);
   }
 
-  if (!num)
-  {
-      const hint = document.getElementById("hint");
-      num = hint.getAttribute("data-num");
-      sessionStorage.setItem("num",JSON.stringify(num));
-  }
 }
 
 
