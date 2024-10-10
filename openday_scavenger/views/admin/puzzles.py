@@ -1,14 +1,14 @@
 import json
-import typing
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, UploadFile, status
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
+from openday_scavenger.api.custom_responses import PrettyJSONResponse
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
@@ -24,22 +24,6 @@ from openday_scavenger.config import get_settings
 router = APIRouter()
 config = get_settings()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
-
-
-# The puzzle JSON dumps might need to be editable by humans
-# and its easier to have it formatted by default
-# Avoid using this for endpoints that are used often as it is a blocking operation
-class PrettyJSONResponse(Response):
-    media_type = "application/json"
-
-    def render(self, content: typing.Any) -> bytes:
-        return json.dumps(
-            content,
-            ensure_ascii=False,
-            allow_nan=False,
-            indent=2,
-            separators=(", ", ": "),
-        ).encode("utf-8")
 
 
 @router.get("/static/{path:path}")
@@ -143,6 +127,8 @@ async def _render_puzzles_table(request: Request, db: Annotated["Session", Depen
 async def download_json(db: Annotated["Session", Depends(get_db)]):
     puzzles = get_all(db)
 
+    # The puzzle JSON downloads might need to be editable by humans
+    # and its easier to have it formatted by default
     return PrettyJSONResponse(
         {"puzzles": jsonable_encoder(puzzles)},
         headers={"Content-Disposition": "attachment; filename=puzzle_data.json"},
