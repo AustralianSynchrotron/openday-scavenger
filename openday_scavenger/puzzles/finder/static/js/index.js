@@ -121,7 +121,6 @@ function addFoundWords(new_word)
         // remove this word and remove the highlight for the related chars
         const word = this.getAttribute("data-word");
         var words = getCachedSession("words") ;//JSON.parse(sessionStorage.getItem("words"));
-        console.log("delete this word",word);
         const filtered_words = words.filter((item)=>{
             if(item['word']===word)
             {
@@ -131,7 +130,6 @@ function addFoundWords(new_word)
             }
             return item['word']!==word;
         });
-        console.log("filtered_words",filtered_words);
         filtered_words.forEach((item)=>{
             const word_char = item['char_list'];
             updateCellBasedOnWords(word_char,true);
@@ -206,7 +204,6 @@ function extractChar(total, value, index, array) {
  function onClickCell()
 { 
     var currDirection =getCachedSession("currDirection") ;// JSON.parse(sessionStorage.getItem("currDirection"));
-    console.log("Click");
     const char = this.getAttribute("data-text");
     const row = this.getAttribute("data-row");
     const col = this.getAttribute("data-col");

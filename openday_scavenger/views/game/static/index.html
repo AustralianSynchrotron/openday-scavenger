@@ -69,7 +69,7 @@
     </p>
 
     <div class="d-flex justify-content-center">
-        <img src="{{visitor_qr}}" width="50%" />
+        <img src="{{visitor_qr}}" width="50%" class="bg-white" style="margin-bottom: 150px; margin-top: 40px;" />
     </div>
     {% endif %}
 
@@ -95,7 +95,6 @@
 <script>
     function onScanSuccess(decodedText, decodedResult) {
         // handle the scanned code as you like, for example:
-        console.log(`Code matched = ${decodedText}`, decodedResult);
         window.location.assign(decodedText);
         window.open(newUrl, "_top");
     }
