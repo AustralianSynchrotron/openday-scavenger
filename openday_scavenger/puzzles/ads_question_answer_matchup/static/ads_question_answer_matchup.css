@@ -26,7 +26,7 @@ h1 {
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 14vh;
+  height: 18vh;
 }
 
 #example4Left .list-row {
@@ -36,7 +36,7 @@ h1 {
   }
 
   @media (max-width: 450px) {
-    font-size: 0.9em;
+    font-size: 0.8em;
   }
 }
 
