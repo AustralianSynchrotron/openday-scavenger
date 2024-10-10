@@ -55,6 +55,7 @@ async def index(
     state["correct_guesses"] = state.get("correct_guesses", 0)
     state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES)
     state["animal_id"] = state.get("animal_id", 1)
+    state["fraction_ix"] = state.get("fraction_ix", 0)
     state["fraction"] = state.get("fraction", FRACTIONS[0])
     set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
 
@@ -66,6 +67,27 @@ async def index(
     )
 
 
+# @router.post("/reset_puzzle")
+# async def reset_puzzle(
+#     request: Request,
+#     db: Annotated["Session", Depends(get_db)],
+#     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+# ):
+#     state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
+#     state["complete"] = False
+#     state["state_access_count"] = 0
+#     state["correct_guesses"] = 0
+#     state["remaining_guesses"] = INITIAL_GUESSES
+#     state["animal_id"] = 1
+#     state["fraction_ix"] = 0
+#     state["fraction"] = FRACTIONS[0]
+#     set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
+
+#     print("Reset endpoint")
+
+#     return 0
+
+
 @router.post("/partsubmission")
 async def partsubmission(
     animal: Annotated[str, Form()],
@@ -73,64 +95,60 @@ async def partsubmission(
     db: Annotated["Session", Depends(get_db)],
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
 ):
+    # We demonstrate the use of state by incrementing a counter each time a user
+    # access this puzzle endpoint.
+    # Use this to store any intermediate state of the visitor while completing a puzzle.
     state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
-    print("animal", animal)
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={"puzzle": PUZZLE_NAME, "state": state},
-    )
+    animal_id = state.get("animal_id")
+    # print(f"### animal: {animal}, animal_id:{animal_id}, MATCHES[animal_id - 1]: {MATCHES[animal_id - 1]}, clause: {int(animal) == MATCHES[animal_id - 1]}")
+    if int(animal) == MATCHES[animal_id - 1]:
+        # correct guess
+        state["correct_guesses"] = state.get("correct_guesses", 0) + 1
+        state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES)
+        state["fraction_ix"] = 0
+        state["fraction"] = FRACTIONS[0]
+        if animal_id == MATCHES[-1]:
+            # Last animal guessed correctly; submit puzzle
+            state["complete"] = True
+        else:
+            # Next animal
+            state["animal_id"] = state.get("animal_id", 1) + 1
 
+        set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
 
-# @router.post("/partsubmission")
-# async def partsubmission(
-#     animal: Annotated[str, Form()],
-#     request: Request,
-#     db: Annotated["Session", Depends(get_db)],
-#     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
-# ):
-#     # We demonstrate the use of state by incrementing a counter each time a user
-#     # access this puzzle endpoint.
-#     # Use this to store any intermediate state of the visitor while completing a puzzle.
-#     state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
-#     animal_id = state.get("animal_id")
-#     if animal == animal_id:
-#         # correct guess
-#         state["correct_guesses"] = state.get("correct_guesses", 0) + 1
-#         state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES)
-#         state["animal_id"] = state.get("animal_id", 1) + 1
-#         state["fraction"] = FRACTIONS[0]
+        # Render the puzzle game page
+        return templates.TemplateResponse(
+            request=request,
+            name="index.html",
+            context={"puzzle": PUZZLE_NAME, "state": state},
+        )
+    else:
+        # incorrect guess
+        print("Incorrect guess")
 
-#             # Render the puzzle game page
-#         return templates.TemplateResponse(
-#             request=request,
-#             name="inter.html",
-#             context={"puzzle": PUZZLE_NAME, "state": state},
-#         )
-#     else:
-#         # incorrect guess
-#         pass
-#         # state["correct_guesses"] = state.get("correct_guesses", 0)
-#         # state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES) - 1
-#         # if state["remaining_guesses"] < 1:
-#         #     # failed to solve puzzle
-#         #     # Do something if there are no remaining guesses
-#         #     pass
-#         # fraction = state.get("fraction", 1)
-#         # if fraction < FRACTIONS[-1]:
-#         #     next_ix = FRACTIONS.index(fraction) + 1
-#         #     fraction = FRACTIONS[next_ix]
-#         # else:
-#         #     state["animal_id"] = state.get("animal_id", 1)
-#         # state["fraction"] = fraction
-#     set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
+        state["correct_guesses"] = state.get("correct_guesses", 0)
+        state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES) - 1
+        if state["remaining_guesses"] < 1:
+            # failed to solve puzzle
+            # Do something if there are no remaining guesses
+            print("No remaining guesses")
+            return
 
-#     # Do something if all animals guessed correctly
+        # Increment fraction shown
+        fraction_ix = state.get("fraction_ix", 0)
+        if fraction_ix < len(FRACTIONS):
+            fraction_ix += 1
+            fraction = FRACTIONS[fraction_ix]
+            state["fraction_ix"] = fraction_ix
+            state["fraction"] = fraction
 
+        set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
 
-#     # Render the puzzle game page
-#     return templates.TemplateResponse(
-#         request=request,
-#         name="index.html",
-#         context={"puzzle": PUZZLE_NAME, "state": state},
-#     )
+        # Do something if all animals guessed correctly
+
+        # Render the puzzle game page
+        return templates.TemplateResponse(
+            request=request,
+            name="index.html",
+            context={"puzzle": PUZZLE_NAME, "state": state},
+        )

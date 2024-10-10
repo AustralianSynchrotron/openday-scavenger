@@ -13,7 +13,9 @@
     <body>
         <h1>X-ray Fluorescence Microscopy (XFM) Images Puzzle</h1>
         
-        What animal was scanned at the XFM beamline to produce this image?
+        XFM produces elemental maps, where each colour component (Red, Green, Blue) represents a different atomic element.<br>
+        Here are four animals scanned at the XFM beamline.<br>
+        Can you identify them as we reveal their image maps?<br>
 
         {% if state['complete'] == false %}
         <form id='form' method='POST' action='/puzzles/imagereveal/partsubmission'>
@@ -36,6 +38,7 @@
             <button>
                 Submit your guess
             </button>
+        </form>
 
         {% else %}
 
