@@ -1,34 +1,34 @@
-from pathlib import Path
 from typing import Generator
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
-from starlette.routing import Route
 
 from openday_scavenger.api.db import Base, create_tables, engine, get_db
 from openday_scavenger.api.puzzles.schemas import PuzzleCreate
-from openday_scavenger.api.puzzles.service import create, get_all
+from openday_scavenger.api.puzzles.service import create as create_puzzle
+from openday_scavenger.api.puzzles.service import get_all as get_all_puzzles
 from openday_scavenger.api.visitors.dependencies import auth_required
+from openday_scavenger.api.visitors.schemas import VisitorPoolCreate
+from openday_scavenger.api.visitors.service import create as create_visitor
+from openday_scavenger.api.visitors.service import create_visitor_pool, get_visitor_pool
+from openday_scavenger.api.visitors.service import get_all as get_all_visitors
 from openday_scavenger.main import app
-from openday_scavenger.puzzles import router as puzzle_router
-from openday_scavenger.puzzles.shuffleanagram.service import PUZZLE_FAMILY
+from openday_scavenger.puzzles.fourbyfour.service import PuzzleStatus
+
+PUZZLE_NAME = "fourbyfour"
+# not the actual solution, but I need it for tests
+SOLUTION = (
+    "car_models:beetle,bronco,mustang,panda;"
+    "farm_animals:chicken,cow,horse,pig;"
+    "fruit:apple,banana,grape,orange;"
+    "i.t._companies:alphabet,meta,microsoft,nvidia"
+)
 
 
-def _get_shuffleanagram_puzzle_names_added_to_router() -> list[tuple[str, str]]:
-    puzzle_with_subpuzzle_names = []
-    for route in puzzle_router.routes:
-        assert isinstance(route, Route)  # for linter
-        if route.path.startswith(f"/{PUZZLE_FAMILY}"):
-            _full = Path(route.path).parts[1]
-            _sub = _full.partition("-")[-1]
-            puzzle_with_subpuzzle_names.append((_full, _sub))
-    return list(set(puzzle_with_subpuzzle_names))
-
-
-@pytest.fixture(scope="module", params=_get_shuffleanagram_puzzle_names_added_to_router())
-def known_puzzle_and_subpuzzle_names(request) -> tuple[str, str]:
-    return request.param
+@pytest.fixture(scope="module")
+def fake_solution() -> str:
+    return SOLUTION
 
 
 @pytest.fixture(scope="module")
@@ -50,20 +50,30 @@ def initialised_db() -> Generator[Session, None, None]:
     create_tables()
     session = next(get_db())
 
-    for pn, sp in _get_shuffleanagram_puzzle_names_added_to_router():
-        _ = create(
-            db_session=session,
-            puzzle_in=PuzzleCreate(
-                name=pn,
-                answer=sp,  # not the actual answer
-                active=True,
-            ),
-        )
-
+    _ = create_puzzle(
+        db_session=session,
+        puzzle_in=PuzzleCreate(
+            name=PUZZLE_NAME,
+            answer=SOLUTION,  # not the actual answer
+            active=True,
+        ),
+    )
     # not sure why, but without the following line, the endpoint test fails:
     # every time I try to poke an endpoint related to a puzzle I just created,
     # I get a 404 response with "puzzle not found in database" message.
-    _ = get_all(db_session=session)  # without this, end
+    _ = get_all_puzzles(db_session=session)
+
+    _ = create_visitor_pool(
+        db_session=session,
+        pool_in=VisitorPoolCreate(number_of_entries=10),
+    )
+    _ = get_all_visitors(db_session=session)
+
+    visitors = get_visitor_pool(db_session=session)
+
+    for visitor in visitors:
+        _ = create_visitor(db_session=session, visitor_uid=visitor.uid)
+    _ = get_all_visitors(db_session=session)
 
     yield session
 
@@ -102,3 +112,8 @@ def mock_init_client(initialised_db: Session) -> Generator[TestClient, None, Non
         yield client
 
     app.dependency_overrides = {}
+
+
+@pytest.fixture(scope="function")
+def new_puzzle() -> PuzzleStatus:
+    return PuzzleStatus.new(SOLUTION)

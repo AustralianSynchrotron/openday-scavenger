@@ -1,0 +1,80 @@
+body {
+  background-color: LightSteelBlue;
+}
+
+h1 {
+  text-align: center;
+}
+
+.guide-message {
+  padding: 0.5em;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+#example4Right {
+  position: relative;
+  cursor: grab;
+}
+
+.last-col {
+  padding-right: 0;
+}
+
+.list-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 18vh;
+}
+
+#example4Left .list-row {
+  font-size: 1.2em;
+  @media (max-width: 768px) {
+    font-size: 1em;
+  }
+
+  @media (max-width: 450px) {
+    font-size: 0.8em;
+  }
+}
+
+#example4Right .list-row {
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+button {
+  margin-top: 0.8em !important;
+  font-size: 1.4em !important;
+  height: 8vh;
+}
+
+/* finger animation */
+.finger-container {
+  position: absolute;
+  top: 0;
+  left: 70%;
+  bottom: 0;
+  right: 0;
+  background-color: transparent;
+  animation: finger-drag 3s ease-in-out infinite;
+  z-index: 1;
+}
+.finger {
+  width: 30px;
+  top: 0;
+  left: 0;
+}
+@keyframes finger-drag {
+  0% {
+    transform: translateY(10%);
+  }
+  50% {
+    transform: translateY(calc(90% - 30px));
+  }
+  100% {
+    transform: translateY(10%);
+  }
+}
