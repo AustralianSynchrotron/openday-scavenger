@@ -12,7 +12,6 @@ dependencies = [
     "reportlab>=4.2.2",
     "pydantic-settings>=2.4.0",
     "python-dotenv>=1.0.1",
-    "word-search-generator>=3.5.1",
     "plotly>=5.24.1",
     "pandas>=2.2.3",
 ]
@@ -20,6 +19,10 @@ dependencies = [
 [project.optional-dependencies]
 postgres = [
     "psycopg2>=2.9.9",
+]
+
+finder = [
+    "word-search-generator>=3.5.1",
 ]
 
 [build-system]

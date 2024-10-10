@@ -414,10 +414,12 @@ dependencies = [
     { name = "reportlab" },
     { name = "segno" },
     { name = "sqlalchemy" },
-    { name = "word-search-generator" },
 ]
 
 [package.optional-dependencies]
+finder = [
+    { name = "word-search-generator" },
+]
 postgres = [
     { name = "psycopg2" },
 ]
@@ -446,7 +448,7 @@ requires-dist = [
     { name = "reportlab", specifier = ">=4.2.2" },
     { name = "segno", specifier = ">=1.6.1" },
     { name = "sqlalchemy", specifier = ">=2.0.32" },
-    { name = "word-search-generator", specifier = ">=3.5.1" },
+    { name = "word-search-generator", marker = "extra == 'finder'", specifier = ">=3.5.1" },
 ]
 
 [package.metadata.requires-dev]
