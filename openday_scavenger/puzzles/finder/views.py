@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.logger import logger
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -29,6 +30,7 @@ PUZZLE_MAP = {
     "mex": "the Medium Energy XAS (MEX) beamlines",
     "xas": "X-ray Absorption Spectroscopy (XAS)",
     "xfm": "X-ray Fluorescence Microscopy (XFM)",
+    "nano": "the Nanoprobe (NANO)",
 }
 
 # prepare puzzle routes
@@ -118,9 +120,12 @@ def get_solution_from_db(puzzle_name: str, db_session: Session) -> list:
         solution = get(db_session, puzzle_name).answer
     except Exception as e:
         solution = PUZZLE_DEFAULT
-        print(f"{e}.\n Puzzle name {puzzle_name} doesn't exist.",
-              f"Using default solution: {solution}")
-    
+        logger.warning(
+            e,
+            f"Puzzle name {puzzle_name} not found.",
+            f"Using default solution: {solution}",
+        )
+
     # create word list
     words = []
     for word in solution.split(","):
