@@ -126,10 +126,11 @@ async def _render_puzzles_table(request: Request, db: Annotated["Session", Depen
 
 @router.get("/download-json")
 async def download_json(db: Annotated["Session", Depends(get_db)]):
+    """Downloads a JSON dump of all puzzle data"""
     puzzles = get_all(db)
 
     # The puzzle JSON downloads might need to be editable by humans
-    # and its easier to have it formatted by default
+    # and its easier to have it pretty formatted by default
     return PrettyJSONResponse(
         {"puzzles": jsonable_encoder(puzzles)},
         headers={"Content-Disposition": "attachment; filename=puzzle_data.json"},
@@ -140,10 +141,11 @@ async def download_json(db: Annotated["Session", Depends(get_db)]):
 async def upload_json(
     request: Request, file: UploadFile, db: Annotated["Session", Depends(get_db)]
 ):
+    """Bulk upserts multiple puzzles and updates the table"""
     file_contents = await file.read()
-    parsed_file = json.loads(file_contents)
-    puzzle_data = PuzzleJson(**parsed_file)
+    raw_json = json.loads(file_contents)
+    puzzle_json = PuzzleJson(**raw_json)
 
-    upsert_puzzle_json(db, puzzle_data)
+    upsert_puzzle_json(db, puzzle_json)
 
     return await _render_puzzles_table(request, db)
