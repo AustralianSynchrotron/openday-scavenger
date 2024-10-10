@@ -27,6 +27,7 @@ router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-toer
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-reboots")
 router.include_router(puzzle_xray_filters_router, prefix="/xray_filters")
 
+
 # Include a route to catch all invalid puzzle routes so we can throw a custom 404.
 @router.get("/{path:path}/")
 async def catch_all(path: str):

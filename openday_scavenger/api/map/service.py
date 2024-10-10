@@ -1,15 +1,16 @@
 import json
+from typing import List
 
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.puzzles.service import get_all
 
-from .schemas import MapLocations
+from .schemas import MapCoordinate
 
 __all__ = ("get_map_locations",)
 
 
-def get_map_locations(db_session: Session) -> MapLocations:
+def get_map_locations(db_session: Session) -> List[MapCoordinate]:
     """
     Return all puzzle locations.
 
@@ -24,7 +25,8 @@ def get_map_locations(db_session: Session) -> MapLocations:
 
     location_arrays = [p.location for p in puzzles if p.location]
 
-    locations: MapLocations = []
+    locations: List[MapCoordinate] = []
+
     for l_array in location_arrays:
         puzzle_locations = json.loads(l_array)
         for loc in puzzle_locations:

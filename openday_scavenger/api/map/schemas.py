@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import BaseModel
 
 
@@ -8,9 +6,3 @@ class MapCoordinate(BaseModel):
 
     top: float
     left: float
-
-
-class MapLocations(BaseModel):
-    """List of map coordinates"""
-
-    locations: List[MapCoordinate]
