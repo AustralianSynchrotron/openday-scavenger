@@ -31,12 +31,11 @@ async def get_static_files(
             status_code=status.HTTP_404_NOT_FOUND, detail="Requested file does not exist"
         )
 
+
 @router.get("/", response_class=HTMLResponse)
-async def new_buildings(request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]): 
+async def new_buildings(
+    request: Request, visitor: Annotated[VisitorAuth | None, Depends(get_auth_visitor)]
+):
     return templates.TemplateResponse(
-        request=request, name="index.html",  context={"puzzle": "newbuildings"}
+        request=request, name="index.html", context={"puzzle": "newbuildings"}
     )
-
-        
-    
-
