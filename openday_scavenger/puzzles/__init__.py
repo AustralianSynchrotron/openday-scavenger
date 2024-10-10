@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from .ads_question_answer_matchup.views import router as ads_question_answer_matchup_router
+from .ant.views import router as ant_puzzle
 from .cube.views import router as puzzle_cube_router
 from .demo.views import router as puzzle_demo_router
 from .element.views import router as puzzle_element_router
@@ -26,6 +27,7 @@ router.include_router(puzzle_element_router, prefix="/element_mct")
 router.include_router(puzzle_element_router, prefix="/element_mx")
 router.include_router(puzzle_element_router, prefix="/element_pd")
 router.include_router(new_buildings_router, prefix="/newbuildings")
+router.include_router(ant_puzzle, prefix="/ant")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-probations")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-crumpets")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-toerags")
