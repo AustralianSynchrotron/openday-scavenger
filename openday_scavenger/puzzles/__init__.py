@@ -1,12 +1,14 @@
 from fastapi import APIRouter
 
 from .demo.views import router as puzzle_demo_router
+from .imagereveal.views import router as puzzle_imagereveal_router
 from .shuffleanagram.views import router as puzzle_shuffleanagram_router
 
 router = APIRouter()
 
 # Include puzzle routes. Name entered into database should match the prefix.
 router.include_router(puzzle_demo_router, prefix="/demo")
+router.include_router(puzzle_imagereveal_router, prefix="/imagereveal")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-probations")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-crumpets")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-toerags")

@@ -1,5 +1,9 @@
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Image Reveal Puzzle</title>
+
         <script src="/static/js/htmx.min.js"></script>
         <script src="/static/js/json-enc.js"></script>
         
@@ -9,20 +13,25 @@
     <body>
         <h1>X-ray Fluorescence Microscopy (XFM) Images Puzzle</h1>
         
-        What animal was scanned at the XFM beamline to produce this map of atomic elements?
+        What animal was scanned at the XFM beamline to produce this image?
 
         {% if state['complete'] == false %}
         <form id='form' method='POST' action='/puzzles/imagereveal/partsubmission'>
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <label for="animal1">Animal {{ state["animal_id"] }}:</label><br>
-            <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg" alt="Animal {{ state['animal_id'] }}" width="500" height="500"><br>
+            <label for="form">Animal {{ state["animal_id"] }}:</label><br>
+            <label for="form">Correct guesses {{ state["correct_guesses"] }}:</label><br>
+            <label for="form">Remaining guesses {{ state["remaining_guesses"] }}:</label><br>
+            <!-- <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg" alt="Animal {{ state['animal_id'] }}" width="500" height="500"><br> -->
+            <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg" alt="Animal {{ state['animal_id'] }}" style="width:100%;"><br>
             <!-- <input type="text" id="answer" name="answer"> -->
             <select id="animal" name="animal">
-                <option value="0">Ant</option>
+                <option value="0">Wasp</option>
                 <option value="1">Millipede</option>
                 <option value="2">Mosquito</option>
-                <option value="3">Lobster larva</option>
+                <option value="3">Giraffe</option>
+                <option value="4">Lobster larva</option>
+                <option value="5">Ant</option>
             </select><br>
             <button>
                 Submit your guess
@@ -33,7 +42,7 @@
         <form id='form' method='POST' action='/submission'>
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <label for="animal1">Submitting results</label><br>
+            <label for="form">Submitting results</label><br>
         </form>
 
         {% endif %}

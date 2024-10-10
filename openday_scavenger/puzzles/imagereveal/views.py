@@ -12,7 +12,7 @@ from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 PUZZLE_NAME = "imagereveal"
-ANIMALS = [3, 5, 6, 1]
+MATCHES = [5, 1, 2, 4]
 FRACTIONS = [1, 5, 9, 10]
 INITIAL_GUESSES = 6
 
@@ -52,6 +52,8 @@ async def index(
     state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
     state["complete"] = False
     state["state_access_count"] = state.get("state_access_count", 0) + 1
+    state["correct_guesses"] = state.get("correct_guesses", 0)
+    state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES)
     state["animal_id"] = state.get("animal_id", 1)
     state["fraction"] = state.get("fraction", FRACTIONS[0])
     set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
