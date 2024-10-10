@@ -42,7 +42,6 @@ async def index(
     db: Annotated["Session", Depends(get_db)],
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
 ):
-
     # Render the puzzle game page
     return templates.TemplateResponse(
         request=request,

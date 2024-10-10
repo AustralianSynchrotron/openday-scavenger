@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from .ant.views import router as ant_puzzle
 from .ads_question_answer_matchup.views import router as ads_question_answer_matchup_router
+from .ant.views import router as ant_puzzle
 from .cube.views import router as puzzle_cube_router
 from .demo.views import router as puzzle_demo_router
 from .element.views import router as puzzle_element_router
