@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <script src="/static/js/htmx.min.js"></script>
     <script src="/static/js/json-enc.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
@@ -77,6 +78,15 @@
                             <a href="/admin/responses" class="nav-link align-middle">
                                 <i class="fa-solid fa-comment"></i> <span
                                     class="ms-1 d-none d-sm-inline">Responses</span>
+                            </a>
+                        </li>
+                        {% if active_page == "map" %}
+                        <li class="nav-item active">
+                            {% else %}
+                        <li class="nav-item">
+                            {% endif %}
+                            <a href="/admin/map" class="nav-link align-middle">
+                                <i class="fa-solid fa-map"></i> <span class="ms-1 d-none d-sm-inline">Map</span>
                             </a>
                         </li>
                     </ul>
