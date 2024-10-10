@@ -1,8 +1,9 @@
 // Store marker locations
 var markerLocations = [];
 
-// Add listener to copy btn
-document.getElementById("map-btn").addEventListener("click", copyMarkerArray);
+// Add listener to btns
+document.getElementById("map-btn-copy").addEventListener("click", copyMarkerArray);
+document.getElementById("map-btn-clear").addEventListener("click", clearMarkerArray);
 
 // Add listener to map
 const map = document.getElementById("map-editor");
@@ -56,6 +57,17 @@ function removeMarker(e) {
     markerLocations = markerLocations.filter(m => !(`${m.top}px` == marker.style.top && `${m.left}px` == marker.style.left));
     marker.remove();
 
+    updateArrayDisplay();
+}
+
+// Clear all markers from map
+function clearMarkerArray(e) {
+    // Remove the markers from html
+    var markers = document.querySelectorAll('.map-marker');
+    markers.forEach(m => m.remove());
+
+    // Remove the markers from stored array
+    markerLocations = [];
     updateArrayDisplay();
 }
 

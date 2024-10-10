@@ -8,6 +8,10 @@
   }
 }
 
+.map-instructions {
+    max-width: 1440px;
+}
+
 .map-admin {
     position: relative;
     margin-left: 0;
