@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
     <!-- Bootstrap CSS -->
@@ -28,7 +29,7 @@
     <form id='form' method='POST' action='/submission' class="text-center">
         <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
         <div class="form-group">
-            <label for="user_solution">Your answer:</label><br>
+            <label for="answer">Your answer:</label><br>
             <input type="text" id="answer" name="answer" pattern="[a-z]+" placeholder="(lowercase letters only)" class="form-control d-inline-block w-50">
         </div>
         <button class="btn btn-custom">

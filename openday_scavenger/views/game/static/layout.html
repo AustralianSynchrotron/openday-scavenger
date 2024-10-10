@@ -1,6 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <script src="/static/js/htmx.min.js"></script>
     <script src="/static/js/json-enc.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
@@ -13,6 +17,8 @@
     <link href="/static/css/openday.css" rel="stylesheet" />
 
     <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+
+    {% block header %}{% endblock %}
 </head>
 
 <body class="game-body">

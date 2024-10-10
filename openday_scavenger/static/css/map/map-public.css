@@ -1,0 +1,11 @@
+.map-public {
+    position: relative;
+    margin-left: 0;
+    max-width: 800px;
+    width: 80vw;
+}
+
+.map-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 0 5px 0 deepskyblue;
+}
