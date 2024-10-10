@@ -1,14 +1,9 @@
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    justify-content: center;
-}
 
-.grid-item {
+.word-item {
     background-color: lightgrey;
     border-radius: 10px;
-    height: 100px; /* Fixed height for grid items */
+    height: 100px;
+    /* Fixed height for grid items */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,22 +11,28 @@
     cursor: pointer;
 }
 
-.category-container {
+.category-item {
     background-color: lightgrey;
     border-radius: 10px;
-    height: 100px; /* Fixed height for grid items */
+    height: 100px;
+    /* Fixed height for grid items */
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center children horizontally */
-    justify-content: center; /* Center children vertically */
+    flex-direction: column;
+    /* Stack children vertically */
+    align-items: center;
+    /* Center children horizontally */
+    justify-content: center;
+    /* Center children vertically */
     text-align: center;
     cursor: pointer;
+
 }
 
-.category-container strong,
-.category-container p {
+.category-item strong,
+.category-item p {
     display: block;
-    margin: 0; /* Optional: Remove default margins if needed */
+    margin: 0;
+    /* Optional: Remove default margins if needed */
 }
 
 .selected {
@@ -49,11 +50,45 @@
 }
 
 .container {
-    max-width: 600px;
+    max-width: 768px;
 }
 
 @media (max-width: 600px) {
     .container {
         max-width: 100%;
     }
+
 }
+
+@media (max-width:500px) {
+    .category-item {
+        letter-spacing: -1px;
+        font-size: 12px;
+    }
+    .word-item {
+        letter-spacing: -1px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width:340px) {
+    .category-item {
+        letter-spacing: -1px;
+        font-size: 10px;
+    }
+    .word-item {
+        letter-spacing: -1px;
+        font-size: 10px;
+    }
+}
+
+@media (max-height: 800px) {
+    .category-item {
+        height: 80px;
+    }
+    .word-item {
+        height: 80px;
+    }
+
+}
+

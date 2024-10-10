@@ -23,21 +23,29 @@
 <body class="container">
     <h1 class="text-center my-4">Create four groups of four!</h1>
 
-    <!-- Make a div for the solved, categories, if any.
+    {% if game_over %}
+    <div class="alert alert-danger text-center" role="alert">
+        Would you like to <a href="#" class="alert-link" hx-delete="/puzzles/{{ puzzle }}/" hx-target="body"
+            hx-swap="outerHTML">start again</a>?
+    </div>
+    {% else %}
+
+    <div class="container">
+
+        <!-- Make a div for the solved, categories, if any.
      Loop over status.categories, and if status.categories[i].solved is true, display the category
      as a rectangle that is as wide as 4 of the normal word boxes -->
-    <div class="grid-container">
-        <!-- Solved categories, if any -->
         {% for category in status.categories %}
         {% if category.is_solved %}
-
-        <div class="category-container" style="grid-column: span 4;">
-            <strong>{{ category.name }}</strong>
-            <p>
-                {% for word in category.words %}
-                {{ word.word.upper() }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
-            </p>
+        <div class="row">
+            <div class="col-12 border category-item">
+                <strong>{{ category.name }}</strong>
+                <p>
+                    {% for word in category.words %}
+                    {{ word.word.upper() }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
         </div>
 
         {% endif %}
@@ -45,12 +53,19 @@
 
         <!-- remaining words  -->
         {% for word in status.words %}
-        <div class="grid-item {% if word.is_selected %}selected{% endif %}"
-            hx-put="/puzzles/{{ puzzle }}/{{ word.id }}/selection" hx-trigger="click" hx-target="body"
-            hx-swap="outerHTML">
-            {{ word.word.upper() }}
+        {% if loop.index0 % 4 == 0 %}
+        <div class="row">
+            {% endif %}
+            <div class="col-3 {% if word.is_selected %}selected{% endif %} border word-item"
+                hx-put="/puzzles/{{ puzzle }}/{{ word.id }}/selection" hx-trigger="click" hx-target="body"
+                hx-swap="outerHTML">
+                {{ word.word.upper() }}
+            </div>
+            {% if loop.index0 % 4 == 3 %}
         </div>
+        {% endif %}
         {% endfor %}
+
     </div>
 
     <div class="text-center my-4">
@@ -73,18 +88,16 @@
 
     </div>
 
-
-    {% if message %}
-    <div class="alert alert-warning text-center" role="alert">
-        {{ message }}
-    </div>
     {% endif %}
 
-    {% if game_over %}
-    <div class="alert alert-danger text-center" role="alert">
-        Would you like to <a href="#" class="alert-link" hx-delete="/puzzles/{{ puzzle }}/" hx-target="body"
-            hx-swap="outerHTML">start again</a>?
+
+    {% if message and register_success %}
+    <div class="alert alert-success text-center" role="alert">
+        {{ message }}
     </div>
+    {% elif message %}
+    <div class="alert alert-warning text-center" role="alert">
+        {{ message }}
     {% endif %}
 
     {% if register_success %}

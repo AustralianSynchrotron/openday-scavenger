@@ -1,13 +1,62 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="container my-4 text-center">
+    <h1 class="type-h1 mb-3">🎉 That's Right! 🎉</h1>
+    <p>Your answer is correct!<br /><span id="game-correct-compliment"></span></p>
 
-Your answer is correct!
+    <p class="mt-5">There are more puzzles around, keep looking!</p>
 
-<div class="game-response-correct-icon">
-    <i class="fa-regular fa-face-smile"></i>
+    <p class="text-secondary mt-5">Found another lock?<br />
+        <a href="/" class="btn btn-primary mt-1"><i class="fa-regular fa-puzzle-piece me-1"></i>Scan Next Puzzle
+            Lock</a>
+    </p>
+
+    <p class="text-secondary mt-5">Need some help finding puzzle locks?<br />
+        <a href="/puzzles/map">Use our map to see where all the puzzle locks are!</a>
+    </p>
 </div>
+{% endblock %}
 
-<a href="/" class="btn btn-success"><i class="fa-regular fa-puzzle-piece"></i>Scan next puzzle</a>
+{% block scripts %}
+<script>
+    // Various compliments for completing a puzzle
+    var compliments = [
+        "Great stuff!",
+        "Bravo!",
+        "Phenomenal!",
+        "Nicely done!",
+        "Nailed it!",
+        "Terrific!",
+        "Too easy!",
+        "Slaying it!",
+        "Fantastic!",
+        "Good going!",
+        "You figured it out!",
+        "Superb!",
+        "Muy Bien!",
+        "Bellissimo!",
+        "You've got it down pat!",
+    ];
 
+    // Compliment span element
+    const span_compliment = document.getElementById("game-correct-compliment");
+
+    // Get a compliment from the list
+    function displayCompliment() {
+        var c = document.createElement("span");
+        c.textContent = compliments[Math.floor(Math.random() * compliments.length)];
+        span_compliment.appendChild(c);
+    }
+    displayCompliment();
+
+    // Tada!
+    document.addEventListener('DOMContentLoaded', function () {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+        });
+    }, false);
+</script>
 {% endblock %}
