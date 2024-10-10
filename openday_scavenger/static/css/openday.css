@@ -1,6 +1,31 @@
-/* Add custom styles here */
+
+/* ---- Google fonts ---- */
+@font-face {
+    font-display: swap;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/static/webfonts/poppins-v21-latin-regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    src: url('/static/webfonts/poppins-v21-latin-500.woff2') format('woff2');
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 700;
+    src: url('/static/webfonts/poppins-v21-latin-700.woff2') format('woff2');
+}
 
 
+/* ---- Game pages ---- */
 .game-response-correct-icon {
     font-size: 40px;
     color: green;

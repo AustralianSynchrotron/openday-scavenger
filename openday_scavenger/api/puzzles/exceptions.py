@@ -25,6 +25,14 @@ class PuzzleCompletedError(HTTPException):
     """Raised if a puzzle already correctly finished"""
 
 
+class PuzzleStateCreationError(RuntimeError):
+    """Raised if a puzzle state could not be created"""
+
+
+class PuzzleStateUpdatedError(RuntimeError):
+    """Raised of a puzzle state could not be updated"""
+
+
 class ForbiddenAccessTestEndpointError(RuntimeError):
     """Raised if somebody tries to access the test endpoint if it is turned off"""
 

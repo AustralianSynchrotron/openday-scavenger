@@ -42,6 +42,11 @@ class Settings(BaseSettings):
 
     SESSIONS_ENABLED: bool = True
     TEST_ENDPOINT_ENABLED: bool = False
+    SUCCESS_THRESHOLD: float = 0.5
+
+    ADMIN_AUTH_ENABLED: bool = True
+    ADMIN_USER: str = "admin"
+    ADMIN_PASSWORD: str = "admin"
 
     model_config = SettingsConfigDict(env_file=".env")
 

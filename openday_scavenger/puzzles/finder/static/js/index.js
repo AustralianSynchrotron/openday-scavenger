@@ -75,19 +75,19 @@ function updateCellBasedOnWords(char_list,inWord)
 
 function displayHideHint( ){
    const hintWords = document.getElementById("hint-words");
-   const btnHint =document.getElementById("btn-hint");
+   const btnHint = document.getElementById("btn-hint");
    const hide = btnHint.getAttribute('data-hide') ;
    if(hide==="0")
    {
       btnHint.setAttribute('data-hide',"1");
       hintWords.style.visibility="hidden";
-      btnHint.innerText="🤯 Show me the words";
+      btnHint.innerText="🤯 I need a hint!";
    }
    else
    {
       btnHint.setAttribute('data-hide',"0");
       hintWords.style.visibility="visible";
-      btnHint.innerText="😃 Hide the words";
+      btnHint.innerText="Hide hints 😃";
    }
 }
 
@@ -95,10 +95,13 @@ function displayHideHint( ){
 function addFoundWords(new_word)
 {
     // add the new_word into the found words list 
-    const found_words=document.getElementById("words");
+    const found_words = document.getElementById("words");
     const innerDiv = document.createElement('div');
     innerDiv.setAttribute("id",`${new_word}-parent`);
     innerDiv.classList.add("word");
+    innerDiv.classList.add("btn");
+    innerDiv.classList.add("btn-outline-secondary");
+    // innerDiv.classList.add("rounded-pill");
     const innerText = document.createElement('div');
     innerText.classList.add("word-text");
     innerText.textContent=new_word;
@@ -148,7 +151,7 @@ function extractChar(total, value, index, array) {
   const name = document.getElementById("name");
   const visitor = document.getElementById("visitor");
   const words = getCachedSession("words") ;// JSON.parse(sessionStorage.getItem("words"));
-  const answer = words.map(item=> item['word']);
+  const answer = words.map(item=> item['word'].toLowerCase());
   answer.sort();
   // Construct a FormData instance
   const formData = new FormData();
@@ -157,21 +160,6 @@ function extractChar(total, value, index, array) {
   formData.append("name", name.defaultValue);
   formData.append("visitor", visitor.defaultValue);
   formData.append("answer", answer.join()); // join with comma
-
-  // fetch(`/submission`, {
-  //     method: "POST",
-  //     // Set the FormData instance as the request body
-  //     body: formData,
-  //   }).then( (response) => {
-  //     // The API call was successful!
-  //     // return response.body();
-  //     console.log("Received response",response);
-  //   }).then((html) => {
-  //     document.body.innerHTML = html;
-  //   }).catch(function (err) {
-  //     // There was an error
-  //     console.warn('Something went wrong.', err);
-  //   });
 
   try {
     const response = await fetch(`/submission`, {

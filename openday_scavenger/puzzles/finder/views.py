@@ -1,53 +1,44 @@
 import json
+from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
-from collections import defaultdict
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+from word_search_generator import WordSearch, utils
 
+from openday_scavenger.api.db import get_db
+from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
+from openday_scavenger.api.puzzles.models import Puzzle
+from openday_scavenger.api.puzzles.service import get
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
-from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
-
-from word_search_generator import WordSearch, utils
-"""
-# NOTE: LS needed to install these binaries on my mac
-# for word_searh_generator pillow dependency to work
-# brew install libtiff libjpeg webp little-cms2brew install libtiff libjpeg webp little-cms2
-# from this post:
-# https://stackoverflow.com/questions/44043906/the-headers-or-library-files-could-not-be-found-for-jpeg-installing-pillow-on
-"""
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
 
+PUZZLE_DEFAULT = "beam,light,magnet,xray"
 
-# define puzzle quiz question and word lists
-PUZZLE_QUIZ = {
-    "synch_finder": {
-        "question": "Can you find 5 words related to the Synchrotron?",
-        "words": ["accelerator", "beamline", "lightsource", "magnet", "xrays"],
-    },
-    "mx3_finder": {
-        "question": "Can you find 5 words related to Macromolecular Crystallography (MX)?",
-        "words": ["crystals", "dispersion", "performance", "protein", "robot"],
-    },
-    "mct_finder": {
-        "question": "Can you find 5 words related to Micro-Computed Tomography?",
-        "words": ["monochromatic", "resolution", "spatial", "structures", "tomography"],
-    },
-    "mex_finder": {
-        "question": "Can you find 5 words related to the Medium Energy X-ray (MEX) beamlines?",
-        "words": ["absorption", "microprobe", "routine", "spectroscopy", "tuneable"],
-    },
-    "xas_finder": {
-        "question": "Can you find 5 words related to the X-ray Absorption Spectroscopy (XAS) beamline?",
-        "words": ["absorption", "fluorescence", "monochromater", "photons", "transmission"],
-    },
+# Default headings for each puzzle
+PUZZLE_MAP = {
+    "as": "the Synchrotron",
+    "mx": "Macromolecular Crystallography (MX)",
+    "mct": "Micro-Computed Tomography",
+    "mex": "the Medium Energy XAS (MEX) beamlines",
+    "xas": "X-ray Absorption Spectroscopy (XAS)",
+    "xfm": "X-ray Fluorescence Microscopy (XFM)",
 }
+
+# prepare puzzle routes
+puzzle_routes = [f"/treasure_{k}" for k in PUZZLE_MAP.keys()]
+
+
+def get_quiz(puzzle_name: str, words: list) -> str:
+    _, puzzle_key = puzzle_name.split("_")
+    return f"There are {len(words)} words related to {PUZZLE_MAP[puzzle_key]}."
 
 
 def get_puzzle_data(
@@ -76,15 +67,13 @@ def get_puzzle_data(
     return data
 
 
-def create_puzzle(puzzle_name: str) -> tuple:
+def generate_puzzle(words: list) -> tuple:
     """
     Create a new word search puzzle based on the puzzle name
     """
-    # word list and question from puzzle dictionary
-    question = PUZZLE_QUIZ[puzzle_name]["question"]
-    words = PUZZLE_QUIZ[puzzle_name]["words"]
+    # Get the puzzle data
     ww = ", ".join([w for w in words])
-    puzzle_dim = max(*[len(w) for w in words], 10) + 1
+    puzzle_dim = max(*[len(w) for w in words], 6) + 1
     
     # Generate a new word search puzzle
     ws = WordSearch(words = ww, size = puzzle_dim)
@@ -93,14 +82,54 @@ def create_puzzle(puzzle_name: str) -> tuple:
     dd = get_puzzle_data(ws) # solution hidden
     ds = get_puzzle_data(ws, solution=True) # solution shown
 
-    return question, dd, ds
+    return dd, ds
 
 
-""" initialize puzzle data """
-PUZZLE_INIT = {k: create_puzzle(k) for k in PUZZLE_QUIZ.keys()}
-def fetch_puzzle(puzzle_name: str) -> tuple:
-    """ Fetch puzzle data for puzzle name"""
-    return PUZZLE_INIT[puzzle_name]
+""" fetch puzzle data """
+@lru_cache
+def fetch_puzzle(words: list) -> tuple:
+    """
+    Fetch puzzle data for puzzle name
+
+    Args:
+        words (list): word list to generate the puzzle
+
+    Returns:
+        tuple: tuple with puzzle data and solution
+    """
+    # make sure words is a list otherwise return default
+    words = [w for w in words if w]
+    if not words:
+        words = PUZZLE_DEFAULT.split(",")
+
+    return generate_puzzle(words)
+
+
+def get_solution_from_db(puzzle_name: str, db_session: Session) -> list:
+    """
+    Get the puzzle solution from the database session
+    and return it as a list of words.
+
+    Args:
+        puzzle_name (str): puzzle name (entry in the database)
+        db_session (Session): db session
+
+    Returns:
+        list: list of words
+    """
+    try:
+        solution = get(db_session, puzzle_name).answer
+    except Exception as e:
+        solution = PUZZLE_DEFAULT
+        print(f"{e}.\n Puzzle name {puzzle_name} doesn't exist.",
+              f"Using default solution: {solution}")
+    
+    # create word list
+    words = []
+    for word in solution.split(","):
+        words.append(str(word))
+
+    return words
 
 
 @router.get("/static/{path:path}")
@@ -126,10 +155,28 @@ async def get_static_files(
 @router.get("/")
 async def index(request: Request,
                 puzzle_name: Annotated[str, Depends(get_puzzle_name)],
-                visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)]
+                visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+                db_session: Annotated["Session", Depends(get_db)]
     ):
+    """
+    Main endpoint for finder puzzle.
+    Gets the word list from the database, fetches the puzzle data,
+    returns the puzzle question and the puzzle data.
 
-    question, data, data_as_solution = fetch_puzzle(puzzle_name)
+    Args:
+        request (Request): Request object
+        puzzle_name (str): puzzle name from database
+        visitor (VisitorAuth): visitor token
+        db_session (Session): db session
+
+    Returns:
+        Response: response object with puzzle data
+    """
+
+    # Get puzzle name, word list, data and metadata
+    solution = get_solution_from_db(puzzle_name, db_session)
+    data, data_as_solution = fetch_puzzle(words=tuple(solution))
+    question = get_quiz(puzzle_name, solution)
 
     return templates.TemplateResponse(
         request=request,
