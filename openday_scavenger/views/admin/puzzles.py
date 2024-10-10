@@ -1,13 +1,16 @@
+import json
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
+from openday_scavenger.api.custom_responses import PrettyJSONResponse
 from openday_scavenger.api.db import get_db
-from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
+from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleJson, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
     create,
     generate_puzzle_qr_code,
@@ -15,6 +18,7 @@ from openday_scavenger.api.puzzles.service import (
     get,
     get_all,
     update,
+    upsert_puzzle_json,
 )
 from openday_scavenger.config import get_settings
 
@@ -118,3 +122,30 @@ async def _render_puzzles_table(request: Request, db: Annotated["Session", Depen
         name="puzzles_table.html",
         context={"puzzles": puzzles, "base_url": config.BASE_URL},
     )
+
+
+@router.get("/download-json")
+async def download_json(db: Annotated["Session", Depends(get_db)]):
+    """Downloads a JSON dump of all puzzle data"""
+    puzzles = get_all(db)
+
+    # The puzzle JSON downloads might need to be editable by humans
+    # and its easier to have it pretty formatted by default
+    return PrettyJSONResponse(
+        {"puzzles": jsonable_encoder(puzzles)},
+        headers={"Content-Disposition": "attachment; filename=puzzle_data.json"},
+    )
+
+
+@router.post("/upload-json")
+async def upload_json(
+    request: Request, file: UploadFile, db: Annotated["Session", Depends(get_db)]
+):
+    """Bulk upserts multiple puzzles and updates the table"""
+    file_contents = await file.read()
+    raw_json = json.loads(file_contents)
+    puzzle_json = PuzzleJson(**raw_json)
+
+    upsert_puzzle_json(db, puzzle_json)
+
+    return await _render_puzzles_table(request, db)

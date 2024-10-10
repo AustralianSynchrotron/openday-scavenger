@@ -23,7 +23,6 @@
 <body class="container">
     <h1 class="text-center my-4">Create four groups of four!</h1>
 
-
     {% if game_over %}
     <div class="alert alert-danger text-center" role="alert">
         Would you like to <a href="#" class="alert-link" hx-delete="/puzzles/{{ puzzle }}/" hx-target="body"
@@ -53,7 +52,6 @@
         {% endfor %}
 
         <!-- remaining words  -->
-
         {% for word in status.words %}
         {% if loop.index0 % 4 == 0 %}
         <div class="row">
@@ -69,7 +67,6 @@
         {% endfor %}
 
     </div>
-
 
     <div class="text-center my-4">
         <p>Mistakes remaining:</p>

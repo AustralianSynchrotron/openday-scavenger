@@ -7,6 +7,7 @@ from .element.views import router as puzzle_element_router
 from .finder.views import puzzle_routes as puzzle_finder_routes
 from .finder.views import router as puzzle_finder_router
 from .fourbyfour.views import router as puzzle_fourbyfour_router
+from .labelthemap.views import router as puzzle_labelthemap_router
 from .newbuildings.views import router as new_buildings_router
 from .shuffleanagram.views import router as puzzle_shuffleanagram_router
 from .xray_filters.views import router as puzzle_xray_filters_router
@@ -31,8 +32,10 @@ router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-prob
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-crumpets")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-toerags")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-reboots")
-router.include_router(ads_question_answer_matchup_router, prefix="/ads_question_answer_matchup")
 router.include_router(puzzle_fourbyfour_router, prefix="/fourbyfour")
+router.include_router(puzzle_labelthemap_router, prefix="/labelthemap")
+router.include_router(puzzle_labelthemap_router, prefix="/labelthemap-easy")
+router.include_router(ads_question_answer_matchup_router, prefix="/ads_question_answer_matchup")
 router.include_router(puzzle_xray_filters_router, prefix="/xray_filters")
 
 

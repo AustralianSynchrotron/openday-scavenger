@@ -26,7 +26,7 @@ from .exceptions import (
     PuzzleNotFoundError,
     PuzzleUpdatedError,
 )
-from .schemas import PuzzleCreate, PuzzleUpdate
+from .schemas import PuzzleCreate, PuzzleJson, PuzzleUpdate
 
 __all__ = (
     "get_all",
@@ -523,3 +523,14 @@ def generate_test_data(
     except:
         db_session.rollback()
         raise
+
+
+def upsert_puzzle_json(db_session: Session, puzzle_json: PuzzleJson):
+    existing_puzzles_by_id = {item.id: item for item in get_all(db_session)}
+
+    for puzzle in puzzle_json.puzzles:
+        existing_puzzle = "id" in puzzle and existing_puzzles_by_id[puzzle["id"]]
+        if existing_puzzle:
+            _ = update(db_session, existing_puzzle.name, PuzzleUpdate(**puzzle))
+        else:
+            _ = create(db_session, PuzzleCreate(**puzzle))
