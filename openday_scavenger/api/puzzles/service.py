@@ -458,6 +458,8 @@ def generate_puzzle_qr_codes_pdf(db_session: Session):
     module_path = module.__file__
     if module_path is not None:
         logo_path = Path(module_path).parent / "static/images/qr_codes/lock.png"
+        if not logo_path.exists():
+            logo_path = None
     else:
         logo_path = None
 

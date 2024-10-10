@@ -1,3 +1,4 @@
+import logging
 from io import BytesIO
 from pathlib import Path
 
@@ -6,6 +7,8 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 from segno import make_qr
+
+logger = logging.getLogger(__name__)
 
 
 def generate_qr_code(
@@ -18,30 +21,40 @@ def generate_qr_code(
         as_file_buff (bool, optional): If True, returns the QR code as a BytesIO object
             containing the PNG image data. Defaults to False, which returns the QR code as
             an SVG data URI string.
+        logo (Path, optional): Pathlib Path to an image to use as a logo in middle of QR code. Must be
+            compatible with `PIL.Image.open`. Logo is only created with `as_file_buff=True`.
+            If the image is incompatible a warning is logged and QR code is created without the logo.
+            Currently the ratio of logo to QR size is fixed at 1/25th.
 
     Returns:
         str | BytesIO: The QR code representation. If `as_file_buff` is True, a BytesIO
             object; otherwise, an SVG data URI string.
     """
     _qr = make_qr(f"{url}", error="H")
+    qr_image = _qr.to_pil()  # type: ignore
 
     if logo is not None:
-        qr_image = _qr.to_pil()
         qr_image = qr_image.convert("RGB")
-        logo_image = Image.open(logo)
-        qr_image = qr_image.resize((500, 500), Image.NEAREST)
-        qr_width, qr_height = qr_image.size
-        logo_width, logo_height = logo_image.size
-        max_logo_size = min(qr_width // 5, qr_height // 5)
-        ratio = min(max_logo_size / logo_width, max_logo_size / logo_height)
-        logo_image = logo_image.resize((int(logo_width * ratio), int(logo_height * ratio)))
+        try:
+            logo_image = Image.open(logo)
+            qr_image = qr_image.resize((500, 500), Image.NEAREST)
+            qr_width, qr_height = qr_image.size
+            logo_width, logo_height = logo_image.size
+            max_logo_size = min(qr_width // 5, qr_height // 5)
+            ratio = min(max_logo_size / logo_width, max_logo_size / logo_height)
+            logo_image = logo_image.resize((int(logo_width * ratio), int(logo_height * ratio)))
 
-        # Calculate the center position for the logo
-        logo_x = (qr_width - logo_image.width) // 2
-        logo_y = (qr_height - logo_image.height) // 2
+            # Calculate the center position for the logo
+            logo_x = (qr_width - logo_image.width) // 2
+            logo_y = (qr_height - logo_image.height) // 2
 
-        # Paste the logo onto the QR code image
-        qr_image.paste(logo_image, (logo_x, logo_y))
+            # Paste the logo onto the QR code image
+            qr_image.paste(logo_image, (logo_x, logo_y))
+
+        except Exception as e:
+            logger.error(
+                f"Opening and merging Logo {logo} with the qr code raised an exception {e}"
+            )
 
     if as_file_buff:
         buff = BytesIO()
