@@ -44,6 +44,7 @@ dev-dependencies = [
     "pytest-mock>=3.14.0",
     "pytest>=8.3.3",
     "ruff>=0.6.4",
+    "djlint>=1.35.2"
 ]
 
 [tool.ruff]
@@ -61,3 +62,11 @@ source = ["openday_scavenger"]
 [tool.coverage.report]
 show_missing = true
 fail_under = 60
+
+[tool.djlint]
+# TODO: Enforce viewport?
+# Just the 'critical' rules for now. At some point we can enable
+# the full rule set and maybe even enforce formatting of html/templates
+# like we do with python files 
+ignore="H030,H031,J004,H008,J018,H029,H006,H025,H021,T001,T002,T003"
+profile="jinja"
