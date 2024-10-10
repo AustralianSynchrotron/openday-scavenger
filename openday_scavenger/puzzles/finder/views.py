@@ -22,7 +22,7 @@ templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templat
 
 PUZZLE_DEFAULT = "beam,light,magnet,xray"
 
-# Default questions for each puzzle
+# Default headings for each puzzle
 PUZZLE_MAP = {
     "as": "the Synchrotron",
     "mx": "Macromolecular Crystallography (MX)",
@@ -32,6 +32,7 @@ PUZZLE_MAP = {
     "xfm": "X-ray Fluorescence Microscopy (XFM)",
 }
 
+# prepare puzzle routes
 puzzle_routes = [f"/treasure_{k}" for k in PUZZLE_MAP.keys()]
 
 
@@ -100,23 +101,8 @@ def fetch_puzzle(words: list) -> tuple:
     words = [w for w in words if w]
     if not words:
         words = PUZZLE_DEFAULT.split(",")
-        # should we populate the database with the solution?
 
     return generate_puzzle(words)
-
-
-def get_puzzle_from_db(puzzle_name: str, db_session: Session) -> Puzzle:
-    """
-    Get puzzle from the database session.
-
-    Args:
-        puzzle_name (str): puzzle name (entry in the database)
-        db_session (Session): db session
-
-    Returns:
-        Puzzle: puzzle instance from database
-    """
-    return get(db_session, puzzle_name)
 
 
 def get_solution_from_db(puzzle_name: str, db_session: Session) -> list:
@@ -131,7 +117,14 @@ def get_solution_from_db(puzzle_name: str, db_session: Session) -> list:
     Returns:
         list: list of words
     """
-    solution = get_puzzle_from_db(puzzle_name, db_session).answer
+    try:
+        solution = get(db_session, puzzle_name).answer
+    except Exception as e:
+        solution = PUZZLE_DEFAULT
+        print(f"{e}.\n Puzzle name {puzzle_name} doesn't exist.",
+              f"Using default solution: {solution}")
+    
+    # create word list
     words = []
     for word in solution.split(","):
         words.append(str(word))
