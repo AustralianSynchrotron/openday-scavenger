@@ -1,21 +1,23 @@
 <html>
-    <head>
-        <script src="/static/js/htmx.min.js"></script>
-        <script src="/static/js/json-enc.js"></script>
-        <script src="/static/js/bootstrap.bundle.min.js"></script>
-        <script src="/static/js/html5-qrcode.js"></script>
-        <script src="/static/js/tsparticles.confetti.bundle.min.js"></script>
 
-        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/static/css/fontawesome.min.css" rel="stylesheet"/>
-        <link href="/static/css/solid.min.css" rel="stylesheet"/>
-        <link href="/static/css/openday.css" rel="stylesheet"/>
+<head>
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/html5-qrcode.js"></script>
+    <script src="/static/js/tsparticles.confetti.bundle.min.js"></script>
 
-        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    </head>
-    
-    <body>
-        <h1 class="mx-auto" style="width:90%;">Welcome to the Open Day Scavenger Hunt</h1>
-        {% block content %}{% endblock %}
-    </body>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="/static/css/solid.min.css" rel="stylesheet" />
+    <link href="/static/css/openday.css" rel="stylesheet" />
+
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+
+<body class="game-body">
+    {% block content %}{% endblock %}
+    {% block scripts %}{% endblock %}
+</body>
+
 </html>

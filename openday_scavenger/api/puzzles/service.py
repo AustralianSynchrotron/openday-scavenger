@@ -419,7 +419,10 @@ def set_puzzle_state(
     # If the state doesn't exist yet, create it, otherwise overwrite the state information
     if state_model is None:
         state_model = State(
-            puzzle=puzzle, visitor=visitor, updated_at=datetime.now(), state=json.dumps(state)
+            puzzle=puzzle,
+            visitor=visitor,
+            updated_at=datetime.now(),
+            state=jsonable_encoder(json.dumps(state)),
         )
         try:
             db_session.add(state_model)
@@ -443,13 +446,13 @@ def set_puzzle_state(
 
 
 def generate_puzzle_qr_code(name: str, as_file_buff: bool = False) -> str | BytesIO:
-    return generate_qr_code(f"puzzles/{name}", as_file_buff=as_file_buff)
+    return generate_qr_code(f"{config.BASE_URL}puzzles/{name}/", as_file_buff=as_file_buff)
 
 
 def generate_puzzle_qr_codes_pdf(db_session: Session):
     puzzles = get_all(db_session, only_active=False)
 
-    return generate_qr_codes_pdf([puzzle.name for puzzle in puzzles])
+    return generate_qr_codes_pdf([f"{config.BASE_URL}puzzles/{puzzle.name}/" for puzzle in puzzles])
 
 
 def generate_test_data(
