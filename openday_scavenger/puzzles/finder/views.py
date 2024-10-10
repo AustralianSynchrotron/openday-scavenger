@@ -11,7 +11,6 @@ from word_search_generator import WordSearch, utils
 
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
-from openday_scavenger.api.puzzles.models import Puzzle
 from openday_scavenger.api.puzzles.service import get
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
@@ -41,12 +40,8 @@ def get_quiz(puzzle_name: str, words: list) -> str:
     return f"There are {len(words)} words related to {PUZZLE_MAP[puzzle_key]}."
 
 
-def get_puzzle_data(
-        ws: WordSearch,
-        solution: bool = False,
-        format: str = 'dict'
-    ) -> dict|str:
-    """ Write puzzle data to dict or JSON format.
+def get_puzzle_data(ws: WordSearch, solution: bool = False, format: str = "dict") -> dict | str:
+    """Write puzzle data to dict or JSON format.
 
     Args:
         path (Path): Path to write the file to.
@@ -58,11 +53,11 @@ def get_puzzle_data(
     """
     puzzle = utils.hide_filler_characters(ws) if solution else ws.cropped_puzzle
     data = {
-            "puzzle": puzzle,
-            "words": [word.text for word in ws.placed_words],
-            "key": {word.text: word.key_info_json for word in ws.words if word.placed},
-        }
-    if format == 'json':
+        "puzzle": puzzle,
+        "words": [word.text for word in ws.placed_words],
+        "key": {word.text: word.key_info_json for word in ws.words if word.placed},
+    }
+    if format == "json":
         data = json.dumps(data)
     return data
 
@@ -74,18 +69,20 @@ def generate_puzzle(words: list) -> tuple:
     # Get the puzzle data
     ww = ", ".join([w for w in words])
     puzzle_dim = max(*[len(w) for w in words], 6) + 1
-    
+
     # Generate a new word search puzzle
-    ws = WordSearch(words = ww, size = puzzle_dim)
+    ws = WordSearch(words=ww, size=puzzle_dim)
 
     # get puzzle data
-    dd = get_puzzle_data(ws) # solution hidden
-    ds = get_puzzle_data(ws, solution=True) # solution shown
+    dd = get_puzzle_data(ws)  # solution hidden
+    ds = get_puzzle_data(ws, solution=True)  # solution shown
 
     return dd, ds
 
 
 """ fetch puzzle data """
+
+
 @lru_cache
 def fetch_puzzle(words: list) -> tuple:
     """
@@ -153,11 +150,12 @@ async def get_static_files(
 
 
 @router.get("/")
-async def index(request: Request,
-                puzzle_name: Annotated[str, Depends(get_puzzle_name)],
-                visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
-                db_session: Annotated["Session", Depends(get_db)]
-    ):
+async def index(
+    request: Request,
+    puzzle_name: Annotated[str, Depends(get_puzzle_name)],
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    db_session: Annotated["Session", Depends(get_db)],
+):
     """
     Main endpoint for finder puzzle.
     Gets the word list from the database, fetches the puzzle data,
@@ -186,6 +184,6 @@ async def index(request: Request,
             "visitor": visitor.uid,
             "question": question,
             "data": data,
-            "data_as_solution": data_as_solution
+            "data_as_solution": data_as_solution,
         },
     )
