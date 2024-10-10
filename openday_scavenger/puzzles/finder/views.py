@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
-from openday_scavenger.api.puzzles.exceptions import PuzzleNotFoundError
+from openday_scavenger.api.puzzles.exceptions import DisabledPuzzleError
 from openday_scavenger.api.puzzles.service import get
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
@@ -203,7 +203,7 @@ async def index(
     # Get puzzle name, word list, data and metadata
     if not WORD_SERACH_AVAILABLE:
         warning_text_no_wordsearch()
-        raise PuzzleNotFoundError("Finder puzzle not available.")
+        raise DisabledPuzzleError(status_code=status.HTTP_403_FORBIDDEN)
 
     solution = get_solution_from_db(puzzle_name, db_session)
     data, data_as_solution = fetch_puzzle(words=tuple(solution))
