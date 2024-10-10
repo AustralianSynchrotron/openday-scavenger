@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -27,9 +28,9 @@
 
     <form id='form' method='POST' action='/submission' class="text-center">
         <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-        <div class="form-group">
-            <label for="user_solution">Your answer:</label><br>
-            <input type="text" id="answer" name="answer" pattern="[a-z]+" placeholder="(lowercase letters only)" class="form-control d-inline-block w-50">
+        <div class="form-group mb-1">
+            <label for="answer">Your answer:</label><br>
+            <input type="text" id="answer" name="answer" pattern="[a-z]+" placeholder="(lowercase letters only)" class="form-control d-inline-block w-60">
         </div>
         <button class="btn btn-custom">
             Submit your answer
