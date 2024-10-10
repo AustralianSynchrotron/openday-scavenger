@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from openday_scavenger.api.custom_responses import PrettyJSONResponse
 from openday_scavenger.api.db import get_db
-from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleUpdate
+from openday_scavenger.api.puzzles.schemas import PuzzleCreate, PuzzleJson, PuzzleUpdate
 from openday_scavenger.api.puzzles.service import (
     create,
     generate_puzzle_qr_code,
@@ -141,16 +141,12 @@ async def upload_json(
 ):
     file_contents = await file.read()
     parsed_file = json.loads(file_contents)
-
-    if not isinstance(parsed_file, dict) or type(parsed_file["puzzles"]) is not list:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="JSON file must be in valid format"
-        )
+    puzzle_data = PuzzleJson(**parsed_file)
 
     existing_puzzles_by_id = {item.id: item for item in get_all(db)}
 
-    for puzzle in parsed_file["puzzles"]:
-        existing_puzzle = existing_puzzles_by_id[puzzle["id"]]
+    for puzzle in puzzle_data.puzzles:
+        existing_puzzle = "id" in puzzle and existing_puzzles_by_id[puzzle["id"]]
         if existing_puzzle:
             _ = update(db, existing_puzzle.name, PuzzleUpdate(**puzzle))
         else:

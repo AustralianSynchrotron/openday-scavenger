@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel
 
 from openday_scavenger.api.visitors.schemas import VisitorAuth
@@ -32,3 +34,7 @@ class PuzzleAccess(BaseModel):
 class ResponseTestCreate(BaseModel):
     number_visitors: int = 3000
     number_wrong_answers: int = 3
+
+
+class PuzzleJson(BaseModel):
+    puzzles: List[dict]
