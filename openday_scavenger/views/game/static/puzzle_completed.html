@@ -1,18 +1,66 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<div class="container my-4 text-center">
+    <h1 class="type-h1 mb-3">👑🎊 100% Complete! 🎊👑</h1>
+    <p>
+        Spectacular!<br />
+        Not only did you get that answer correct,<br />
+        you've also managed to find and correctly answer <br />
+        💮 <b>all the puzzles</b>! 💯
+    </p>
+
+    <img class="w-50 game-complete-parrot" src="https://media.tenor.com/-HC_ksHsCeMAAAAi/parrot-dance-moves.gif"
+        alt="Congratulations from the party parrot" />
+
+    <p class="mt-5">
+        <span class="text-primary">⚠️ Don't forget!!</span><br />
+        Come back to the Scientific Computing booth and show us your adventure key before you leave to pick up your
+        prize!
+        🎖
+    </p>
+    <p>We hope you had fun!</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+        // Centre stage tada!
         confetti({
-            particleCount: 100,
+            particleCount: 200,
             spread: 70,
-            origin: { y: 0.6 },
+            origin: { y: 0.8 },
+        });
+
+        // Stage left tada!
+        confetti({
+            particleCount: 200,
+            spread: 70,
+            origin: { y: 0.8, x: 0.2 },
+        });
+
+        // Stage right tada!
+        confetti({
+            particleCount: 200,
+            spread: 70,
+            origin: { y: 0.8, x: 0.8 },
+        });
+
+        // Stars tada!
+        confetti({
+            colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
+            decay: 0.94,
+            gravity: 0,
+            particleCount: 100,
+            scalar: 1.2,
+            shapes: ["star"],
+            spread: 360,
+            startVelocity: 30,
+            ticks: 50,
         });
     }, false);
+
+
 </script>
-
-Congratulations! You have solved all the puzzles.
-
-Please go back to the registration desk to pick up your prize!
-
 {% endblock %}

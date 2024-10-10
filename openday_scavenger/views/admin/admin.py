@@ -73,10 +73,15 @@ async def render_index_page(
         # need to allow for different time periods
         resample_period = "15min"
         checked_in = checked_in_df.resample(resample_period, on="checked_in").count()
-        checked_out = checked_out_df.resample(resample_period, on="checked_out").count()
-
         checked_in["checkin_cumsum"] = checked_in["uid"].cumsum()
-        checked_out["checkout_cumsum"] = checked_out["uid"].cumsum()
+
+        # handle case where no users have checked out
+        if checked_out_df["checked_out"].isnull().all():
+            checked_out = checked_in.copy()
+            checked_out["checkout_cumsum"] = 0
+        else:
+            checked_out = checked_out_df.resample(resample_period, on="checked_out").count()
+            checked_out["checkout_cumsum"] = checked_out["uid"].cumsum()
 
         df = pd.DataFrame(
             {

@@ -6,6 +6,7 @@ from .element.views import router as puzzle_element_router
 from .fourbyfour.views import router as puzzle_fourbyfour_router
 from .newbuildings.views import router as new_buildings_router
 from .shuffleanagram.views import router as puzzle_shuffleanagram_router
+from .xray_filters.views import router as puzzle_xray_filters_router
 
 router = APIRouter()
 
@@ -26,7 +27,7 @@ router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-crum
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-toerags")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-reboots")
 router.include_router(puzzle_fourbyfour_router, prefix="/fourbyfour")
-
+router.include_router(puzzle_xray_filters_router, prefix="/xray_filters")
 
 # Include a route to catch all invalid puzzle routes so we can throw a custom 404.
 @router.get("/{path:path}/")
