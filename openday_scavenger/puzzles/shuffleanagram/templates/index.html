@@ -26,16 +26,27 @@
         </button>
     </div>
 
-    <form id='form' method='POST' action='/submission' class="text-center">
+    <form id='form' method='POST' action='/submission' class="text-center" onsubmit="prepareSubmission">
         <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
         <div class="form-group">
-            <label for="answer">Your answer:</label><br>
-            <input type="text" id="answer" name="answer" pattern="[a-z]+" placeholder="(lowercase letters only)" class="form-control d-inline-block w-50">
+            <label for="raw-answer">Your answer:</label><br>
+            <input type="text" id="raw-answer" name="raw-answer" class="form-control d-inline-block w-50" onchange="updateAnswer();">
+            <input type="hidden" id="answer" name="answer">
         </div>
         <button class="btn btn-custom">
             Submit your answer
         </button>
     </form>
 </body>
+
+<script>
+    // Until we get https://github.com/AustralianSynchrotron/openday-scavenger/issues/118 done this workaround
+    // makes sure that the answer is always in lower case so it matches the answer in the database
+    function updateAnswer() {
+        const rawAnswerElement = document.getElementById('raw-answer');
+        const answerElement = document.getElementById('answer');
+        answerElement.value = rawAnswerElement.value.toLowerCase();
+    }
+</script>
 
 </html>
