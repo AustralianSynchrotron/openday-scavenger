@@ -1,20 +1,42 @@
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Union
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.logger import logger
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from word_search_generator import WordSearch, utils
 
 from openday_scavenger.api.db import get_db
 from openday_scavenger.api.puzzles.dependencies import get_puzzle_name
+from openday_scavenger.api.puzzles.exceptions import PuzzleNotFoundError
 from openday_scavenger.api.puzzles.service import get
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
+
+
+def warning_text_no_wordsearch() -> None:
+    """Warning text when word_search_generator has not been installed"""
+    print("-----------------------------------")
+    print("WARNING: Word search generator has not been installed.")
+    print("This package is needed to run the word finder (treasure hunt) puzzle.")
+    print("Run `uv sync --extra finder` to include the word search generator.")
+    print("Run `uv sync --all-extras` to include all extras.")
+    print("-----------------------------------")
+
+
+# import word search generator if available
+WORD_SERACH_AVAILABLE = False
+try:
+    from word_search_generator import WordSearch, utils
+
+    WORD_SERACH_AVAILABLE = True
+except ImportError:
+    WordSearch = None
+    warning_text_no_wordsearch()
+
 
 router = APIRouter()
 
@@ -42,7 +64,9 @@ def get_quiz(puzzle_name: str, words: list) -> str:
     return f"There are {len(words)} words related to {PUZZLE_MAP[puzzle_key]}."
 
 
-def get_puzzle_data(ws: WordSearch, solution: bool = False, format: str = "dict") -> dict | str:
+def get_puzzle_data(
+    ws: Union[WordSearch, None], solution: bool = False, format: str = "dict"
+) -> dict | str:
     """Write puzzle data to dict or JSON format.
 
     Args:
@@ -177,6 +201,10 @@ async def index(
     """
 
     # Get puzzle name, word list, data and metadata
+    if not WORD_SERACH_AVAILABLE:
+        warning_text_no_wordsearch()
+        raise PuzzleNotFoundError("Finder puzzle not available.")
+
     solution = get_solution_from_db(puzzle_name, db_session)
     data, data_as_solution = fetch_puzzle(words=tuple(solution))
     question = get_quiz(puzzle_name, solution)
