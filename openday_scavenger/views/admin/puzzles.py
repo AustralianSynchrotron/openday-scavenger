@@ -18,6 +18,7 @@ from openday_scavenger.api.puzzles.service import (
     get,
     get_all,
     update,
+    upsert_puzzle_json,
 )
 from openday_scavenger.config import get_settings
 
@@ -143,13 +144,6 @@ async def upload_json(
     parsed_file = json.loads(file_contents)
     puzzle_data = PuzzleJson(**parsed_file)
 
-    existing_puzzles_by_id = {item.id: item for item in get_all(db)}
-
-    for puzzle in puzzle_data.puzzles:
-        existing_puzzle = "id" in puzzle and existing_puzzles_by_id[puzzle["id"]]
-        if existing_puzzle:
-            _ = update(db, existing_puzzle.name, PuzzleUpdate(**puzzle))
-        else:
-            _ = create(db, PuzzleCreate(**puzzle))
+    upsert_puzzle_json(db, puzzle_data)
 
     return await _render_puzzles_table(request, db)
