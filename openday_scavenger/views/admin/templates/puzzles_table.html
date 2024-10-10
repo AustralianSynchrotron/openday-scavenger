@@ -16,7 +16,7 @@
         {% for puzzle in puzzles %}
         <tr>
             <td>{{ puzzle.name }}</td>
-            <td>{{ puzzle.answer }}</td>
+            <td style="max-width: 500px; text-wrap: wrap; word-break: break-all;">{{ puzzle.answer }}</td>
             <td>{% if puzzle.active is true %}
                 <span class="badge text-bg-success">Enabled</span>
                 {% else %}
@@ -27,7 +27,7 @@
             <td>{{ puzzle.notes if puzzle.notes }}</td>
             <td>
                 <a href="{{ puzzle.name }}/qr">
-                    <i class="fa-regular fa-qrcode"></i> 
+                    <i class="fa-regular fa-qrcode"></i>
                 </a>
             </td>
             <td>
@@ -37,13 +37,19 @@
             </td>
             <td>
                 {% if puzzle.active is true %}
-                <button type="button" class="btn btn-danger" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": false}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Disable</button>
+                <button type="button" class="btn btn-danger" hx-put="/admin/puzzles/{{ puzzle.name }}"
+                    hx-vals='{"active": false}' hx-ext='json-enc' hx-swap="innerHTML"
+                    hx-target="#puzzle-table">Disable</button>
                 {% else %}
-                <button type="button" class="btn btn-success" hx-put="/admin/puzzles/{{ puzzle.name }}" hx-vals='{"active": true}' hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">Enable</button>
+                <button type="button" class="btn btn-success" hx-put="/admin/puzzles/{{ puzzle.name }}"
+                    hx-vals='{"active": true}' hx-ext='json-enc' hx-swap="innerHTML"
+                    hx-target="#puzzle-table">Enable</button>
                 {% endif %}
             </td>
             <td>
-                <button type="button" class="btn btn-warning" hx-get="/admin/puzzles/{{ puzzle.name }}/edit_modal" hx-target="#editPuzzleModal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#editPuzzleModal"><i class="fa-solid fa-pencil"></i> Edit</button>
+                <button type="button" class="btn btn-warning" hx-get="/admin/puzzles/{{ puzzle.name }}/edit_modal"
+                    hx-target="#editPuzzleModal" hx-trigger="click" data-bs-toggle="modal"
+                    data-bs-target="#editPuzzleModal"><i class="fa-solid fa-pencil"></i> Edit</button>
             </td>
         </tr>
         {% endfor %}

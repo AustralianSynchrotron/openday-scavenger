@@ -71,7 +71,7 @@
 }
 
 .admin-nav-sidebar {
-    width: 16.875rem;
+    width: 5rem;
     background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
     background-color: #584475;
     font-family: 'Poppins';
@@ -148,7 +148,7 @@
 
 .admin-page-content {
     background-color: #faf8fb;
-    margin-left: 16.875rem;
+    margin-left: 5rem;
 }
 
 .admin-panel-container {
@@ -177,4 +177,14 @@
 
 .admin-visitor-status-panel {
     font-size: 2.125rem;
+}
+
+@media screen and (min-width: 600px) {
+    .admin-nav-sidebar {
+        width: 16.875rem;
+    }
+
+    .admin-page-content {
+        margin-left: 16.875rem;
+    }
 }

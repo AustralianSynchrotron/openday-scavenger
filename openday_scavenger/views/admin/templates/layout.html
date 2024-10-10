@@ -1,6 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <script src="/static/js/htmx.min.js"></script>
     <script src="/static/js/json-enc.js"></script>
     <script src="/static/js/bootstrap.bundle.min.js"></script>
@@ -16,8 +20,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
-
-    {% block header %}{% endblock %}
 </head>
 
 <body class="admin-bg-grey">
@@ -88,7 +90,9 @@
                             </a>
                         </li>
                     </ul>
-                    <img src="/static/images/logo.svg" class="mt-auto mb-3">
+                    <img src="/static/images/logo.svg" class="mt-auto mb-3 d-none d-sm-block">
+                    <img src="/static/images/logo-small.svg" class="mt-auto mb-3 ms-2 me-auto d-sm-none"
+                        style="width: 60px;">
                 </div>
             </aside>
             <div class="col py-3 admin-page-content">
