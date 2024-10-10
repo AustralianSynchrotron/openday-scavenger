@@ -1,0 +1,13 @@
+<form id="form" method="POST" action="/submission" autocomplete="off">
+  <input hidden type="text" id="name" name="name" value="{{ puzzle }}" />
+  <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}" />
+  <label for="answer">Your answer (e.g "Zn" - case sensitive❗️):</label><br />
+  <input
+    type="text"
+    id="answer"
+    name="answer"
+    pattern="[a-zA-Z]+"
+    placeholder=""
+  />
+  <button id="submit">Submit your answer</button>
+</form>
