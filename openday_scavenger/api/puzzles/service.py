@@ -419,7 +419,10 @@ def set_puzzle_state(
     # If the state doesn't exist yet, create it, otherwise overwrite the state information
     if state_model is None:
         state_model = State(
-            puzzle=puzzle, visitor=visitor, updated_at=datetime.now(), state=json.dumps(state)
+            puzzle=puzzle,
+            visitor=visitor,
+            updated_at=datetime.now(),
+            state=jsonable_encoder(json.dumps(state)),
         )
         try:
             db_session.add(state_model)
