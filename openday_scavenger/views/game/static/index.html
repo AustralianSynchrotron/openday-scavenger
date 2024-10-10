@@ -13,7 +13,7 @@
 
     {% if has_completed_all_puzzles %}
 
-    <p>
+    <p class="mt-5">
         <span class="text-primary fw-bold">🎊 Congratulations!!</span><br />
         You've completed all the puzzles!
     </p>
@@ -54,10 +54,23 @@
         Puzzle locks will only be within accessible areas!
     </p>
 
+
     <p class="text-secondary mt-5">Need some help finding puzzle locks?<br />
         <a href="/map">Use our map to see where all the puzzle locks are!</a>
     </p>
 
+    {% endif %}
+
+    {% if visitor_qr %}
+    <p class="mt-5">
+        <span class="text-primary">🙈 Lost your adventure key?</span><br />
+        No worries, here's a digital copy of your key!<br />
+        (You'll need to show this before you leave to collect your prize.)
+    </p>
+
+    <div class="d-flex justify-content-center">
+        <img src="{{visitor_qr}}" width="50%" />
+    </div>
     {% endif %}
 
     {% else %}
