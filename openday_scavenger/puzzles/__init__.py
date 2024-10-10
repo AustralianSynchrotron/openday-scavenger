@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 from .cube.views import router as puzzle_cube_router
 from .demo.views import router as puzzle_demo_router
-from .newbuildings.views import router as new_buildings_router
 from .element.views import router as puzzle_element_router
+from .newbuildings.views import router as new_buildings_router
 from .shuffleanagram.views import router as puzzle_shuffleanagram_router
 
 router = APIRouter()
