@@ -1,12 +1,16 @@
 from io import BytesIO
+from pathlib import Path
 
+from PIL import Image
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
 from segno import make_qr
 
 
-def generate_qr_code(url: str, as_file_buff: bool = False) -> str | BytesIO:
+def generate_qr_code(
+    url: str, as_file_buff: bool = False, logo: Path | None = None
+) -> str | BytesIO:
     """Generates a QR code for the provided URL.
 
     Args:
@@ -21,9 +25,27 @@ def generate_qr_code(url: str, as_file_buff: bool = False) -> str | BytesIO:
     """
     _qr = make_qr(f"{url}", error="H")
 
+    if logo is not None:
+        qr_image = _qr.to_pil()
+        qr_image = qr_image.convert("RGB")
+        logo_image = Image.open(logo)
+        qr_image = qr_image.resize((500, 500), Image.NEAREST)
+        qr_width, qr_height = qr_image.size
+        logo_width, logo_height = logo_image.size
+        max_logo_size = min(qr_width // 5, qr_height // 5)
+        ratio = min(max_logo_size / logo_width, max_logo_size / logo_height)
+        logo_image = logo_image.resize((int(logo_width * ratio), int(logo_height * ratio)))
+
+        # Calculate the center position for the logo
+        logo_x = (qr_width - logo_image.width) // 2
+        logo_y = (qr_height - logo_image.height) // 2
+
+        # Paste the logo onto the QR code image
+        qr_image.paste(logo_image, (logo_x, logo_y))
+
     if as_file_buff:
         buff = BytesIO()
-        _qr.save(buff, kind="png")
+        qr_image.save(buff, format="png")
         buff.seek(0)
         qr = buff
     else:
@@ -32,7 +54,15 @@ def generate_qr_code(url: str, as_file_buff: bool = False) -> str | BytesIO:
     return qr
 
 
-def generate_qr_codes_pdf(entries: list[str]) -> BytesIO:
+def generate_qr_codes_pdf(
+    entries: list[str],
+    title: str = "blah",
+    title_font_size: int = 14,
+    url_font_size: int = 10,
+    columns: int = 1,
+    rows: int = 1,
+    logo: Path | None = None,
+) -> BytesIO:
     """Generates a PDF document containing QR codes for each URL in the provided list.
 
     Args:
@@ -47,30 +77,47 @@ def generate_qr_codes_pdf(entries: list[str]) -> BytesIO:
     c = canvas.Canvas(pdf_io, pagesize=A4)
     width, height = A4
 
-    # Calculate the position to center the QR code
-    qr_size = 400  # Size of the QR code
-    x = (width - qr_size) / 2
-    y = (height - qr_size) / 2
+    x_margin = 50 / columns
+    y_margin = 100
 
-    for entry in entries:
+    qr_size = 500 / (rows)
+
+    for i, entry in enumerate(entries):
+        col_index = i % columns
+        row_index = 0 if i % (columns * rows) < 2 else 1
+
+        x = x_margin + col_index * (qr_size + x_margin)
+        y = height - (row_index + 1) * (qr_size + y_margin)
+
+        # Set the font size for the Title text
+        c.setFillColorRGB(0, 0.46, 0.75)
+        c.setFont("Helvetica-Bold", title_font_size)
+
+        # Calculate the position to center the text
+        text_width = c.stringWidth(f"{title}", "Helvetica-Bold", title_font_size)
+        text_x = x + (qr_size - text_width) / 2
+
+        # Add the Title text above the QR code
+        c.drawString(text_x, y + 510 / rows, f"{title}")
+
         # Draw the QR code image from BytesIO
-        qr_code = generate_qr_code(entry, as_file_buff=True)
+        qr_code = generate_qr_code(entry, as_file_buff=True, logo=logo)
         qr_image = ImageReader(qr_code)
         c.drawImage(qr_image, x, y, width=qr_size, height=qr_size)
 
         # Set the font size for the URL text
-        font_size = 24
-        c.setFont("Helvetica", font_size)
+        c.setFont("Helvetica", url_font_size)
 
         # Calculate the position to center the text
-        text_width = c.stringWidth(f"{entry}", "Helvetica", font_size)
-        text_x = (width - text_width) / 2
+        text_width = c.stringWidth(f"{entry}", "Helvetica", url_font_size)
+        text_x = x + (qr_size - text_width) / 2
 
         # Add the URL text below the QR code
-        c.drawString(text_x, y - 30, f"{entry}")
+        c.drawString(text_x, y, f"{entry}")
 
         # Create a new page for the next QR code
-        c.showPage()
+        if (i + 1) % (columns * rows) == 0:
+            c.showPage()
 
     c.save()
     pdf_io.seek(0)
