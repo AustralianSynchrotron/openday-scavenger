@@ -1,7 +1,10 @@
+import json
+import typing
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, UploadFile, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -21,6 +24,22 @@ from openday_scavenger.config import get_settings
 router = APIRouter()
 config = get_settings()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "templates")
+
+
+# The puzzle JSON dumps might need to be editable by humans
+# and its easier to have it formatted by default
+# Avoid using this for endpoints that are used often as it is a blocking operation
+class PrettyJSONResponse(Response):
+    media_type = "application/json"
+
+    def render(self, content: typing.Any) -> bytes:
+        return json.dumps(
+            content,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=2,
+            separators=(", ", ": "),
+        ).encode("utf-8")
 
 
 @router.get("/static/{path:path}")
@@ -118,3 +137,37 @@ async def _render_puzzles_table(request: Request, db: Annotated["Session", Depen
         name="puzzles_table.html",
         context={"puzzles": puzzles, "base_url": config.BASE_URL},
     )
+
+
+@router.get("/download-json")
+async def download_json(db: Annotated["Session", Depends(get_db)]):
+    puzzles = get_all(db)
+
+    return PrettyJSONResponse(
+        {"puzzles": jsonable_encoder(puzzles)},
+        headers={"Content-Disposition": "attachment; filename=puzzle_data.json"},
+    )
+
+
+@router.post("/upload-json")
+async def upload_json(
+    request: Request, file: UploadFile, db: Annotated["Session", Depends(get_db)]
+):
+    file_contents = await file.read()
+    parsed_file = json.loads(file_contents)
+
+    if not isinstance(parsed_file, dict) or type(parsed_file["puzzles"]) is not list:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="JSON file must be in valid format"
+        )
+
+    existing_puzzles_by_id = {item.id: item for item in get_all(db)}
+
+    for puzzle in parsed_file["puzzles"]:
+        existing_puzzle = existing_puzzles_by_id[puzzle["id"]]
+        if existing_puzzle:
+            _ = update(db, existing_puzzle.name, PuzzleUpdate(**puzzle))
+        else:
+            _ = create(db, PuzzleCreate(**puzzle))
+
+    return await _render_puzzles_table(request, db)
