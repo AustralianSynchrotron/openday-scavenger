@@ -13,9 +13,8 @@
             <h1 class="title">Look inside the ant! 🐜</h1>
          
             <div class="instructions">
-             <p>Below is the reconstructed CT data of an ant taken in Micro-Computed Tomography (MCT) beamline. MCT can take three-dimensional (3D) structures at high spatial resolution.</p> 
-             <p>The simplified model for the resolution calculation is (object_size/(num_of_stitches*num_of_pixel_for_each_stitch)). So we know the size of the ant is 2 mm(2000 micron meter),the number of</p>
-             <p>stitch is 2 and each stich has 2560 pixels across the length.Guess what's the <b>resolution</b> MCT can reach? 👀 Select your answer at the bottom of this page! 👇</p>
+             <p>This is a video showing an example of the reconstructed CT data of an ant taken at the Micro Computed Tomography (MCT) beamline. MCT can take three-dimensional (3D) structures at high spatial resolution, which can get down to micron scales. 
+                One micron is a thousandth of a millimeter. For comparison, a water droplet in mist or cloud is around 10 microns. Do you know what the resolution is for MCT?👀 Select your answer at the bottom of this page!</p>
             </div>
 
            <hr class="solid">
@@ -30,23 +29,23 @@
            <form id='form' class="form" method='POST' action='/submission'>
                 <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
                 <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-                <input hidden id="answer" class="form-input">
+                <input hidden id="answer" name="answer" class="form-input">
                 <div class="container">
                     
-                    <input type="radio" id="option-a" class="form-option" name="resolution" value="0.2">
-                    <label class="form-option-label" for="option-a">0.2 micron</label>
+                    <input type="radio" id="option-a" class="form-option" name="resolution" value="0.1">
+                    <label class="form-option-label" for="option-a">0.1 micron</label>
  
                     
-                    <input type="radio" id="option-b" class="form-option" name="resolution"  value="2">
-                    <label class="form-option-label" for="option-b">2 micron</label>
+                    <input type="radio" id="option-b" class="form-option" name="resolution"  value="1">
+                    <label class="form-option-label" for="option-b">1 micron</label>
                     
                     
-                    <input type="radio" id="option-c" class="form-option" name="resolution" value="20">
-                    <label class="form-option-label" for="option-c">20 micron</label>
+                    <input type="radio" id="option-c" class="form-option" name="resolution" value="10">
+                    <label class="form-option-label" for="option-c">10 micron</label>
                     
                     
-                    <input type="radio" id="option-d" class="form-option" name="resolution" value="200">
-                    <label class="form-option-label" for="option-d">200 micron</label>
+                    <input type="radio" id="option-d" class="form-option" name="resolution" value="100">
+                    <label class="form-option-label" for="option-d">100 micron</label>
                     
                 </div>
                 

@@ -1,7 +1,7 @@
 function updateAnswer(e)
 {
     const answerInputBox = document.getElementById("answer");
-    answerInputBox.textContent=e.target.value;
+    answerInputBox.value=e.target.value;
 }
 
 

@@ -142,8 +142,12 @@ hr.solid {
   border-top: 2px solid #d8ebf7;
 }
 
-@media (min-width: 800px) {
+@media only screen and (min-width: 800px) {
   .grid {
       flex-direction: row;
+  }
+
+  p {
+    font-size: calc(0.6rem + .9vw);
   }
 }
