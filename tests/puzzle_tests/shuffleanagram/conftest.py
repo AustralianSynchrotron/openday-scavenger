@@ -26,12 +26,12 @@ def _get_shuffleanagram_puzzle_names_added_to_router() -> list[tuple[str, str]]:
     return list(set(puzzle_with_subpuzzle_names))
 
 
-@pytest.fixture(scope="session", params=_get_shuffleanagram_puzzle_names_added_to_router())
+@pytest.fixture(scope="module", params=_get_shuffleanagram_puzzle_names_added_to_router())
 def known_puzzle_and_subpuzzle_names(request) -> tuple[str, str]:
     return request.param
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def initialised_db() -> Generator[Session, None, None]:
     """
     Fixture to provide a database session populated with puzzles.
@@ -72,7 +72,7 @@ def initialised_db() -> Generator[Session, None, None]:
     Base.metadata.drop_all(bind=engine)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def mock_init_client(initialised_db: Session) -> Generator[TestClient, None, None]:
     """
     Fixture to provide a test client for each test function.
@@ -101,5 +101,4 @@ def mock_init_client(initialised_db: Session) -> Generator[TestClient, None, Non
     with TestClient(app) as client:
         yield client
 
-    app.dependency_overrides.pop(get_db)
-    app.dependency_overrides.pop(auth_required)
+    app.dependency_overrides = {}
