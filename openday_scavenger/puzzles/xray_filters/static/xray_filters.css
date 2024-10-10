@@ -40,7 +40,7 @@ p {
     font-size: 1rem;
     color: #383636;
     text-align: center;
-    margin: 16px 0;
+    margin: 8px 0;
 }
 
 .checkbox-container {
@@ -79,7 +79,7 @@ button {
 }
 
 /************** Set up for mobile screens ***************/
-@media only screen and (max-width: 800px) {
+@media (max-width: 800px) {
     body {
         font-size: 14px;
     }
@@ -101,6 +101,12 @@ button {
 
     .checkbox-container {
         max-width: 95%;
+    }
+}
+
+@media (max-width: 400px) {
+    p {
+        font-size: 0.9rem;
     }
 }
 
@@ -189,6 +195,11 @@ button {
     visibility: hidden;
     opacity: 0;
     -webkit-filter: brightness(0.8) saturate(0.7);
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
 }
 
 .beam1 {
@@ -215,6 +226,4 @@ img.dim-3 {
 
 img.dim-4 {
     -webkit-filter: brightness(0.5) saturate(0.6);
-    -web
 }
-
