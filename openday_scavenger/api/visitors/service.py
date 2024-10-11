@@ -222,7 +222,7 @@ def generate_visitor_qr_code(uid: str, as_file_buff: bool = False) -> str | Byte
 
 
 def generate_visitor_qr_codes_pdf(db_session: Session):
-    visitors = get_visitor_pool(db_session)
+    visitors = get_visitor_pool(db_session, limit=1000)
 
     module = modules["openday_scavenger"]
     module_path = module.__file__

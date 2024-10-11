@@ -9,6 +9,7 @@ from reportlab.pdfgen import canvas
 from segno import make_qr
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
 def generate_qr_code(
@@ -37,12 +38,14 @@ def generate_qr_code(
         qr_image = qr_image.convert("RGB")
         try:
             logo_image = Image.open(logo)
-            qr_image = qr_image.resize((500, 500), Image.NEAREST)
+            qr_image = qr_image.resize((1000, 1000), Image.NEAREST)
             qr_width, qr_height = qr_image.size
             logo_width, logo_height = logo_image.size
             max_logo_size = min(qr_width // 5, qr_height // 5)
             ratio = min(max_logo_size / logo_width, max_logo_size / logo_height)
-            logo_image = logo_image.resize((int(logo_width * ratio), int(logo_height * ratio)))
+            logo_image = logo_image.resize(
+                (int(logo_width * ratio), int(logo_height * ratio)), Image.BICUBIC
+            )
 
             # Calculate the center position for the logo
             logo_x = (qr_width - logo_image.width) // 2
@@ -96,6 +99,7 @@ def generate_qr_codes_pdf(
     qr_size = 500 / (rows)
 
     for i, entry in enumerate(entries):
+        logger.info(f"Entry number {i}")
         col_index = i % columns
         row_index = 0 if i % (columns * rows) < 2 else 1
 
