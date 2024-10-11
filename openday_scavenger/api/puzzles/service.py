@@ -269,7 +269,7 @@ def compare_answer(
 
     # We compare the provided answer with the stored answer. Currently this is a very simple
     # case sensitive string comparison. We can add more complicated comparison modes here later.
-    is_correct = answer == puzzle.answer
+    is_correct = answer.strip().lower() == puzzle.answer.lower()
 
     # Only store the response if the visitor is active (not None and authenticated)
     if visitor_auth.is_active:
