@@ -14,6 +14,7 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "plotly>=5.24.1",
     "pandas>=2.2.3",
+    "qrcode-artistic>=3.0.2",
 ]
 
 [project.optional-dependencies]
