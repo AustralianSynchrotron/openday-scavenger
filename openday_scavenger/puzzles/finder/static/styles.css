@@ -17,7 +17,7 @@ body {
 }
 
 /* Style for the header */
-h1 {
+.heading-h1 {
     background-color: #203d79;
     color: #ffffff;
     padding: 10px 0;
@@ -193,7 +193,7 @@ h1 {
         /* flex-basis: 0;
         flex-grow: 1;
         flex-shrink: 1; */
-        padding: 0rem;
+        padding: 0.5rem;
         border: 0.8px none grey;
     }
     .btn {
@@ -223,7 +223,7 @@ h1 {
     .word-text {
         font-size: calc(0.5rem + .9vw);
     }
-    h1 {
+    .heading-h1 {
         font-size: calc(1rem + .9vw);
         padding: 5px;
         line-height: 1;
