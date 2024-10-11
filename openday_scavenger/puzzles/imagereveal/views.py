@@ -1,3 +1,4 @@
+from copy import deepcopy
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
@@ -149,20 +150,33 @@ async def partsubmission(
             # failed to solve puzzle
             # Do something if there are no remaining guesses
             print("No remaining guesses")
+            state["complete"] = True
             state["answer"] = 0
-            return
 
-        # Increment fraction shown
         fraction_ix = state.get("fraction_ix", 0)
-        if fraction_ix < len(FRACTIONS):
+        if fraction_ix + 1 < len(FRACTIONS):
+            # Increment fraction shown
             fraction_ix += 1
             fraction = FRACTIONS[fraction_ix]
             state["fraction_ix"] = fraction_ix
             state["fraction"] = fraction
+        else:
+            state["fraction_ix"] = len(FRACTIONS) - 1
+            state["fraction"] = FRACTIONS[-1]
 
-        set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
-
-        # Do something if all animals guessed correctly
+        if state["complete"]:
+            blank_state = deepcopy(state)
+            blank_state["complete"] = False
+            blank_state["answer"] = 0
+            blank_state["state_access_count"] = 0
+            blank_state["correct_guesses"] = 0
+            blank_state["remaining_guesses"] = INITIAL_GUESSES
+            blank_state["animal_id"] = 1
+            blank_state["fraction_ix"] = 0
+            blank_state["fraction"] = FRACTIONS[0]
+            set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=blank_state)
+        else:
+            set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
 
         # Render the puzzle game page
         return templates.TemplateResponse(
