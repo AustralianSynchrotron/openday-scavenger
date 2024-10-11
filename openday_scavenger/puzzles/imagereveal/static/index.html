@@ -18,7 +18,7 @@
         Can you identify them as we reveal their image maps?<br>
 
         {% if state['complete'] == false %}
-        <form id='form' method='POST' action='/puzzles/imagereveal/partsubmission'>
+        <form name='form' id='form' method='POST' action='/puzzles/imagereveal/partsubmission'>
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
             <label for="form">Animal {{ state["animal_id"] }}:</label><br>

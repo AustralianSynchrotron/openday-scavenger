@@ -1,3 +1,133 @@
 body {
     background-color: LightSteelBlue;
 }
+
+html {
+    -moz-font-feature-settings: 'kern', 'mgrk';
+    -moz-font-feature-settings: 'kern=1', 'mgrk=1';
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-feature-settings: 'kern', 'mgrk';
+    -webkit-font-smoothing: antialiased;
+    background-color: #f0f7fa;
+    background: radial-gradient(#dae7ff, #f0f7fa);
+    background-size: 300vw 300vh;
+    background-position: 10vw 20vh;
+    color: #2a2a2a;
+    font-family: 'Poppins', sans-serif;
+    font-feature-settings: 'kern', 'mgrk';
+    font-size: 16px;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background-color: royalblue;
+    color: #fff;
+}
+
+.container {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.title {
+    color: dodgerblue;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    margin-top: 24px;
+    text-align: center;
+}
+
+.instructions p {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.grid-item img {
+    display: block;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.form {
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 16px;
+    max-width: 800px;
+    width: 100%;
+}
+
+.form-label {
+    align-items: center;
+    display: flex;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+}
+
+.form-input {
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #d8ebf7;
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0 0 0 8px;
+    padding: 2%;
+    vertical-align: middle;
+    width: 96%;
+}
+
+.form-input:focus,
+.form-input:hover {
+    outline-color: deepskyblue;
+}
+
+.form-help_text {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.form-button {
+    background-color: dodgerblue;
+    border-radius: 4px;
+    border: 1px solid #d8ebf7;
+    box-shadow: 0 1px 1px 0 rgb(204 205 205), 0 0 2px 0 rgb(204 205 205);
+    color: white;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    padding: 12px 24px;
+}
+
+.button:hover {
+    background-color: deepskyblue;
+}
+
+hr.solid {
+    border-top: 2px solid #d8ebf7;
+}
+
+@media (min-width: 800px) {
+    .grid {
+        flex-direction: row;
+    }
+}
