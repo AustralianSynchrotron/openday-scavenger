@@ -58,7 +58,7 @@
                         class="position-absolute" id="reveal-{{index}}">
                     {% endfor %}
                     <img src="static/im{{ state['reveal'] }}_10.jpg" alt="Animal {{ state['reveal'] }}"
-                        style="max-width: 800px; width:100%;">
+                        style="max-width: 800px; width:100%;" class="mx-auto">
                 </div>
 
                 <button type="button" class="btn btn-primary mt-3 mb-5 p-3" onclick="nextQuestion()">Next
@@ -90,18 +90,19 @@
 
         {% else %}
 
-        <form id='auto-submit-form' method='POST' action='/submission'>
+        <form id='auto-submit-form' method='POST' action='/submission'
+            class="d-flex flex-column text-center justify-content-center">
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
             <input hidden type="text" id="answer" name="answer" value="{{ state['answer'] }}">
 
-            <div class="mt-5 mb-3 text-center">
+            <div class="mt-5 mb-3">
                 <p class="text-secondary fw-bold">Submitting results...</p>
                 <div class="spinner-border text-primary" role="presentation"></div>
             </div>
 
             {% if state["reveal"] > 0 %}
-            <div id="content-reveal">
+            <div id="content-reveal" class="mb-5">
                 <div class="position-relative">
                     {% for index in [9, 7, 5, 3, 1] %}
                     <img src="static/im{{ state['reveal'] }}_{{ index }}.jpg" alt="Animal {{ state['reveal'] }}"
@@ -109,7 +110,7 @@
                         class="position-absolute" id="reveal-{{index}}">
                     {% endfor %}
                     <img src="static/im{{ state['reveal'] }}_10.jpg" alt="Animal {{ state['reveal'] }}"
-                        style="max-width: 800px; width:100%;">
+                        style="max-width: 800px; width:100%;" class="mx-auto">
                 </div>
             </div>
             {% endif %}
