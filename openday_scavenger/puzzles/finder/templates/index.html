@@ -23,7 +23,7 @@
         <h2 id="question" >{{question}} </h2>
         <h5 id="hint" data-num="{{data['words']|length}}"> Select letters in order to build a word. 😎</h5>
         <h5>😏 Use the button below to add words to your answer! 👇</h5>
-        <div class="container" style="margin-top:15px;">
+        <div class="container" style="margin-top:15px;" id="puzzle">
             {% for i in range(data['puzzle']|length ) %}
             <div class="row">
                 {% for j in range(data['puzzle'][i]|length) %}
