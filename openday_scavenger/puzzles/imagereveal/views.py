@@ -100,6 +100,8 @@ async def partsubmission(
             # Last animal guessed correctly; submit puzzle
             state["complete"] = True
             state["answer"] = get_solution_from_db(db, puzzle_name=PUZZLE_NAME)
+            # Set reveal to last animal
+            state["reveal"] = state.get("animal_id", 1)
         else:
             # Set reveal to current animal
             state["reveal"] = state.get("animal_id", 1)
