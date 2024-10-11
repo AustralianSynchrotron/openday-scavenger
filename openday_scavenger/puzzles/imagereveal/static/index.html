@@ -1,33 +1,46 @@
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Image Reveal Puzzle</title>
+<!DOCTYPE html>
+<html lang="en">
 
-        <script src="/static/js/htmx.min.js"></script>
-        <script src="/static/js/json-enc.js"></script>
-        
-        <link href="static/demo.css" rel="stylesheet">
-        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    </head>
-    <body>
-        <h1>X-ray Fluorescence Microscopy (XFM) Images Puzzle</h1>
-        
-        XFM produces elemental maps, where each colour component (Red, Green, Blue) represents a different atomic element.<br>
-        Here are four animals scanned at the XFM beamline.<br>
-        Can you identify them as we reveal their image maps?<br>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Image Reveal Puzzle</title>
+
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/openday.css" rel="stylesheet">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+
+<body>
+    <div class="container my-3">
+        <h1 class="type-h1 text-center">X-ray Fluorescence Microscopy (XFM) Images Puzzle</h1>
+
+        <p class="mt-3 text-center">
+            XFM produces elemental maps, where each colour component (Red, Green, Blue) represents a different atomic
+            element.
+        </p>
+        <p class="text-center">
+            Here are four animals scanned at the XFM beamline.<br>
+            Can you identify them as we reveal their image maps?
+        </p>
 
         {% if state['complete'] == false %}
-        <form id='form' method='POST' action='/puzzles/imagereveal/partsubmission'>
+        <form id='form' method='POST' action='/puzzles/imagereveal/partsubmission'
+            class="d-flex flex-column text-center">
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <label for="form">Animal {{ state["animal_id"] }}:</label><br>
-            <label for="form">Correct guesses {{ state["correct_guesses"] }}:</label><br>
-            <label for="form">Remaining guesses {{ state["remaining_guesses"] }}:</label><br>
+            <label for="form" class="text-secondary fw-bold">Animal #{{ state["animal_id"] }}</label>
+            <label for="form">Correct guesses: <b>{{ state["correct_guesses"] }}</b></label>
+            <label for="form">Remaining guesses: <b>{{ state["remaining_guesses"] }}</b></label>
 
             <!-- {% if state["remaining_guesses"] %} -->
 
-            <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg" alt="Animal {{ state['animal_id'] }}" style="width:100%;"><br>
+            <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg"
+                alt="Animal {{ state['animal_id'] }}" style="max-width: 800px; width: 100%;" class="my-3">
 
             <!-- {% else %} -->
 
@@ -36,6 +49,14 @@
             <!-- {% endif %} -->
 
             <!-- <input type="text" id="answer" name="answer"> -->
+            <div>
+                <button value="0" class="btn btn-secondary m-2 p-3">Wasp</button>
+                <button value="1" class="btn btn-secondary m-2 p-3">Millipede</button>
+                <button value="2" class="btn btn-secondary m-2 p-3">Mosquito</button>
+                <button value="3" class="btn btn-secondary m-2 p-3">Giraffe</button>
+                <button value="4" class="btn btn-secondary m-2 p-3">Lobster larva</button>
+                <button value="5" class="btn btn-secondary m-2 p-3">Ant</button>
+            </div>
             <select id="animal" name="animal">
                 <option value="0">Wasp</option>
                 <option value="1">Millipede</option>
@@ -44,7 +65,7 @@
                 <option value="4">Lobster larva</option>
                 <option value="5">Ant</option>
             </select><br>
-            <button>
+            <button class="btn btn-primary mt-3">
                 Submit your guess
             </button>
         </form>
@@ -63,5 +84,7 @@
             }, 1000); // 1 second delay
         </script>
         {% endif %}
-    </body>
+    </div>
+</body>
+
 </html>
