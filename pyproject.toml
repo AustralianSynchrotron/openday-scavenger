@@ -26,13 +26,6 @@ finder = [
     "word-search-generator>=3.5.1",
 ]
 
-imagereveal = [
-    "ipykernel>=6.29.5",
-    "matplotlib>=3.9.2",
-    "numpy>=2.1.1",
-    "pillow>=10.4.0",
-]
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
