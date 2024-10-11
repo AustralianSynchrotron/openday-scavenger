@@ -70,6 +70,7 @@ async def index(
     state["animal_id"] = state.get("animal_id", 1)
     state["fraction_ix"] = state.get("fraction_ix", 0)
     state["fraction"] = state.get("fraction", FRACTIONS[0])
+    state["reveal"] = 0
     set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
 
     # Render the puzzle game page
@@ -100,7 +101,9 @@ async def partsubmission(
             state["complete"] = True
             state["answer"] = get_solution_from_db(db, puzzle_name=PUZZLE_NAME)
         else:
-            # Next animal
+            # Set reveal to current animal
+            state["reveal"] = state.get("animal_id", 1)
+            # Set question to next animal
             state["animal_id"] = state.get("animal_id", 1) + 1
 
         set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
@@ -115,6 +118,8 @@ async def partsubmission(
         # An incorrect guess
         state["correct_guesses"] = state.get("correct_guesses", 0)
         state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES) - 1
+        # Set no reveal
+        state["reveal"] = 0
         if state["remaining_guesses"] < 1:
             # failed to solve puzzle
             # Do something if there are no remaining guesses
@@ -142,6 +147,7 @@ async def partsubmission(
             blank_state["animal_id"] = 1
             blank_state["fraction_ix"] = 0
             blank_state["fraction"] = FRACTIONS[0]
+            blank_state["reveal"] = 0
             set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=blank_state)
         else:
             set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
