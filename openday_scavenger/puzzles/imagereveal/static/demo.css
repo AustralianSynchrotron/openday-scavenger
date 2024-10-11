@@ -23,7 +23,7 @@ html {
     background-color: royalblue;
     color: #fff;
 }
- 
+
 
 .container {
     display: block;
@@ -116,10 +116,11 @@ html {
     box-shadow: 0 1px 1px 0 rgb(204 205 205), 0 0 2px 0 rgb(204 205 205);
     color: white;
     cursor: pointer;
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 32px;
-    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    /* margin-bottom: 3px; */
+    margin-top: 8px;
+    padding: 2px 4px;
 }
 
 .button:hover {

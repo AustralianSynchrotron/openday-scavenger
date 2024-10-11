@@ -15,23 +15,23 @@
     <body>
         <div class="container">
             <h1 class="title">X-ray Fluorescence Microscopy (XFM) Images Puzzle</h1>
-        
+
             <div class="instructions">
                 <p>XFM produces elemental maps, where each colour component (Red, Green, Blue) represents a different atomic element.
-                <p>Here are four animals scanned at the XFM beamline.Can you identify them as we reveal their image maps?</p>
-        
+                <p>Here are four animals scanned at the XFM beamline. Can you identify them as we reveal their image maps?</p>
+
             </div>
-            
+
             {% if state['complete'] == false %}
             <form id='form' class="form" method='POST' action='/puzzles/imagereveal/partsubmission'>
                 <input  hidden type="text" id="name" name="name" value="{{ puzzle }}">
                 <input   hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-                 
-                <label  for="form">Animal {{ state["animal_id"] }}:</label> 
-                <label   for="form">Correct guesses {{ state["correct_guesses"] }}:</label> 
-                <label  for="form">Remaining guesses {{ state["remaining_guesses"] }}:</label> 
-                 
-                
+
+                <label  for="form">Animal {{ state["animal_id"] }}:</label>
+                <label   for="form">Correct guesses {{ state["correct_guesses"] }}:</label>
+                <label  for="form">Remaining guesses {{ state["remaining_guesses"] }}:</label>
+
+
 
                 <!-- {% if state["remaining_guesses"] %} -->
 
@@ -44,7 +44,7 @@
                 <!-- {% endif %} -->
 
                 <!-- <input type="text" id="answer" name="answer"> -->
-                <select class="form-select" id="animal" name="animal">
+                <!-- <select class="form-select" id="animal" name="animal">
                     <option value="0">Wasp</option>
                     <option value="1">Millipede</option>
                     <option value="2">Mosquito</option>
@@ -54,7 +54,18 @@
                 </select><br>
                 <button class="form-button">
                     Submit your guess
-                </button>
+                </button> -->
+                <input type="hidden" id="animal" name="animal" value="">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <button type="button" class="form-button col-4" id="0" onclick="submitForm(0)">Wasp</button>
+                        <button type="button" class="form-button col-4" id="1" onclick="submitForm(1)">Millipede</button>
+                        <button type="button" class="form-button col-4" id="2" onclick="submitForm(2)">Mosquito</button>
+                        <button type="button" class="form-button col-4" id="3" onclick="submitForm(3)">Giraffe</button>
+                        <button type="button" class="form-button col-4" id="4" onclick="submitForm(4)">Lobster larva</button>
+                        <button type="button" class="form-button col-4" id="5" onclick="submitForm(5)">Ant</button>
+                    </div>
+                </div>
             </form>
 
             {% else %}
@@ -71,7 +82,15 @@
                 }, 1000); // 1 second delay
             </script>
             {% endif %}
+
+
+        <script>
+            function submitForm(animalId) {
+                document.getElementById('animal').value = animalId;
+                document.getElementById('form').submit();
+            }
+        </script>
         </div>
-        
+
     </body>
 </html>
