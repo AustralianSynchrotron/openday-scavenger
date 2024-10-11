@@ -161,15 +161,8 @@ async def partsubmission(
             state["fraction_ix"] = fraction_ix
             state["fraction"] = fraction
         else:
-            # Move to next animal
-            state["fraction_ix"] = 0
-            state["fraction"] = FRACTIONS[0]
-            if animal_id != MATCHES[-1]:
-                # Next animal
-                state["animal_id"] = state.get("animal_id", 1) + 1
-            else:
-                state["fraction_ix"] = len(FRACTIONS) - 1
-                state["fraction"] = FRACTIONS[-1]
+            state["fraction_ix"] = len(FRACTIONS) - 1
+            state["fraction"] = FRACTIONS[-1]
 
         if state["complete"]:
             blank_state = deepcopy(state)
