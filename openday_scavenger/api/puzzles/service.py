@@ -546,7 +546,7 @@ def upsert_puzzle_json(db_session: Session, puzzle_json: PuzzleJson):
     existing_puzzles_by_id = {item.id: item for item in get_all(db_session)}
 
     for puzzle in puzzle_json.puzzles:
-        existing_puzzle = "id" in puzzle and existing_puzzles_by_id[puzzle["id"]]
+        existing_puzzle = "id" in puzzle and existing_puzzles_by_id.get(puzzle["id"])
         if existing_puzzle:
             _ = update(db_session, existing_puzzle.name, PuzzleUpdate(**puzzle))
         else:
