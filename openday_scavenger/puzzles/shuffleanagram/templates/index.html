@@ -1,6 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+    <title>Anagram Puzzle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -27,14 +30,25 @@
 
     <form id='form' method='POST' action='/submission' class="text-center">
         <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-        <div class="form-group">
-            <label for="user_solution">Your answer:</label><br>
-            <input type="text" id="answer" name="answer" pattern="[a-z]+" placeholder="(lowercase letters only)" class="form-control d-inline-block w-50">
+        <div class="form-group mb-1">
+            <label for="raw-answer">Your answer:</label><br>
+            <input type="text" id="raw-answer" name="raw-answer" class="form-control d-inline-block w-60" onchange="updateAnswer();">
+            <input type="hidden" id="answer" name="answer">
         </div>
         <button class="btn btn-custom">
             Submit your answer
         </button>
     </form>
 </body>
+
+<script>
+    // Until we get https://github.com/AustralianSynchrotron/openday-scavenger/issues/118 done this workaround
+    // makes sure that the answer is always in lower case so it matches the answer in the database
+    function updateAnswer() {
+        const rawAnswerElement = document.getElementById('raw-answer');
+        const answerElement = document.getElementById('answer');
+        answerElement.value = rawAnswerElement.value.toLowerCase();
+    }
+</script>
 
 </html>

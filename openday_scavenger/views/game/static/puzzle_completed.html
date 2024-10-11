@@ -20,6 +20,18 @@
         🎖
     </p>
     <p>We hope you had fun!</p>
+
+    {% if visitor_qr %}
+    <p class="mt-5">
+        <span class="text-primary">🙈 Lost your adventure key?</span><br />
+        No worries, here's a digital copy of your key!<br />
+        (You'll need to show this before you leave to collect your prize.)
+    </p>
+
+    <div class="d-flex justify-content-center">
+        <img src="{{visitor_qr}}" width="50%" class="bg-white" style="margin-bottom: 150px; margin-top: 40px;" alt="QR code of puzzle adventure key"/>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 

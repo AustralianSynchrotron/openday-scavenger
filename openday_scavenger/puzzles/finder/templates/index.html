@@ -1,5 +1,7 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <title>Hidden Treasure Puzzle</title>
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <script src="/static/js/htmx.min.js"></script>
         <script src="/static/js/json-enc.js"></script>
@@ -14,7 +16,6 @@
         <!-- custom styles -->
         <link href="static/styles.css" rel="stylesheet">
 
-
         <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
     </head>
     <body>
@@ -28,7 +29,7 @@
             <div class="row">
                 {% for j in range(data['puzzle'][i]|length) %}
                     {% set char = data['puzzle'][i][j] %}
-                     <div class="cell" data-is-in-word="0" data-selected="0" data-row="{{i}}" data-col="{{j}}" data-text= "{{char}}" id="{{i}}-{{j}}" name="char">{{char}}</div>
+                     <div class="cell" data-is-in-word="0" data-selected="0" data-row="{{i}}" data-col="{{j}}" data-text="{{char}}" id="{{i}}-{{j}}" name="char">{{char}}</div>
                 {%endfor%}
             </div>
             {% endfor %} 
@@ -38,7 +39,7 @@
         <button id="btn-hint" class="btn btn-outline-primary rounded-pill" data-hide="1">🤯 I need a hint!</button>
         <div class="form-parent">
             {% include 'found_words.html' %}
-            <div class = 'form-button-container'>
+            <div class='form-button-container'>
                 <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
                 <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
                 <!-- <input hidden type="text" id="answer" name="answer" > -->

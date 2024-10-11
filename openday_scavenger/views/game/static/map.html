@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<title>Scientific Computing Scavenger Hunt Map - Unlock the Secrets of the Synchrotron</title>
+
+<link href="/static/css/map/map-admin.css" rel="stylesheet">
+<link href="/static/css/map/map-public.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 text-center">
+    <h1 class="type-h1 mb-3">🔒 Puzzle Locks Map 🗺</h1>
+    <p>
+        You can finish at any time! ⏰
+        <br />(Even if you haven't finished all the puzzles!)
+    </p>
+    <p class="mt-5">
+        Look at this map for hints if you're having trouble finding puzzle locks. 📍
+    </p>
+</div>
+
+<div class="container relative map-wrapper d-flex justify-content-center mt-3 bg-white">
+    <div id="map-public" class="map-public">
+        {% for marker in locations %}
+        <img class="map-marker" src="/static/images/map/map_marker.svg" data-marker data-top="{{marker.top}}"
+            data-left="{{marker.left}}" alt="puzzle lock location"></i>
+        {% endfor %}
+        <img src="/static/images/map/as_layout.svg" class="map-svg" alt="puzzle locks map"/>
+    </div>
+</div>
+
+<p class="mt-5 mb-4 text-center">
+    <a href="/">&lt; Click here to go back to the main page</a>
+</p>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/map/map-public.js"></script>
+{% endblock %}

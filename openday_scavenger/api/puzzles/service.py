@@ -2,6 +2,8 @@ import json
 import random
 from datetime import datetime, timedelta
 from io import BytesIO
+from pathlib import Path
+from sys import modules
 from typing import Any
 
 from fastapi.encoders import jsonable_encoder
@@ -26,7 +28,7 @@ from .exceptions import (
     PuzzleNotFoundError,
     PuzzleUpdatedError,
 )
-from .schemas import PuzzleCreate, PuzzleUpdate
+from .schemas import PuzzleCreate, PuzzleJson, PuzzleUpdate
 
 __all__ = (
     "get_all",
@@ -452,7 +454,22 @@ def generate_puzzle_qr_code(name: str, as_file_buff: bool = False) -> str | Byte
 def generate_puzzle_qr_codes_pdf(db_session: Session):
     puzzles = get_all(db_session, only_active=False)
 
-    return generate_qr_codes_pdf([f"{config.BASE_URL}puzzles/{puzzle.name}/" for puzzle in puzzles])
+    module = modules["openday_scavenger"]
+    module_path = module.__file__
+    if module_path is not None:
+        logo_path = Path(module_path).parent / "static/images/qr_codes/lock.png"
+        if not logo_path.exists():
+            logo_path = None
+    else:
+        logo_path = None
+
+    return generate_qr_codes_pdf(
+        [f"{config.BASE_URL}puzzles/{puzzle.name}/" for puzzle in puzzles],
+        logo=logo_path,
+        title="You Found A Puzzle Lock!",
+        title_font_size=30,
+        url_font_size=12,
+    )
 
 
 def generate_test_data(
@@ -523,3 +540,14 @@ def generate_test_data(
     except:
         db_session.rollback()
         raise
+
+
+def upsert_puzzle_json(db_session: Session, puzzle_json: PuzzleJson):
+    existing_puzzles_by_id = {item.id: item for item in get_all(db_session)}
+
+    for puzzle in puzzle_json.puzzles:
+        existing_puzzle = "id" in puzzle and existing_puzzles_by_id.get(puzzle["id"])
+        if existing_puzzle:
+            _ = update(db_session, existing_puzzle.name, PuzzleUpdate(**puzzle))
+        else:
+            _ = create(db_session, PuzzleCreate(**puzzle))
