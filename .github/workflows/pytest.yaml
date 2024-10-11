@@ -28,6 +28,9 @@ jobs:
       - name: Ruff Format
         run: uvx ruff format
 
+      - name: HTML Template Lint (djlint)
+        run:  uv run djlint openday_scavenger/
+
       - name: Run tests
         run: uv run pytest tests
 

@@ -23,9 +23,9 @@
     <div id="map-public" class="map-public">
         {% for marker in locations %}
         <img class="map-marker" src="/static/images/map/map_marker.svg" data-marker data-top="{{marker.top}}"
-            data-left="{{marker.left}}"></i>
+            data-left="{{marker.left}}" alt="puzzle lock location"></i>
         {% endfor %}
-        <img src="/static/images/map/as_layout.svg" class="map-svg" />
+        <img src="/static/images/map/as_layout.svg" class="map-svg" alt="puzzle locks map"/>
     </div>
 </div>
 
