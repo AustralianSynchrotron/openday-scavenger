@@ -1,7 +1,6 @@
 body {
     background-color: LightSteelBlue;
 }
-
 html {
     -moz-font-feature-settings: 'kern', 'mgrk';
     -moz-font-feature-settings: 'kern=1', 'mgrk=1';
@@ -24,6 +23,7 @@ html {
     background-color: royalblue;
     color: #fff;
 }
+ 
 
 .container {
     display: block;
@@ -52,6 +52,10 @@ html {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.grid-item  {
+    margin: 16px;
 }
 
 .grid-item img {
