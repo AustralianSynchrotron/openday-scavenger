@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 from io import BytesIO
+from pathlib import Path
+from sys import modules
 from typing import Any
 from uuid import uuid4
 
@@ -220,10 +222,21 @@ def generate_visitor_qr_code(uid: str, as_file_buff: bool = False) -> str | Byte
 
 
 def generate_visitor_qr_codes_pdf(db_session: Session):
-    visitors = get_visitor_pool(db_session)
+    visitors = get_visitor_pool(db_session, limit=1000)
+
+    module = modules["openday_scavenger"]
+    module_path = module.__file__
+    if module_path is not None:
+        logo_path = Path(module_path).parent / "static/images/qr_codes/key.png"
+    else:
+        logo_path = None
 
     return generate_qr_codes_pdf(
-        [f"{config.BASE_URL}register/{visitor.uid}" for visitor in visitors]
+        [f"{config.BASE_URL}register/{visitor.uid}" for visitor in visitors],
+        logo=logo_path,
+        rows=2,
+        columns=2,
+        title="Your Personal Adventure Key!",
     )
 
 
