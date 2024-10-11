@@ -33,9 +33,9 @@
             class="d-flex flex-column text-center">
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <label for="form" class="text-secondary fw-bold">Animal #{{ state["animal_id"] }}</label>
-            <label for="form">Correct guesses: <b>{{ state["correct_guesses"] }}</b></label>
-            <label for="form">Remaining guesses: <b>{{ state["remaining_guesses"] }}</b></label>
+            <p class="text-secondary fw-bold">Animal #{{ state["animal_id"] }}</p>
+            <p>Correct guesses: <b>{{ state["correct_guesses"] }}</b></p>
+            <p>Remaining guesses: <b>{{ state["remaining_guesses"] }}</b></p>
 
             <!-- {% if state["remaining_guesses"] %} -->
 
@@ -50,13 +50,20 @@
 
             <!-- <input type="text" id="answer" name="answer"> -->
             <div>
-                <button value="0" class="btn btn-secondary m-2 p-3">Wasp</button>
-                <button value="1" class="btn btn-secondary m-2 p-3">Millipede</button>
-                <button value="2" class="btn btn-secondary m-2 p-3">Mosquito</button>
-                <button value="3" class="btn btn-secondary m-2 p-3">Giraffe</button>
-                <button value="4" class="btn btn-secondary m-2 p-3">Lobster larva</button>
-                <button value="5" class="btn btn-secondary m-2 p-3">Ant</button>
+                <button value="0" type="button" class="btn btn-secondary m-2 p-3"
+                    onclick="submitGuess(this)">Wasp</button>
+                <button value="1" type="button" class="btn btn-secondary m-2 p-3"
+                    onclick="submitGuess(this)">Millipede</button>
+                <button value="2" type="button" class="btn btn-secondary m-2 p-3"
+                    onclick="submitGuess(this)">Mosquito</button>
+                <button value="3" type="button" class="btn btn-secondary m-2 p-3"
+                    onclick="submitGuess(this)">Giraffe</button>
+                <button value="4" type="button" class="btn btn-secondary m-2 p-3" onclick="submitGuess(this)">Lobster
+                    larva</button>
+                <button value="5" type="button" class="btn btn-secondary m-2 p-3"
+                    onclick="submitGuess(this)">Ant</button>
             </div>
+
             <select id="animal" name="animal">
                 <option value="0">Wasp</option>
                 <option value="1">Millipede</option>
@@ -64,11 +71,21 @@
                 <option value="3">Giraffe</option>
                 <option value="4">Lobster larva</option>
                 <option value="5">Ant</option>
-            </select><br>
+            </select>
+
+            <input hidden type="text" id="animal" name="animal" />
             <button class="btn btn-primary mt-3">
                 Submit your guess
             </button>
         </form>
+        <script>
+            function submitGuess(e) {
+                console.log(e.target);
+                document.getElementById('animal').value = e.target.value;
+
+                document.getElementById('form').submit();
+            }
+        </script>
 
         {% else %}
 
