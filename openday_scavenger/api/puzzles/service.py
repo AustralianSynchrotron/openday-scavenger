@@ -468,7 +468,7 @@ def generate_puzzle_qr_codes_pdf(db_session: Session):
         logo=logo_path,
         title="You Found A Puzzle Lock!",
         title_font_size=30,
-        url_font_size=16,
+        url_font_size=12,
     )
 
 

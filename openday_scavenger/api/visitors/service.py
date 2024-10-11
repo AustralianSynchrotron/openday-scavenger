@@ -237,6 +237,7 @@ def generate_visitor_qr_codes_pdf(db_session: Session):
         rows=2,
         columns=2,
         title="Your Personal Adventure Key!",
+        url_font_size=8,
     )
 
 
