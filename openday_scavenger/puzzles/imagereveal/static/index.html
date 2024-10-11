@@ -24,8 +24,17 @@
             <label for="form">Animal {{ state["animal_id"] }}:</label><br>
             <label for="form">Correct guesses {{ state["correct_guesses"] }}:</label><br>
             <label for="form">Remaining guesses {{ state["remaining_guesses"] }}:</label><br>
-            <!-- <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg" alt="Animal {{ state['animal_id'] }}" width="500" height="500"><br> -->
+
+            <!-- {% if state["remaining_guesses"] %} -->
+
             <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg" alt="Animal {{ state['animal_id'] }}" style="width:100%;"><br>
+
+            <!-- {% else %} -->
+
+            <!-- <img src="static/im{{ state['animal_id'] }}_10.jpg" alt="Animal {{ state['animal_id'] }}" style="width:100%;"><br> -->
+
+            <!-- {% endif %} -->
+
             <!-- <input type="text" id="answer" name="answer"> -->
             <select id="animal" name="animal">
                 <option value="0">Wasp</option>
@@ -42,12 +51,17 @@
 
         {% else %}
 
-        <form id='form' method='POST' action='/submission'>
+        <form id='auto-submit-form' method='POST' action='/submission'>
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <label for="form">Submitting results</label><br>
+            <input hidden type="text" id="answer" name="answer" value="{{ state['answer'] }}">
+            <label for="auto-submit-form">Submitting results</label><br>
         </form>
-
+        <script>
+            setTimeout(function () {
+                document.getElementById('auto-submit-form').submit();
+            }, 1000); // 1 second delay
+        </script>
         {% endif %}
     </body>
 </html>

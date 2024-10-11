@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
 
@@ -7,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
+from openday_scavenger.api.puzzles.service import get as get_puzzle
 from openday_scavenger.api.puzzles.service import get_puzzle_state, set_puzzle_state
 from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.schemas import VisitorAuth
@@ -18,6 +20,17 @@ INITIAL_GUESSES = 6
 
 router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).resolve().parent / "static")
+
+
+@lru_cache()
+def get_solution_from_db(db: Session, puzzle_name: str) -> str:
+    # ask the database for the solution.
+    # Cached so it should only happen infrequently.
+    # If we change the solution in the database, this info *will* be stale.
+    # TODO: What happens if solution changes halfway through a game?
+    # User will definitely be told their selection is wrong...
+    p = get_puzzle(db_session=db, puzzle_name=puzzle_name)
+    return p.answer
 
 
 @router.get("/static/{path:path}")
@@ -51,6 +64,7 @@ async def index(
     # Use this to store any intermediate state of the visitor while completing a puzzle.
     state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
     state["complete"] = False
+    state["answer"] = 0
     state["state_access_count"] = state.get("state_access_count", 0) + 1
     state["correct_guesses"] = state.get("correct_guesses", 0)
     state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES)
@@ -103,6 +117,8 @@ async def partsubmission(
     # print(f"### animal: {animal}, animal_id:{animal_id}, MATCHES[animal_id - 1]: {MATCHES[animal_id - 1]}, clause: {int(animal) == MATCHES[animal_id - 1]}")
     if int(animal) == MATCHES[animal_id - 1]:
         # correct guess
+        print("Correct guess")
+
         state["correct_guesses"] = state.get("correct_guesses", 0) + 1
         state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES)
         state["fraction_ix"] = 0
@@ -110,6 +126,7 @@ async def partsubmission(
         if animal_id == MATCHES[-1]:
             # Last animal guessed correctly; submit puzzle
             state["complete"] = True
+            state["answer"] = get_solution_from_db(db, puzzle_name=PUZZLE_NAME)
         else:
             # Next animal
             state["animal_id"] = state.get("animal_id", 1) + 1
@@ -132,6 +149,7 @@ async def partsubmission(
             # failed to solve puzzle
             # Do something if there are no remaining guesses
             print("No remaining guesses")
+            state["answer"] = 0
             return
 
         # Increment fraction shown
