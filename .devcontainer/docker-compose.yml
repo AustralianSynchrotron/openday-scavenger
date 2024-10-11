@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: ..
+      target: python_base
       dockerfile: .devcontainer/Dockerfile
 
     # It is important not to include the project virtual environment (.venv) in the mount,

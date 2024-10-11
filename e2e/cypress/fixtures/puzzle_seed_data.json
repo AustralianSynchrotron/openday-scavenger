@@ -1,0 +1,12 @@
+{
+  "puzzles": [
+    {
+      "name": "demo",
+      "id": 1,
+      "active": true,
+      "notes": "",
+      "answer": "3",
+      "location": ""
+    }
+  ]
+}

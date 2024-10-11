@@ -1,0 +1,31 @@
+{
+  "name": "openday-scavenger",
+  "version": "1.0.0",
+  "description": "The Open Day Scavenger Hunt is an interactive activity that the Scientific Computing team of the Australian Synchrotron is organising for the 2024 Open Day. This repository contains the complete web application for this activity.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@devcontainers/cli": "^0.71.0",
+    "@eslint/js": "^9.12.0",
+    "@types/cypress": "^0.1.6",
+    "cypress": "^13.15.0",
+    "cypress-file-upload": "^5.0.8",
+    "eslint": "^9.12.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-cypress": "^3.5.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3"
+  },
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "format": "prettier . --write",
+    "lint": "eslint ."
+  }
+}

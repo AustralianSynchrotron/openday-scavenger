@@ -103,6 +103,11 @@
         // for example:
     }
     document.addEventListener('DOMContentLoaded', function () {
+        if (!document.getElementById('#reader')) {
+            // When there is no session, the reader element is not rendered
+            return;
+        }
+
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
             { fps: 10, qrbox: { width: 300, height: 300 } },

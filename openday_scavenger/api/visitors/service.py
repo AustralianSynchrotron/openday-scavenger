@@ -192,7 +192,7 @@ def get_visitor_pool(db_session: Session, *, limit: int = 10) -> list[VisitorPoo
     Returns:
         list[VisitorPool]: List of visitors from the pool.
     """
-    return db_session.query(VisitorPool).limit(limit).all()
+    return db_session.query(VisitorPool).order_by(VisitorPool.id.desc()).limit(limit).all()
 
 
 def create_visitor_pool(db_session: Session, pool_in: VisitorPoolCreate) -> None:

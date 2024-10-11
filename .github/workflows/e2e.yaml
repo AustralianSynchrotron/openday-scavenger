@@ -1,0 +1,31 @@
+name: E2E Test on PR
+
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  cypress-run:
+    name: e2e
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run docker-compose
+        working-directory: ./.devcontainer
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.e2e.yml build
+          docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: ./e2e
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: ./e2e/cypress/screenshots
