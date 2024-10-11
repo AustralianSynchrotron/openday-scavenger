@@ -6,6 +6,7 @@ from openday_scavenger.api.visitors.schemas import VisitorAuth
 
 
 class PuzzleCreate(BaseModel):
+    id: int | None = None
     name: str
     answer: str
     active: bool = False

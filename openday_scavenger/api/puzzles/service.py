@@ -193,6 +193,7 @@ def create(db_session: Session, puzzle_in: PuzzleCreate) -> Puzzle:
     # explicitly. This maintains a nice abstraction between the service layer
     # and the database layer.
     puzzle = Puzzle(
+        id=puzzle_in.id,
         name=puzzle_in.name,
         answer=puzzle_in.answer,
         active=puzzle_in.active,
