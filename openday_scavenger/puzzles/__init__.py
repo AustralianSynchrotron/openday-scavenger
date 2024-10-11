@@ -40,6 +40,10 @@ router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-crum
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-probations")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-reboots")
 router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-toerags")
+router.include_router(puzzle_shuffleanagram_router, prefix="/shuffleanagram-reboots")
+router.include_router(ads_question_answer_matchup_router, prefix="/ads_question_answer_matchup")
+router.include_router(puzzle_imagereveal_router, prefix="/imagereveal")
+router.include_router(puzzle_fourbyfour_router, prefix="/fourbyfour")
 router.include_router(puzzle_xray_filters_router, prefix="/xray_filters")
 for rr in puzzle_finder_routes:
     router.include_router(puzzle_finder_router, prefix=rr)
