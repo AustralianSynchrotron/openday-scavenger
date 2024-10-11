@@ -60,9 +60,7 @@ async def index(
     db: Annotated["Session", Depends(get_db)],
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
 ):
-    # We demonstrate the use of state by incrementing a counter each time a user
-    # access this puzzle endpoint.
-    # Use this to store any intermediate state of the visitor while completing a puzzle.
+    # state stores the intermediate state of the visitor while completing a puzzle.
     state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
     state["complete"] = False
     state["answer"] = 0
@@ -82,27 +80,6 @@ async def index(
     )
 
 
-# @router.post("/reset_puzzle")
-# async def reset_puzzle(
-#     request: Request,
-#     db: Annotated["Session", Depends(get_db)],
-#     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
-# ):
-#     state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
-#     state["complete"] = False
-#     state["state_access_count"] = 0
-#     state["correct_guesses"] = 0
-#     state["remaining_guesses"] = INITIAL_GUESSES
-#     state["animal_id"] = 1
-#     state["fraction_ix"] = 0
-#     state["fraction"] = FRACTIONS[0]
-#     set_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor, state=state)
-
-#     print("Reset endpoint")
-
-#     return 0
-
-
 @router.post("/partsubmission")
 async def partsubmission(
     animal: Annotated[str, Form()],
@@ -110,16 +87,10 @@ async def partsubmission(
     db: Annotated["Session", Depends(get_db)],
     visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
 ):
-    # We demonstrate the use of state by incrementing a counter each time a user
-    # access this puzzle endpoint.
-    # Use this to store any intermediate state of the visitor while completing a puzzle.
     state = get_puzzle_state(db, puzzle_name=PUZZLE_NAME, visitor_auth=visitor)
     animal_id = state.get("animal_id")
-    # print(f"### animal: {animal}, animal_id:{animal_id}, MATCHES[animal_id - 1]: {MATCHES[animal_id - 1]}, clause: {int(animal) == MATCHES[animal_id - 1]}")
     if int(animal) == MATCHES[animal_id - 1]:
-        # correct guess
-        print("Correct guess")
-
+        # A correct guess
         state["correct_guesses"] = state.get("correct_guesses", 0) + 1
         state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES)
         state["fraction_ix"] = 0
@@ -141,15 +112,12 @@ async def partsubmission(
             context={"puzzle": PUZZLE_NAME, "state": state},
         )
     else:
-        # incorrect guess
-        print("Incorrect guess")
-
+        # An incorrect guess
         state["correct_guesses"] = state.get("correct_guesses", 0)
         state["remaining_guesses"] = state.get("remaining_guesses", INITIAL_GUESSES) - 1
         if state["remaining_guesses"] < 1:
             # failed to solve puzzle
             # Do something if there are no remaining guesses
-            print("No remaining guesses")
             state["complete"] = True
             state["answer"] = 0
 

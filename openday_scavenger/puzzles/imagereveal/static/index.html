@@ -40,29 +40,9 @@
                 Remaining guesses: <b>{{ state["remaining_guesses"] }}</b>
             </p>
 
-            <!-- {% if state["remaining_guesses"] %} -->
-
             <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg"
                 alt="Animal {{ state['animal_id'] }}" style="max-width: 800px; width:100%" class="my-3 mx-auto">
 
-            <!-- {% else %} -->
-
-            <!-- <img src="static/im{{ state['animal_id'] }}_10.jpg" alt="Animal {{ state['animal_id'] }}" style="width:100%;"><br> -->
-
-            <!-- {% endif %} -->
-
-            <!-- <input type="text" id="answer" name="answer"> -->
-            <!-- <select class="form-select" id="animal" name="animal">
-                    <option value="0">Wasp</option>
-                    <option value="1">Millipede</option>
-                    <option value="2">Mosquito</option>
-                    <option value="3">Giraffe</option>
-                    <option value="4">Lobster larva</option>
-                    <option value="5">Ant</option>
-                </select><br>
-                <button class="form-button">
-                    Submit your guess
-                </button> -->
             <input type="hidden" id="animal" name="animal" value="">
 
             <div>
