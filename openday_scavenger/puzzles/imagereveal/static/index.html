@@ -6,62 +6,72 @@
 
         <script src="/static/js/htmx.min.js"></script>
         <script src="/static/js/json-enc.js"></script>
-        
+        <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/css/fontawesome.min.css" rel="stylesheet" />
+        <link href="/static/css/solid.min.css" rel="stylesheet" />
         <link href="static/demo.css" rel="stylesheet">
         <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
     </head>
     <body>
-        <h1>X-ray Fluorescence Microscopy (XFM) Images Puzzle</h1>
+        <div class="container">
+            <h1 class="title">X-ray Fluorescence Microscopy (XFM) Images Puzzle</h1>
         
-        XFM produces elemental maps, where each colour component (Red, Green, Blue) represents a different atomic element.<br>
-        Here are four animals scanned at the XFM beamline.<br>
-        Can you identify them as we reveal their image maps?<br>
+            <div class="instructions">
+                <p>XFM produces elemental maps, where each colour component (Red, Green, Blue) represents a different atomic element.
+                <p>Here are four animals scanned at the XFM beamline.Can you identify them as we reveal their image maps?</p>
+        
+            </div>
+            
+            {% if state['complete'] == false %}
+            <form id='form' class="form" method='POST' action='/puzzles/imagereveal/partsubmission'>
+                <input  hidden type="text" id="name" name="name" value="{{ puzzle }}">
+                <input   hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+                 
+                <label  for="form">Animal {{ state["animal_id"] }}:</label> 
+                <label   for="form">Correct guesses {{ state["correct_guesses"] }}:</label> 
+                <label  for="form">Remaining guesses {{ state["remaining_guesses"] }}:</label> 
+                 
+                
 
-        {% if state['complete'] == false %}
-        <form id='form' method='POST' action='/puzzles/imagereveal/partsubmission'>
-            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-            <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <label for="form">Animal {{ state["animal_id"] }}:</label><br>
-            <label for="form">Correct guesses {{ state["correct_guesses"] }}:</label><br>
-            <label for="form">Remaining guesses {{ state["remaining_guesses"] }}:</label><br>
+                <!-- {% if state["remaining_guesses"] %} -->
 
-            <!-- {% if state["remaining_guesses"] %} -->
+                <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg" alt="Animal {{ state['animal_id'] }}" style="width:80%" ><br>
 
-            <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg" alt="Animal {{ state['animal_id'] }}" style="width:100%;"><br>
+                <!-- {% else %} -->
 
-            <!-- {% else %} -->
+                <!-- <img src="static/im{{ state['animal_id'] }}_10.jpg" alt="Animal {{ state['animal_id'] }}" style="width:100%;"><br> -->
 
-            <!-- <img src="static/im{{ state['animal_id'] }}_10.jpg" alt="Animal {{ state['animal_id'] }}" style="width:100%;"><br> -->
+                <!-- {% endif %} -->
 
-            <!-- {% endif %} -->
+                <!-- <input type="text" id="answer" name="answer"> -->
+                <select class="form-select" id="animal" name="animal">
+                    <option value="0">Wasp</option>
+                    <option value="1">Millipede</option>
+                    <option value="2">Mosquito</option>
+                    <option value="3">Giraffe</option>
+                    <option value="4">Lobster larva</option>
+                    <option value="5">Ant</option>
+                </select><br>
+                <button class="form-button">
+                    Submit your guess
+                </button>
+            </form>
 
-            <!-- <input type="text" id="answer" name="answer"> -->
-            <select id="animal" name="animal">
-                <option value="0">Wasp</option>
-                <option value="1">Millipede</option>
-                <option value="2">Mosquito</option>
-                <option value="3">Giraffe</option>
-                <option value="4">Lobster larva</option>
-                <option value="5">Ant</option>
-            </select><br>
-            <button>
-                Submit your guess
-            </button>
-        </form>
+            {% else %}
 
-        {% else %}
-
-        <form id='auto-submit-form' method='POST' action='/submission'>
-            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-            <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <input hidden type="text" id="answer" name="answer" value="{{ state['answer'] }}">
-            <label for="auto-submit-form">Submitting results</label><br>
-        </form>
-        <script>
-            setTimeout(function () {
-                document.getElementById('auto-submit-form').submit();
-            }, 1000); // 1 second delay
-        </script>
-        {% endif %}
+            <form id='auto-submit-form' method='POST' action='/submission'>
+                <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+                <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+                <input hidden type="text" id="answer" name="answer" value="{{ state['answer'] }}">
+                <label for="auto-submit-form">Submitting results</label><br>
+            </form>
+            <script>
+                setTimeout(function () {
+                    document.getElementById('auto-submit-form').submit();
+                }, 1000); // 1 second delay
+            </script>
+            {% endif %}
+        </div>
+        
     </body>
 </html>
