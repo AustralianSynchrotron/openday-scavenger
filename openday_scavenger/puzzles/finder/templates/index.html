@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
         <script src="/static/js/htmx.min.js"></script>
         <script src="/static/js/json-enc.js"></script>
         <script src="/static/js/bootstrap.bundle.min.js"></script>
@@ -18,10 +19,11 @@
     </head>
     <body>
         <!-- <h1>Finder Puzzle</h1> -->
+        <h1 id="question" > 🔍 Can you find the hidden treasure? </h1>
         <h2 id="question" >{{question}} </h2>
-        <p id="hint" data-num="{{data['words']|length}}"> 🔍Let's start the words treasure hunting! Click on the letter in the right order to build a word. 😎</p>
-        <p>😏When you are happy with the word, use the button below to add the each word you find into answer! 👇</p>
-        <div class="container" style="margin-top:20px;" id="puzzle">
+        <h5 id="hint" data-num="{{data['words']|length}}"> Select letters in order to build a word. 😎</h5>
+        <h5>😏 Use the button below to add words to your answer! 👇</h5>
+        <div class="container" style="margin-top:15px;">
             {% for i in range(data['puzzle']|length ) %}
             <div class="row">
                 {% for j in range(data['puzzle'][i]|length) %}
@@ -33,7 +35,7 @@
         </div>
         
         {% include 'hint_words.html' %}
-        <button id="btn-hint" data-hide="1">🤯 Show me the words!</button>
+        <button id="btn-hint" class="btn btn-outline-primary rounded-pill" data-hide="1">🤯 I need a hint!</button>
         <div class="form-parent">
             {% include 'found_words.html' %}
             <div class = 'form-button-container'>
@@ -41,7 +43,7 @@
                 <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
                 <!-- <input hidden type="text" id="answer" name="answer" > -->
                 <button id="btn-add" class="btn btn-outline-primary rounded-pill mx-2" ><i class="fa-solid fa-plus"></i>  Add to answer</button>
-                <button id="btn-submit" class="btn btn-outline-primary rounded-pill mx-2"><i class="fa-solid fa-check"></i> Submit your answer</button>
+                <button id="btn-submit" class="btn btn-outline-primary rounded-pill mx-2"><i class="fa-solid fa-check"></i> Submit!</button>
                     
             </div>
         </div>

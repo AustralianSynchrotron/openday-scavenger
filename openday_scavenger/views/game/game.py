@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from openday_scavenger.api.db import get_db
+from openday_scavenger.api.map.service import get_map_locations
 from openday_scavenger.api.puzzles.schemas import PuzzleCompare
 from openday_scavenger.api.puzzles.service import compare_answer, get_all_responses
 from openday_scavenger.api.puzzles.service import count as count_puzzles
@@ -14,7 +15,7 @@ from openday_scavenger.api.visitors.dependencies import get_auth_visitor
 from openday_scavenger.api.visitors.exceptions import VisitorExistsError
 from openday_scavenger.api.visitors.schemas import VisitorAuth
 from openday_scavenger.api.visitors.service import create as create_visitor
-from openday_scavenger.api.visitors.service import get_correct_responses
+from openday_scavenger.api.visitors.service import generate_visitor_qr_code, get_correct_responses
 from openday_scavenger.api.visitors.service import (
     has_completed_all_puzzles as visitor_has_completed_all_puzzles,
 )
@@ -37,9 +38,12 @@ async def render_root_page(
     # and send them back to the registration desk. Also get the progress of the visitor.
     has_completed_all_puzzles = False
     number_correct_responses = 0
+    visitor_qr = None
+
     if (config.SESSIONS_ENABLED) and (visitor.uid is not None):
         has_completed_all_puzzles = visitor_has_completed_all_puzzles(db, visitor_uid=visitor.uid)
         number_correct_responses = len(get_correct_responses(db, visitor_uid=visitor.uid))
+        visitor_qr = generate_visitor_qr_code(visitor.uid)
 
     return templates.TemplateResponse(
         request=request,
@@ -49,6 +53,7 @@ async def render_root_page(
             "number_active_puzzles": count_puzzles(db, only_active=True),
             "number_correct_responses": number_correct_responses,
             "has_completed_all_puzzles": has_completed_all_puzzles,
+            "visitor_qr": visitor_qr,
         },
     )
 
@@ -87,7 +92,7 @@ async def register_visitor(
         domain=config.BASE_URL.host,
         secure=config.BASE_URL.scheme == "https",
         httponly=True,
-        samesite="strict",
+        samesite="none" if config.BASE_URL.scheme == "https" else "lax",
     )
     return response
 
@@ -97,6 +102,7 @@ async def submit_answer(
     request: Request,
     puzzle_in: Annotated[PuzzleCompare, Form()],
     db: Annotated["Session", Depends(get_db)],
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
 ):
     """
     Endpoint for submitting the puzzle answer.
@@ -115,23 +121,45 @@ async def submit_answer(
     """
     # Check if visitor has already given a correct answer for this puzzle
     responses = get_all_responses(
-        db, filter_by_puzzle_name=puzzle_in.name, filter_by_visitor_uid=puzzle_in.visitor
+        db, filter_by_puzzle_name=puzzle_in.name, filter_by_visitor_uid=visitor.uid
     )
 
     if any([response.is_correct for response in responses]):
         return templates.TemplateResponse(request=request, name="puzzle_correct.html")
 
     # Compare the answer and render the appropriate page
-    if compare_answer(db, puzzle_in):
+    if compare_answer(
+        db, puzzle_name=puzzle_in.name, visitor_auth=visitor, answer=puzzle_in.answer
+    ):
         if (
-            (config.SESSIONS_ENABLED)
-            and (puzzle_in.visitor is not None)
-            and (visitor_has_completed_all_puzzles(db, visitor_uid=puzzle_in.visitor))
+            (visitor.is_active)
+            and (visitor.uid is not None)
+            and (visitor_has_completed_all_puzzles(db, visitor_uid=visitor.uid))
         ):
-            return templates.TemplateResponse(request=request, name="puzzle_completed.html")
+            return templates.TemplateResponse(
+                request=request,
+                name="puzzle_completed.html",
+                context={"visitor_qr": generate_visitor_qr_code(visitor.uid)},
+            )
         else:
             return templates.TemplateResponse(request=request, name="puzzle_correct.html")
     else:
         return templates.TemplateResponse(
             request=request, name="puzzle_incorrect.html", context={"puzzle": puzzle_in.name}
         )
+
+
+@router.get("/map")
+async def index(
+    request: Request,
+    visitor: Annotated[VisitorAuth, Depends(get_auth_visitor)],
+    db: Annotated["Session", Depends(get_db)],
+):
+    return templates.TemplateResponse(
+        request=request,
+        name="map.html",
+        context={
+            "visitor": visitor.uid,
+            "locations": get_map_locations(db),
+        },
+    )

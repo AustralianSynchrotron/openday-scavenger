@@ -1,4 +1,23 @@
 // ************************* START of Cick based Method *******************************
+
+function getCachedSession(key)
+{
+  const formPuzzleName = document.getElementById("name");
+  const puzzleName = formPuzzleName.defaultValue;
+  const newKey=`${puzzleName}_${key}`;
+  return JSON.parse(sessionStorage.getItem(newKey));
+}
+
+function saveSession(key, value)
+{
+  const formPuzzleName = document.getElementById("name");
+  const puzzleName = formPuzzleName.defaultValue;
+
+  const newKey=`${puzzleName}_${key}`;
+  return  sessionStorage.setItem(newKey,JSON.stringify(value)) ;
+}
+
+
 function updateCellBasedOnCharList(select , char_list, ignoreIdx )
 {
     char_list.forEach((item)=>{
@@ -56,19 +75,19 @@ function updateCellBasedOnWords(char_list,inWord)
 
 function displayHideHint( ){
    const hintWords = document.getElementById("hint-words");
-   const btnHint =document.getElementById("btn-hint");
+   const btnHint = document.getElementById("btn-hint");
    const hide = btnHint.getAttribute('data-hide') ;
    if(hide==="0")
    {
       btnHint.setAttribute('data-hide',"1");
       hintWords.style.visibility="hidden";
-      btnHint.innerText="🤯 Show me the words";
+      btnHint.innerText="🤯 I need a hint!";
    }
    else
    {
       btnHint.setAttribute('data-hide',"0");
       hintWords.style.visibility="visible";
-      btnHint.innerText="😃 Hide the words";
+      btnHint.innerText="Hide hints 😃";
    }
 }
 
@@ -76,10 +95,13 @@ function displayHideHint( ){
 function addFoundWords(new_word)
 {
     // add the new_word into the found words list 
-    const found_words=document.getElementById("words");
+    const found_words = document.getElementById("words");
     const innerDiv = document.createElement('div');
     innerDiv.setAttribute("id",`${new_word}-parent`);
     innerDiv.classList.add("word");
+    innerDiv.classList.add("btn");
+    innerDiv.classList.add("btn-outline-secondary");
+    // innerDiv.classList.add("rounded-pill");
     const innerText = document.createElement('div');
     innerText.classList.add("word-text");
     innerText.textContent=new_word;
@@ -98,9 +120,8 @@ function addFoundWords(new_word)
     innerBtn.addEventListener("click", function () {
         // remove this word and remove the highlight for the related chars
         const word = this.getAttribute("data-word");
-        var words = JSON.parse(sessionStorage.getItem("words"));
-        console.log("delete this word",word);
-        const filterd_words = words.filter((item)=>{
+        var words = getCachedSession("words") ;//JSON.parse(sessionStorage.getItem("words"));
+        const filtered_words = words.filter((item)=>{
             if(item['word']===word)
             {
                 const char_list = item["char_list"];
@@ -109,12 +130,11 @@ function addFoundWords(new_word)
             }
             return item['word']!==word;
         });
-        console.log("filtered_words",filterd_words);
-        filterd_words.forEach((item)=>{
+        filtered_words.forEach((item)=>{
             const word_char = item['char_list'];
             updateCellBasedOnWords(word_char,true);
         });
-        sessionStorage.setItem("words",JSON.stringify(filterd_words));
+        saveSession("words",filtered_words);//sessionStorage.setItem("words",JSON.stringify(filterd_words));
         document.getElementById(`${word}-parent`).remove();
 
       });
@@ -128,8 +148,8 @@ function extractChar(total, value, index, array) {
  const submitForm = async () => {
   const name = document.getElementById("name");
   const visitor = document.getElementById("visitor");
-  const words = JSON.parse(sessionStorage.getItem("words"));
-  const answer = words.map(item=> item['word']);
+  const words = getCachedSession("words") ;// JSON.parse(sessionStorage.getItem("words"));
+  const answer = words.map(item=> item['word'].toLowerCase());
   answer.sort();
   // Construct a FormData instance
   const formData = new FormData();
@@ -138,21 +158,6 @@ function extractChar(total, value, index, array) {
   formData.append("name", name.defaultValue);
   formData.append("visitor", visitor.defaultValue);
   formData.append("answer", answer.join()); // join with comma
-
-  // fetch(`/submission`, {
-  //     method: "POST",
-  //     // Set the FormData instance as the request body
-  //     body: formData,
-  //   }).then( (response) => {
-  //     // The API call was successful!
-  //     // return response.body();
-  //     console.log("Received response",response);
-  //   }).then((html) => {
-  //     document.body.innerHTML = html;
-  //   }).catch(function (err) {
-  //     // There was an error
-  //     console.warn('Something went wrong.', err);
-  //   });
 
   try {
     const response = await fetch(`/submission`, {
@@ -171,7 +176,7 @@ function extractChar(total, value, index, array) {
  function onClickAddWord(){
   {
     // add the word to the session state
-    var char_list = JSON.parse(sessionStorage.getItem("char_list"));
+    var char_list = getCachedSession("char_list") ;//JSON.parse(sessionStorage.getItem("char_list"));
     if (!char_list || char_list.length===0)
     {
       return;
@@ -182,30 +187,29 @@ function extractChar(total, value, index, array) {
 
     // update words
     var new_word= char_list.reduce(extractChar,"");
-    var words = JSON.parse(sessionStorage.getItem("words"));
+    var words = getCachedSession("words") ;//JSON.parse(sessionStorage.getItem("words"));
     addFoundWords(new_word);
     if (!words)
     {
       words = Array();
     }
     words.push({"word":new_word,"char_list":char_list});
-    sessionStorage.setItem("words",JSON.stringify(words));
+    saveSession("words",words);//sessionStorage.setItem("words",JSON.stringify(words));
 
     // after adding the char_list into words, should empty the char_list
-    sessionStorage.setItem("char_list",JSON.stringify([]));
+    saveSession("char_list",[]);//sessionStorage.setItem("char_list",JSON.stringify([]));
   }
 }
 
  function onClickCell()
 { 
-    var currDirection = JSON.parse(sessionStorage.getItem("currDirection"));
-    console.log("Click");
+    var currDirection =getCachedSession("currDirection") ;// JSON.parse(sessionStorage.getItem("currDirection"));
     const char = this.getAttribute("data-text");
     const row = this.getAttribute("data-row");
     const col = this.getAttribute("data-col");
     const selected = this.getAttribute("data-selected");
 
-    var char_list = JSON.parse(sessionStorage.getItem("char_list"));
+    var char_list = getCachedSession("char_list") ; JSON.parse(sessionStorage.getItem("char_list"));
 
     if (!char_list || char_list.length===0)
     {
@@ -240,17 +244,16 @@ function extractChar(total, value, index, array) {
       this.classList.remove("item-is-in-word");
     }
     
-    sessionStorage.setItem("char_list", JSON.stringify(char_list));
-    sessionStorage.setItem("currDirection", JSON.stringify(currDirection));
+    saveSession("char_list",char_list);//sessionStorage.setItem("char_list", JSON.stringify(char_list));
+    saveSession("currDirection",currDirection);//sessionStorage.setItem("currDirection", JSON.stringify(currDirection));
 }
 
 
  function initFromSessionStorage(){
-  var char_list = JSON.parse(sessionStorage.getItem("char_list"));
-  var words = JSON.parse(sessionStorage.getItem("words"));
+  var char_list = getCachedSession("char_list") ;//JSON.parse(sessionStorage.getItem("char_list"));
+  var words = getCachedSession("words") ;// JSON.parse(sessionStorage.getItem("words"));
   
-  // answer number
-  var num = JSON.parse(sessionStorage.getItem("num"));
+  
 
   if(words)
   {
@@ -267,12 +270,6 @@ function extractChar(total, value, index, array) {
       updateCellBasedOnCharList(true, char_list, null);
   }
 
-  if (!num)
-  {
-      const hint = document.getElementById("hint");
-      num = hint.getAttribute("data-num");
-      sessionStorage.setItem("num",JSON.stringify(num));
-  }
 }
 
 

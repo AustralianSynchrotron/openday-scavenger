@@ -1,0 +1,41 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>UID</th>
+            <th>Checked In</th>
+            <th>Checked Out</th>
+            <th>Correct/Attempted/Total</th>
+            <th>Still Playing</th>
+            <th>Play Time (m)</th>
+            <th>Checkout</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for visitor, correct_answers, attempted_puzzles in visitors %}
+        <tr>
+            <td>{{ visitor.uid }}</td>
+            <td>{{ visitor.checked_in.strftime("%H:%M") }}</td>
+            <td>{{ visitor.checked_out.strftime("%H:%M") if visitor.checked_out}}</td>
+            <td>{{ correct_answers }}/{{ attempted_puzzles }}/{{ number_enabled_puzzles }}</td>
+            <td>{% if visitor.checked_out %}
+                <span class="badge text-bg-secondary">Finished</span>
+                {% else %}
+                <span class="badge text-bg-primary">Playing</span>
+                {% endif %}
+            </td>
+            <td>{% if visitor.checked_out %}
+                {{ ((visitor.checked_out - visitor.checked_in).total_seconds()/60)|round|int}}
+                {% else %}
+                {{ ((now - visitor.checked_in).total_seconds()/60)|round|int}}
+                {% endif %}
+            </td>
+            <td>{% if visitor.checked_out is none %}
+                <button type="button" class="btn btn-danger" hx-post="/admin/visitors/{{ visitor.uid }}/checkout" hx hx-include="#still_playing" hx-swap="innerHTML" hx-target="#visitor-table" onclick="clearFilter();">Checkout</button>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

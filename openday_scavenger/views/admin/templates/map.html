@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block header %}
+<link href="/static/css/map/map-admin.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<h1 class="mx-3 admin-page-title">
+    <i class="fa-solid fa-map"></i> Puzzle Location Map<br />
+    <small>Use this tool to generate the Location of your puzzle so it can be placed into the <a href="/map">public
+            map</a> for visitors!</small>
+</h1>
+
+
+<div class="my-4 mx-3 p-3 bg-body shadow-sm admin-panel-container">
+    <h5 class="border-bottom pb-2 mb-0">Generate Puzzle Location String</h5>
+
+    <div class="my-3 d-flex map-instructions">
+        <div class="me-6">
+            <p>
+                Click your puzzle location(s) on the map below.
+            </p>
+            <p>
+                Copy the <b class="text-primary">Location Array</b>
+                string, and add it as the <b>Location</b> for your puzzle on the <a href="/admin/puzzles">Puzzles</a>
+                page.
+            </p>
+        </div>
+
+        <div class="ms-auto d-flex flex-column flex-nowrap align-items-start">
+            <button id="map-btn-copy" class="btn btn-primary">Copy Array String to Clipboard</button>
+
+            <button id="map-btn-clear" class="btn link-primary mt-2 p-0 d-inline-block"><u>Clear Selection</u></button>
+        </div>
+        <div class="ms-3" style="width: 320px;">
+            <h6 id="map-array-title" class="text-primary my-1">Location Array</h6>
+            <p id="map-array" class="mb-0">No location selected</p>
+        </div>
+    </div>
+
+    <div id="map-editor" class="map-admin">
+        <img src="/static/images/map/as_layout.svg" class="map-svg" />
+    </div>
+</div>
+
+<script type="application/javascript" src="/static/js/map/map-admin.js"></script>
+{% endblock %}

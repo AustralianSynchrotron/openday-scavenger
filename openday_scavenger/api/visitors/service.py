@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 from io import BytesIO
+from pathlib import Path
+from sys import modules
 from typing import Any
 from uuid import uuid4
 
@@ -15,6 +17,16 @@ from .exceptions import VisitorExistsError, VisitorUIDInvalidError
 from .models import Visitor, VisitorPool
 from .schemas import VisitorPoolCreate
 
+__all__ = (
+    "get_all",
+    "count",
+    "create",
+    "check_out",
+    "get_correct_responses",
+    "has_completed_all_puzzles",
+    "get_visitor_pool",
+    "create_visitor_pool",
+)
 config = get_settings()
 
 
@@ -47,6 +59,20 @@ def get_all(
     )
 
     return q.all()  # type: ignore
+
+
+def count(db_session: Session, *, still_playing: bool = False) -> int:
+    """
+    Convenience method to count the number of visitors.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        still_playing (bool): Whether to filter for visitors who are still playing (checked_out is None).
+
+    Returns:
+        int: The number of visitors.
+    """
+    return _filter(db_session.query(Visitor), still_playing=still_playing).count()
 
 
 def create(
@@ -196,10 +222,22 @@ def generate_visitor_qr_code(uid: str, as_file_buff: bool = False) -> str | Byte
 
 
 def generate_visitor_qr_codes_pdf(db_session: Session):
-    visitors = get_visitor_pool(db_session)
+    visitors = get_visitor_pool(db_session, limit=1000)
+
+    module = modules["openday_scavenger"]
+    module_path = module.__file__
+    if module_path is not None:
+        logo_path = Path(module_path).parent / "static/images/qr_codes/key.png"
+    else:
+        logo_path = None
 
     return generate_qr_codes_pdf(
-        [f"{config.BASE_URL}register/{visitor.uid}" for visitor in visitors]
+        [f"{config.BASE_URL}register/{visitor.uid}" for visitor in visitors],
+        logo=logo_path,
+        rows=2,
+        columns=2,
+        title="Your Personal Adventure Key!",
+        url_font_size=8,
     )
 
 

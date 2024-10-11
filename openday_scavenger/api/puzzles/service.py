@@ -1,14 +1,23 @@
+import json
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
+from pathlib import Path
+from sys import modules
+from typing import Any
 
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from openday_scavenger.api.puzzles.models import Access, Puzzle, Response
+from openday_scavenger.api.puzzles.exceptions import (
+    PuzzleStateCreationError,
+    PuzzleStateUpdatedError,
+)
+from openday_scavenger.api.puzzles.models import Access, Puzzle, Response, State
 from openday_scavenger.api.qr_codes import generate_qr_code, generate_qr_codes_pdf
 from openday_scavenger.api.visitors.exceptions import VisitorUIDInvalidError
 from openday_scavenger.api.visitors.models import Visitor
-from openday_scavenger.api.visitors.schemas import VisitorPoolCreate
+from openday_scavenger.api.visitors.schemas import VisitorAuth, VisitorPoolCreate
 from openday_scavenger.api.visitors.service import create_visitor_pool, get_visitor_pool
 from openday_scavenger.config import get_settings
 
@@ -19,12 +28,14 @@ from .exceptions import (
     PuzzleNotFoundError,
     PuzzleUpdatedError,
 )
-from .schemas import PuzzleCompare, PuzzleCreate, PuzzleUpdate
+from .schemas import PuzzleCreate, PuzzleJson, PuzzleUpdate
 
 __all__ = (
     "get_all",
+    "get",
     "count",
     "get_all_responses",
+    "count_responses",
     "create",
     "update",
     "compare_answer",
@@ -146,6 +157,27 @@ def get_all_responses(
     return q.all()
 
 
+def count_responses(db_session: Session, *, only_correct: bool = False) -> int:
+    """
+    Convenience method to count the number of responses.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        only_correct (bool): Set this to True to only count correct responses.
+
+    Returns:
+        int: The number of responses.
+    """
+    # Construct the database query dynamically, taking into account
+    # whether only correct responses should be counted.
+    q = db_session.query(Response)
+
+    if only_correct:
+        q = q.filter(Response.is_correct)
+
+    return q.count()
+
+
 def create(db_session: Session, puzzle_in: PuzzleCreate) -> Puzzle:
     """
     Create a new puzzle entry in the database and return the entry.
@@ -217,37 +249,43 @@ def update(db_session: Session, puzzle_name: str, puzzle_in: PuzzleUpdate) -> Pu
     return puzzle
 
 
-def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
+def compare_answer(
+    db_session: Session, *, puzzle_name: str, visitor_auth: VisitorAuth, answer: str
+) -> bool:
     """
     Compare the provided answer with the stored answer and return whether it is correct.
 
     Args:
         db_session (Session): The SQLAlchemy session object.
-        puzzle_in (PuzzleCompare): The object containing the visitor's answer that should be compared.
+        puzzle_name (str): The name of the puzzle against which the answer should be checked.
+        visitor_auth (VisitorAuth): The authenticated visitor that accessed the puzzle.
+        answer (str): The answer the visitor gave for the puzzle.
+
+    Returns:
+        bool: Returns true of the answer was correct.
     """
     # Get the database models for the puzzle so we can perform the answer comparison.
-    puzzle = get(db_session, puzzle_in.name)
+    puzzle = get(db_session, puzzle_name)
 
     # We compare the provided answer with the stored answer. Currently this is a very simple
     # case sensitive string comparison. We can add more complicated comparison modes here later.
-    is_correct = puzzle_in.answer == puzzle.answer
+    is_correct = answer == puzzle.answer
 
-    # If the session management is turned off, skip the creation and storage
-    # of a response as it is connected to a visitor uid.
-    if config.SESSIONS_ENABLED:
+    # Only store the response if the visitor is active (not None and authenticated)
+    if visitor_auth.is_active:
         # Get the database model for the visitor so we can record who submitted the answer in the response table.
-        visitor = db_session.query(Visitor).filter(Visitor.uid == puzzle_in.visitor).first()
+        visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_auth.uid).first()
 
         if visitor is None:
             raise VisitorUIDInvalidError(
-                f"Could not find visitor {puzzle_in.visitor} in the database."
+                f"Could not find visitor {visitor_auth.uid} in the database."
             )
 
         # Create a new response entry and store it in the database
         response = Response(
             visitor=visitor,
             puzzle=puzzle,
-            answer=puzzle_in.answer,
+            answer=answer,
             is_correct=is_correct,
             created_at=datetime.now(),
         )
@@ -263,26 +301,33 @@ def compare_answer(db_session: Session, puzzle_in: PuzzleCompare) -> bool:
     return is_correct
 
 
-def record_access(db_session: Session, puzzle_name: str, visitor_uid: str) -> Access:
+def record_access(
+    db_session: Session, *, puzzle_name: str, visitor_auth: VisitorAuth
+) -> Access | None:
     """
     Record that a visitor has accessed a puzzle.
 
     Args:
         db_session (Session): The SQLAlchemy session object.
         puzzle_name (str): The name of the puzzle the visitor accessed.
-        visitor_uid (str): The uid of the visitor that accessed the puzzle.
+        visitor_auth (VisitorAuth): The authenticated visitor that accessed the puzzle.
 
     Returns:
-        Access: The created access object.
+        Access: The created access object or None if no Access object was created.
     """
+    # Only record the access if the visitor is active
+    # (authenticated and the registration system is enabled)
+    if not visitor_auth.is_active:
+        return
+
     # Get the database models for the puzzle.
     puzzle = get(db_session, puzzle_name)
 
     # Get the database model for the visitor.
-    visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_uid).first()
+    visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_auth.uid).first()
 
     if visitor is None:
-        raise VisitorUIDInvalidError(f"Could not find visitor {visitor_uid} in the database.")
+        raise VisitorUIDInvalidError(f"Could not find visitor {visitor_auth.uid} in the database.")
 
     access = Access(
         puzzle=puzzle,
@@ -296,19 +341,135 @@ def record_access(db_session: Session, puzzle_name: str, visitor_uid: str) -> Ac
         db_session.commit()
     except Exception:
         db_session.rollback()
-        raise AccessCreationError(f"Could not record the access to {puzzle_name} by {visitor_uid}")
+        raise AccessCreationError(
+            f"Could not record the access to {puzzle_name} by {visitor_auth.uid}"
+        )
 
     return access
 
 
+def get_puzzle_state(
+    db_session: Session, *, puzzle_name: str, visitor_auth: VisitorAuth
+) -> dict[str, Any]:
+    """
+    Get the state information for the given puzzle and visitor.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        puzzle_name (str): The name of the puzzle the visitor accessed.
+        visitor_auth (VisitorAuth): The authenticated visitor that accessed the puzzle.
+
+    Returns:
+        dict[str, Any]: The state as a dictionary that the puzzle can structure as it sees fit.
+    """
+    # Puzzle states only work if there is a valid and authenticated visitor
+    if not visitor_auth.is_active:
+        return {}
+
+    # Get the database model for the visitor.
+    visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_auth.uid).first()
+    if visitor is None:
+        raise VisitorUIDInvalidError(f"Could not find visitor {visitor_auth.uid} in the database.")
+
+    # Get the database models for the puzzle.
+    puzzle = get(db_session, puzzle_name)
+
+    # Check whether a state for the puzzle and visitor already exists.
+    state_model = (
+        db_session.query(State)
+        .filter(State.puzzle_id == puzzle.id, State.visitor_id == visitor.id)
+        .first()
+    )
+
+    if state_model is None:
+        return {}
+    else:
+        return json.loads(state_model.state)
+
+
+def set_puzzle_state(
+    db_session: Session, *, puzzle_name: str, visitor_auth: VisitorAuth, state: dict[str, Any]
+):
+    """
+    Set the state information for the given puzzle and visitor.
+
+    Args:
+        db_session (Session): The SQLAlchemy session object.
+        puzzle_name (str): The name of the puzzle the visitor accessed.
+        visitor_auth (VisitorAuth): The authenticated visitor that accessed the puzzle.
+        state (dict[str, Any]): The state as a dictionary that the puzzle can structure as it sees fit.
+    """
+    # Puzzle states only work if there is a valid and authenticated visitor
+    if not visitor_auth.is_active:
+        return
+
+    # Get the database model for the visitor.
+    visitor = db_session.query(Visitor).filter(Visitor.uid == visitor_auth.uid).first()
+    if visitor is None:
+        raise VisitorUIDInvalidError(f"Could not find visitor {visitor_auth.uid} in the database.")
+
+    # Get the database models for the puzzle.
+    puzzle = get(db_session, puzzle_name)
+
+    # Check whether a state for the puzzle and visitor already exists.
+    state_model = (
+        db_session.query(State)
+        .filter(State.puzzle_id == puzzle.id, State.visitor_id == visitor.id)
+        .first()
+    )
+
+    # If the state doesn't exist yet, create it, otherwise overwrite the state information
+    if state_model is None:
+        state_model = State(
+            puzzle=puzzle,
+            visitor=visitor,
+            updated_at=datetime.now(),
+            state=jsonable_encoder(json.dumps(state)),
+        )
+        try:
+            db_session.add(state_model)
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            raise PuzzleStateCreationError(
+                f"Could not create a state for {puzzle.name} by {visitor.uid}"
+            )
+    else:
+        state_model.updated_at = datetime.now()
+        state_model.state = json.dumps(jsonable_encoder(state))
+
+        try:
+            db_session.commit()
+        except Exception:
+            db_session.rollback()
+            raise PuzzleStateUpdatedError(
+                f"Failed to update the state for  {puzzle.name} and {visitor.uid}"
+            )
+
+
 def generate_puzzle_qr_code(name: str, as_file_buff: bool = False) -> str | BytesIO:
-    return generate_qr_code(f"puzzles/{name}", as_file_buff=as_file_buff)
+    return generate_qr_code(f"{config.BASE_URL}puzzles/{name}/", as_file_buff=as_file_buff)
 
 
 def generate_puzzle_qr_codes_pdf(db_session: Session):
     puzzles = get_all(db_session, only_active=False)
 
-    return generate_qr_codes_pdf([puzzle.name for puzzle in puzzles])
+    module = modules["openday_scavenger"]
+    module_path = module.__file__
+    if module_path is not None:
+        logo_path = Path(module_path).parent / "static/images/qr_codes/lock.png"
+        if not logo_path.exists():
+            logo_path = None
+    else:
+        logo_path = None
+
+    return generate_qr_codes_pdf(
+        [f"{config.BASE_URL}puzzles/{puzzle.name}/" for puzzle in puzzles],
+        logo=logo_path,
+        title="You Found A Puzzle Lock!",
+        title_font_size=30,
+        url_font_size=12,
+    )
 
 
 def generate_test_data(
@@ -336,11 +497,18 @@ def generate_test_data(
     visitors_pool = get_visitor_pool(db_session, limit=number_visitors)
     puzzles = get_all(db_session, only_active=True)
 
+    start_time = datetime.now().replace(hour=9, minute=30, second=0)
+    end_time = start_time + timedelta(hours=6)
+
     # Loop over all visitors from the pool, add them to the visitor table and
     # generate a number of responses for each puzzle.
     try:
         for visitor_from_pool in visitors_pool:
-            visitor = Visitor(uid=visitor_from_pool.uid, checked_in=datetime.now())
+            random_time = start_time + (end_time - start_time) * random.random()
+            checkout_time = random_time + (end_time - random_time) * random.random()
+            visitor = Visitor(
+                uid=visitor_from_pool.uid, checked_in=random_time, checked_out=checkout_time
+            )
             db_session.add(visitor)
             db_session.delete(visitor_from_pool)
 
@@ -372,3 +540,14 @@ def generate_test_data(
     except:
         db_session.rollback()
         raise
+
+
+def upsert_puzzle_json(db_session: Session, puzzle_json: PuzzleJson):
+    existing_puzzles_by_id = {item.id: item for item in get_all(db_session)}
+
+    for puzzle in puzzle_json.puzzles:
+        existing_puzzle = "id" in puzzle and existing_puzzles_by_id.get(puzzle["id"])
+        if existing_puzzle:
+            _ = update(db_session, existing_puzzle.name, PuzzleUpdate(**puzzle))
+        else:
+            _ = create(db_session, PuzzleCreate(**puzzle))
