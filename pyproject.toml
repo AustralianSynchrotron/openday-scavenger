@@ -22,10 +22,6 @@ postgres = [
     "psycopg2>=2.9.9",
 ]
 
-finder = [
-    "word-search-generator>=3.5.1",
-]
-
 imagereveal = [
     "ipykernel>=6.29.5",
     "matplotlib>=3.9.2",
