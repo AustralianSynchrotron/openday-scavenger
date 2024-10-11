@@ -1,0 +1,7 @@
+- rule:
+    name: A001
+    message: Consider adding a viewport meta tag.
+    flags: re.DOTALL|re.I
+    # <meta name="viewport" content="width=device-width, initial-scale=1"> is a good starting point
+    patterns:
+      - <html[^>]*?>(?:(?!<meta[^>]*?name=([\"|'])viewport\b).)*</html>

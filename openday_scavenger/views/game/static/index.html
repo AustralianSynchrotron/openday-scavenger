@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container my-4 text-center">
 
-    <h1 class="type-h1 mb-3">🗝 Unlock the Secrets of the 🗝<br />🕵️‍♂️ Australian Synchrotron 🕵️‍♂️</h1>
+    <h1 class="type-h1 mb-3">🗝 Unlock the Secrets of the 🗝<br />🕵️‍♂️ Australian Synchrotron 🕵️‍♀️</h1>
     <p>
         Welcome to the Australian Synchrotron Open Day Scavenger Hunt!<br />
         (Brought to you by Scientific Computing! 🧑‍💻)
@@ -13,7 +13,7 @@
 
     {% if has_completed_all_puzzles %}
 
-    <p>
+    <p class="mt-5">
         <span class="text-primary fw-bold">🎊 Congratulations!!</span><br />
         You've completed all the puzzles!
     </p>
@@ -33,7 +33,7 @@
     </p>
 
     <p class="text-primary fw-bold mt-5">Scan puzzle lock to unlock the puzzle!</p>
-    <div class="mx-auto" id="reader" style="width: 800px;"></div>
+    <div class="mx-auto" id="reader" style="max-width: 800px; width: 100%;"></div>
 
     <div class="mt-3">
         {% if number_correct_responses > 0 %}
@@ -55,9 +55,21 @@
     </p>
 
     <p class="text-secondary mt-5">Need some help finding puzzle locks?<br />
-        <a href="/puzzles/map">Use our map to see where all the puzzle locks are!</a>
+        <a href="/map">Use our map to see where all the puzzle locks are!</a>
     </p>
 
+    {% endif %}
+
+    {% if visitor_qr %}
+    <p class="mt-5">
+        <span class="text-primary">🙈 Lost your adventure key?</span><br />
+        No worries, here's a digital copy of your key!<br />
+        (You'll need to show this before you leave to collect your prize.)
+    </p>
+
+    <div class="d-flex justify-content-center">
+        <img src="{{visitor_qr}}" width="50%" class="bg-white" style="margin-bottom: 150px; margin-top: 40px;" alt="QR code of adventure key" />
+    </div>
     {% endif %}
 
     {% else %}
@@ -82,7 +94,6 @@
 <script>
     function onScanSuccess(decodedText, decodedResult) {
         // handle the scanned code as you like, for example:
-        console.log(`Code matched = ${decodedText}`, decodedResult);
         window.location.assign(decodedText);
         window.open(newUrl, "_top");
     }

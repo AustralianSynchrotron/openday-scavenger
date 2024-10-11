@@ -1,23 +1,31 @@
-<html>
-    <head>
-        <script src="/static/js/htmx.min.js"></script>
-        <script src="/static/js/json-enc.js"></script>
-        
-        <link href="static/demo.css" rel="stylesheet">
-        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    </head>
-    <body>
-        <h1>Demo Puzzle</h1>
-        
-        What energy in GeV does the accelerator of the Australian Synchrotron run at?
-        
-        <form id='form' method='POST' action='/submission'>
-            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-            <label for="energy">Energy:</label><br>
-            <input type="text" id="answer" name="answer">
-            <button>
-                Submit your answer
-            </button>
-        </form>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Demo Puzzle</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/json-enc.js"></script>
+
+    <link href="static/demo.css" rel="stylesheet">
+    <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+</head>
+
+<body>
+    <h1>Demo Puzzle</h1>
+
+    What energy in GeV does the accelerator of the Australian Synchrotron run at?
+
+    <form id='form' method='POST' action='/submission'>
+        <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+        <label for="energy">Energy:</label><br>
+        <input type="text" id="answer" name="answer">
+        <button>
+            Submit your answer
+        </button>
+    </form>
+</body>
+
 </html>

@@ -1,5 +1,6 @@
+
 .word-item {
-    background-color: lightgrey;
+    background-color: #f0f0f0;
     border-radius: 10px;
     height: 100px;
     /* Fixed height for grid items */
@@ -11,7 +12,7 @@
 }
 
 .category-item {
-    background-color: lightgrey;
+    background-color: #203d79;
     border-radius: 10px;
     height: 100px;
     /* Fixed height for grid items */
@@ -24,7 +25,7 @@
     /* Center children vertically */
     text-align: center;
     cursor: pointer;
-
+    color: white;
 }
 
 .category-item strong,
@@ -35,7 +36,7 @@
 }
 
 .selected {
-    background-color: darkgrey;
+    background-color: #0078c1;
     color: white;
 }
 
@@ -52,10 +53,21 @@
     max-width: 768px;
 }
 
+
+.btn-custom {
+    background-color: #35bfc9;
+    color: white;
+}
+.btn-custom:hover {
+    background-color: #2aa3b0;
+    color: white;
+}
+
 @media (max-width: 600px) {
     .container {
         max-width: 100%;
     }
+
 }
 
 @media (max-width:500px) {
