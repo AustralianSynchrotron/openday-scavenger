@@ -34,52 +34,121 @@
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
 
             <p>
-                <span class="text-secondary fw-bold">Animal #{{ state["animal_id"] }}</span><br />
+                <span class="text-secondary fw-bold">
+                    Animal #
+                    {% if state["reveal"] > 0 %}
+                    <span id="display_id-reveal">{{ state["reveal"] }}</span>
+                    {% endif %}
+                    <span id="display_id-question" class="{% if state['reveal'] > 0 %}d-none{% endif %}"> {{
+                        state["animal_id"] }} </span>
+                    / 4
+                </span>
+                <br />
                 Correct guesses: <b>{{ state["correct_guesses"] }}</b>
                 <br />
                 Remaining guesses: <b>{{ state["remaining_guesses"] }}</b>
             </p>
 
-            <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg"
-                alt="Animal {{ state['animal_id'] }}" style="max-width: 800px; width:100%" class="my-3 mx-auto">
+            {% if state["reveal"] > 0 %}
+            <div id="content-reveal">
+                <div class="position-relative">
+                    {% for index in [9, 7, 5, 3, 1] %}
+                    <img src="static/im{{ state['reveal'] }}_{{ index }}.jpg" alt="Animal {{ state['reveal'] }}"
+                        style="max-width: 800px; width:100%; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%);"
+                        class="position-absolute" id="reveal-{{index}}">
+                    {% endfor %}
+                    <img src="static/im{{ state['reveal'] }}_10.jpg" alt="Animal {{ state['reveal'] }}"
+                        style="max-width: 800px; width:100%;" class="mx-auto">
+                </div>
 
-            <input type="hidden" id="animal" name="animal" value="">
+                <button type="button" class="btn btn-primary mt-3 mb-5 p-3" onclick="nextQuestion()">Next
+                    Animal</button>
+            </div>
 
-            <div>
-                <button type="button" class="btn btn-secondary m-2 p-3" id="0" onclick="submitForm(0)">Wasp</button>
-                <button type="button" class="btn btn-secondary m-2 p-3" id="1"
-                    onclick="submitForm(1)">Millipede</button>
-                <button type="button" class="btn btn-secondary m-2 p-3" id="2" onclick="submitForm(2)">Mosquito</button>
-                <button type="button" class="btn btn-secondary m-2 p-3" id="3" onclick="submitForm(3)">Giraffe</button>
-                <button type="button" class="btn btn-secondary m-2 p-3" id="4" onclick="submitForm(4)">Lobster
-                    larva</button>
-                <button type="button" class="btn btn-secondary m-2 p-3" id="5" onclick="submitForm(5)">Ant</button>
+            {% endif %}
+
+            <div id="content-question" class="{% if state['reveal'] > 0 %}d-none{% endif %}">
+                <img src="static/im{{ state['animal_id'] }}_{{ state['fraction'] }}.jpg"
+                    alt="Animal {{ state['animal_id'] }}" style="max-width: 800px; width:100%" class="my-3 mx-auto">
+
+                <input type="hidden" id="animal" name="animal" value="">
+
+                <div class="mb-5">
+                    <button type="button" class="btn btn-secondary m-2 p-3" id="0" onclick="submitForm(0)">Wasp</button>
+                    <button type="button" class="btn btn-secondary m-2 p-3" id="1"
+                        onclick="submitForm(1)">Millipede</button>
+                    <button type="button" class="btn btn-secondary m-2 p-3" id="2"
+                        onclick="submitForm(2)">Mosquito</button>
+                    <button type="button" class="btn btn-secondary m-2 p-3" id="3"
+                        onclick="submitForm(3)">Giraffe</button>
+                    <button type="button" class="btn btn-secondary m-2 p-3" id="4" onclick="submitForm(4)">Lobster
+                        larva</button>
+                    <button type="button" class="btn btn-secondary m-2 p-3" id="5" onclick="submitForm(5)">Ant</button>
+                </div>
             </div>
         </form>
 
         {% else %}
 
-        <form id='auto-submit-form' method='POST' action='/submission'>
+        <form id='auto-submit-form' method='POST' action='/submission'
+            class="d-flex flex-column text-center justify-content-center">
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
             <input hidden type="text" id="answer" name="answer" value="{{ state['answer'] }}">
-            <label for="auto-submit-form">Submitting results</label><br>
+
+            <div class="mt-5 mb-3">
+                <p class="text-secondary fw-bold">Submitting results...</p>
+                <div class="spinner-border text-primary" role="presentation"></div>
+            </div>
+
+            {% if state["reveal"] > 0 %}
+            <div id="content-reveal" class="mb-5">
+                <div class="position-relative">
+                    {% for index in [9, 7, 5, 3, 1] %}
+                    <img src="static/im{{ state['reveal'] }}_{{ index }}.jpg" alt="Animal {{ state['reveal'] }}"
+                        style="max-width: 800px; width:100%; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%);"
+                        class="position-absolute" id="reveal-{{index}}">
+                    {% endfor %}
+                    <img src="static/im{{ state['reveal'] }}_10.jpg" alt="Animal {{ state['reveal'] }}"
+                        style="max-width: 800px; width:100%;" class="mx-auto">
+                </div>
+            </div>
+            {% endif %}
         </form>
         <script>
             setTimeout(function () {
                 document.getElementById('auto-submit-form').submit();
-            }, 1000); // 1 second delay
+            }, 5000); // 5 second delay to allow user enjoy last image reveal
         </script>
         {% endif %}
-
-        <script>
-            function submitForm(animalId) {
-                document.getElementById('animal').value = animalId;
-                document.getElementById('form').submit();
-            }
-        </script>
     </div>
 
+    <script>
+        // Submit animal guess
+        function submitForm(animalId) {
+            document.getElementById('animal').value = animalId;
+            document.getElementById('form').submit();
+        }
+
+        // Hide previous answer reveal, show current question
+        function nextQuestion() {
+            document.getElementById('content-reveal').remove();
+            document.getElementById('display_id-reveal').remove();
+
+            document.getElementById('content-question').classList.remove('d-none');
+            document.getElementById('display_id-question').classList.remove('d-none');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!document.getElementById(`content-reveal`)) return;
+
+            [1, 3, 5, 7, 9].forEach((mask, i) => {
+                setTimeout(function () {
+                    document.getElementById(`reveal-${mask}`).remove();
+                }, (i + 1) * 500);
+            });
+        });
+    </script>
 </body>
 
 </html>
