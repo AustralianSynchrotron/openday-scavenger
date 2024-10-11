@@ -63,7 +63,11 @@
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
             <input hidden type="text" id="answer" name="answer" value="{{ state['answer'] }}">
-            <label for="auto-submit-form">Submitting results</label><br>
+
+            <div class="mt-5 text-center">
+                <p class="text-secondary fw-bold">Submitting results...</p>
+                <div class="spinner-border text-primary" role="presentation"></div>
+            </div>
         </form>
         <script>
             setTimeout(function () {
