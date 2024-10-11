@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Ant</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="/static/js/htmx.min.js"></script>
+        <script src="/static/js/json-enc.js"></script>
+        
+        <link href="static/styles.css" rel="stylesheet">
+        <script src="static/js/index.js"></script>
+        <link id="favicon" rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    </head>
+    <body>
+        <!-- <h1>Demo Puzzle</h1> -->
+        <div class="container">
+            <h1 class="title">Look inside the ant! 🐜</h1>
+         
+            <div class="instructions">
+             <p>This is a video showing an example of the reconstructed CT data of an ant taken at the Micro Computed Tomography (MCT) beamline. MCT can take three-dimensional (3D) structures at high spatial resolution, which can get down to micron scales. 
+                One micron is a thousandth of a millimeter. For comparison, a water droplet in mist or cloud is around 10 microns. Do you know what the resolution is for MCT?👀 Select your answer at the bottom of this page!</p>
+            </div>
+
+           <hr class="solid">
+           
+           <video width="100%"  controls loop>
+                <source src="static/ant_movieph.mp4" type="video/mp4">
+                Your browser does not support HTML video.
+            </video>
+           
+           <hr class="solid">
+           
+           <form id='form' class="form" method='POST' action='/submission'>
+                <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+                <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+                <input hidden id="answer" name="answer" class="form-input">
+                <div class="container">
+                    
+                    <input type="radio" id="option-a" class="form-option" name="resolution" value="0.1">
+                    <label class="form-option-label" for="option-a">0.1 micron</label>
+ 
+                    
+                    <input type="radio" id="option-b" class="form-option" name="resolution"  value="1">
+                    <label class="form-option-label" for="option-b">1 micron</label>
+                    
+                    
+                    <input type="radio" id="option-c" class="form-option" name="resolution" value="10">
+                    <label class="form-option-label" for="option-c">10 micron</label>
+                    
+                    
+                    <input type="radio" id="option-d" class="form-option" name="resolution" value="100">
+                    <label class="form-option-label" for="option-d">100 micron</label>
+                    
+                </div>
+                
+                <!-- <input type="text" id="answer" name="answer"> -->
+                <button class="form-button" type="submit">✈ Submit</button>
+            </form>
+         </div>
+         
+        
+    </body>
+</html>
