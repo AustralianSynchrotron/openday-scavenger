@@ -51,53 +51,80 @@ async def render_index_page(
     number_responses = count_responses(db, only_correct=False)
     number_correct_responses = count_responses(db, only_correct=False)
 
-    # TODO: refactor this code to convert db data into a dataframe
-    # and add it into a service, rather than this route
     all_visitors = get_all_visitors(db)
-    xval = []
-    yval = []
-    zval = []
-    for visitor, correct_answers, attempted_puzzles in all_visitors:
-        xval.append(visitor.checked_in)
-        zval.append(visitor.checked_out)
-        yval.append(visitor.uid)
 
-    # TODO: don't use a for loop and add more useful structured data into the df
-    # index = pd.date_range('10/7/2024', periods=24, freq='h')
-    checked_in_df = pd.DataFrame({"uid": yval, "checked_in": xval})
-    checked_out_df = pd.DataFrame({"uid": yval, "checked_out": zval})
-    if checked_in_df.empty:
-        plotly_jinja_data = "No user data available 😔"
+    visitor_data = [
+        {
+            "uid": visitor.uid,
+            "check_in_time": visitor.checked_in,
+            "check_out_time": visitor.checked_out,
+            "correct_answers": correct_answers,
+            "attempted_puzzles": attempted_puzzles,
+        }
+        for visitor, correct_answers, attempted_puzzles in all_visitors
+    ]
+
+    df_visitors = pd.DataFrame(visitor_data)
+
+    if df_visitors.empty or df_visitors["check_in_time"].isnull().all():
+        plotly_visitor_data = "No user data available 😔"
     else:
-        # TODO: this only works because check_in/out times have the same range
-        # need to allow for different time periods
+        # resample the data to get a count of visitors for a given frequency
         resample_period = "15min"
-        checked_in = checked_in_df.resample(resample_period, on="checked_in").count()
-        checked_in["checkin_cumsum"] = checked_in["uid"].cumsum()
 
-        # handle case where no users have checked out
-        if checked_out_df["checked_out"].isnull().all():
-            checked_out = checked_in.copy()
-            checked_out["checkout_cumsum"] = 0
+        checked_in_df = (
+            df_visitors.resample(resample_period, on="check_in_time")["check_in_time"]
+            .count()
+            .cumsum()
+            .reset_index(name="checked_in")
+        )
+
+        # handle case where no visitors have checked out
+        if df_visitors["check_out_time"].isnull().all():
+            checked_out_df = checked_in_df.copy().rename(
+                columns={"check_in_time": "check_out_time", "checked_in": "checked_out"}
+            )
+            checked_out_df["checked_out"] = 0
         else:
-            checked_out = checked_out_df.resample(resample_period, on="checked_out").count()
-            checked_out["checkout_cumsum"] = checked_out["uid"].cumsum()
+            checked_out_df = (
+                df_visitors.resample(resample_period, on="check_out_time")["check_out_time"]
+                .count()
+                .cumsum()
+                .reset_index(name="checked_out")
+            )
 
-        df = pd.DataFrame(
-            {
-                "checked_in": checked_in["checkin_cumsum"],
-                "checked_out": checked_out["checkout_cumsum"],
-            }
+        cumulative_df = pd.merge(
+            checked_in_df,
+            checked_out_df,
+            left_on="check_in_time",
+            right_on="check_out_time",
+            how="outer",
+        ).fillna(0)
+
+        # Convert datetime columns to 12-hour format
+        cumulative_df["time"] = cumulative_df.apply(
+            lambda row: row["check_out_time"] if row["checked_in"] == 0 else row["check_in_time"],
+            axis=1,
+        )
+        cumulative_df["time"] = cumulative_df["time"].dt.strftime("%I:%M %p")
+
+        # Convert datetime columns to 12-hour format
+        cumulative_df["time"] = cumulative_df.apply(
+            lambda row: row["check_out_time"] if row["checked_in"] == 0 else row["check_in_time"],
+            axis=1,
+        )
+        cumulative_df["time"] = cumulative_df["time"].dt.strftime("%I:%M %p")
+
+        visitor_fig = px.line(
+            cumulative_df,
+            x="time",
+            y=["checked_in", "checked_out"],
+            # title="Adventurers Searching for Puzzles",
+            title="Today's Puzzled Puzzlers at the Synchrotron",
+            labels={"time": "Time", "value": "Running Total of Visitors", "variable": "Status"},
         )
 
-        # create  a line plot with both check-in and check-out data
-        fig = px.line(
-            df,
-            # title="Number of visitors",
-            labels={"index": "Time (hour)", "value": "N. visitors (cumulative)"},
-        )
-
-        plotly_jinja_data = fig.to_html(full_html=False)
+        plotly_visitor_data = visitor_fig.to_html(full_html=False)
 
     return templates.TemplateResponse(
         request=request,
@@ -108,6 +135,6 @@ async def render_index_page(
             "number_active_visitors": number_active_visitors,
             "number_responses": number_responses,
             "number_correct_responses": number_correct_responses,
-            "fig": plotly_jinja_data,
+            "fig": plotly_visitor_data,
         },
     )
