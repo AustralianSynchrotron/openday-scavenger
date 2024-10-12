@@ -145,31 +145,12 @@ function extractChar(total, value, index, array) {
   return total + value["char"];
 }
 
- const submitForm = async () => {
-  const name = document.getElementById("name");
-  const visitor = document.getElementById("visitor");
+function updateAnswer() {
   const words = getCachedSession("words") ;// JSON.parse(sessionStorage.getItem("words"));
   const answer = words.map(item=> item['word'].toLowerCase());
-  answer.sort();
-  // Construct a FormData instance
-  const formData = new FormData();
-  const path = window.location.pathname;
-  // Add a text field
-  formData.append("name", name.defaultValue);
-  formData.append("visitor", visitor.defaultValue);
-  formData.append("answer", answer.join()); // join with comma
 
-  try {
-    const response = await fetch(`/submission`, {
-      method: "POST",
-      // Set the FormData instance as the request body
-      body: formData,
-    });
-    const html = await response.text();
-    document.body.innerHTML = html;
-  } catch (e) {
-    console.error(e);
-  }
+  // Update hidden answer field
+  document.getElementById("answer").value = answer.sort().join();
 };
 
 
@@ -198,6 +179,9 @@ function extractChar(total, value, index, array) {
 
     // after adding the char_list into words, should empty the char_list
     saveSession("char_list",[]);//sessionStorage.setItem("char_list",JSON.stringify([]));
+
+    // Update the hidden answer input
+    updateAnswer();
   }
 }
 
@@ -290,9 +274,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const btnAdd = document.getElementById("btn-add");
     btnAdd.addEventListener("click", onClickAddWord);
-
-    const btnSubmit =document.getElementById("btn-submit");
-    btnSubmit.addEventListener("click", submitForm); 
 
     const btnHint =document.getElementById("btn-hint");
     btnHint.addEventListener("click", displayHideHint ); 
