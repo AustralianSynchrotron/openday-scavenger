@@ -43,16 +43,24 @@
 
     {% include 'hint_words.html' %}
     <button id="btn-hint" class="btn btn-outline-primary rounded-pill" data-hide="1">🤯 I need a hint!</button>
+
     <div class="form-parent">
         {% include 'found_words.html' %}
         <div class='form-button-container'>
-            <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
-            <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
-            <!-- <input hidden type="text" id="answer" name="answer" > -->
-            <button id="btn-add" class="btn btn-outline-primary rounded-pill mx-2"><i class="fa-solid fa-plus"></i> Add
-                to answer</button>
-            <button id="btn-submit" class="btn btn-outline-primary rounded-pill mx-2"><i class="fa-solid fa-check"></i>
-                Submit!</button>
+            <button id="btn-add" class="btn btn-outline-primary rounded-pill mx-2" type="button">
+                <i class="fa-solid fa-plus"></i> Add
+                to answer
+            </button>
+
+            <form id="form" method="POST" action="/submission" class="d-flex">
+                <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
+                <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
+                <input hidden type="text" id="answer" name="answer">
+                <button class="btn btn-outline-primary rounded-pill mx-2 w-100">
+                    <i class="fa-solid fa-check"></i>
+                    Submit!
+                </button>
+            </form>
         </div>
     </div>
 </body>
