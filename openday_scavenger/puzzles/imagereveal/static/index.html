@@ -28,7 +28,7 @@
         </div>
 
         {% if state['complete'] == false %}
-        <form id='form' class="d-flex flex-column text-center justify-content-center" method='POST'
+        <form id="form" class="d-flex flex-column text-center justify-content-center" method="POST"
             action='/puzzles/imagereveal/partsubmission'>
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">
@@ -90,7 +90,7 @@
 
         {% else %}
 
-        <form id='auto-submit-form' method='POST' action='/submission'
+        <form id="auto-submit-form" method="POST" action="/submission"
             class="d-flex flex-column text-center justify-content-center">
             <input hidden type="text" id="name" name="name" value="{{ puzzle }}">
             <input hidden type="text" id="visitor" name="visitor" value="{{ visitor }}">

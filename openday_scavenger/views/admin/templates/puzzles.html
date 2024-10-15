@@ -38,7 +38,7 @@
                 <h1 class="modal-title fs-5">Add a new Puzzle to the Scavenger Hunt</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form id='puzzle-add-form' class="mt-3" hx-encoding='multipart/form-data' hx-post='/admin/puzzles'
+            <form id="puzzle-add-form" class="mt-3" hx-encoding="multipart/form-data" hx-post="/admin/puzzles"
                 hx-ext='json-enc' hx-swap="innerHTML" hx-target="#puzzle-table">
                 <div class="modal-body">
                     <div class="container">
@@ -85,7 +85,7 @@
                 <h1 class="modal-title fs-5">Upload a JSON file with puzzle data</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form id='upload-json-form' class="mt-3" hx-encoding='multipart/form-data'
+            <form id="upload-json-form" class="mt-3" hx-encoding="multipart/form-data"
                 hx-post='/admin/puzzles/upload-json' hx-swap="innerHTML" hx-target="#puzzle-table">
                 <div class="modal-body">
                     <div class="container">
