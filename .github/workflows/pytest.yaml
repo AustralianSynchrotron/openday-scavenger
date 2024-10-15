@@ -8,7 +8,8 @@ on:
 jobs:
   test:
     name: test-lint-format
-    runs-on: ubuntu-latest
+    # ubuntu-24.04 (latest) fails at the install step due to missing libjpeg
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
