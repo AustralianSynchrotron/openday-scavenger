@@ -1,0 +1,13 @@
+# Overrides to run e2e tests in CI
+# Shouldn't be needed for normal development
+# E.g. docker compose -f docker-compose.yml -f docker-compose.e2e.yml up
+
+services:
+  app:
+    build:
+      context: ..
+      target: python_e2e
+    command: uv run fastapi dev ./openday_scavenger/main.py --host 0.0.0.0
+    ports:
+      - "8000:8000"
+    network_mode: !reset ""

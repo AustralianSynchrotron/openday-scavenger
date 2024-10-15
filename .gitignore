@@ -167,5 +167,5 @@ cython_debug/
 # direnv
 .envrc
 
-# direnv
-.envrc
+# Dev container output
+nohup.out

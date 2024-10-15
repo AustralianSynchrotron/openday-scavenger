@@ -12,7 +12,8 @@
 	"forwardPorts": [8000, 5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "uv sync --all-extras && uv run fastapi dev ./openday_scavenger/main.py --reload",
+	// No hup makes the server run in the background so it doesn't hang the build process
+	"postCreateCommand": "nohup bash -c 'uv sync --all-extras && uv run fastapi dev ./openday_scavenger/main.py --reload &'",
 
 	// Configure tool-specific properties.
 	"customizations": {
